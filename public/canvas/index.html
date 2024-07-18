@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>CodePen - Chemistry Drawing</title>
+		<link rel="stylesheet" href="./style.css" />
+	</head>
+	<body>
+		<!-- partial:index.partial.html -->
+		<div class="container">
+			<div class="button-container" id="button-container">
+				<button
+					id="button-draw"
+					class="button"
+					onclick="startDraw()"
+					title="Draw"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/draw.svg"
+					/>
+				</button>
+				<button
+					id="button-clear"
+					class="button"
+					onclick="clearCanvas()"
+					title="Clear All"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/clear-all.svg"
+					/>
+				</button>
+				<button
+					id="button-select"
+					class="button"
+					onclick="select()"
+					title="Select"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/select.svg"
+					/>
+				</button>
+				<button
+					id="button-hex"
+					class="button"
+					onclick="addHex()"
+					title="Hexagon"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/hexagon.svg"
+					/>
+				</button>
+				<button
+					id="button-pent"
+					class="button"
+					onclick="addPent()"
+					title="Pentagon"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/pentagon.svg"
+					/>
+				</button>
+				<button
+					id="button-tri"
+					class="button"
+					onclick="addTriangle()"
+					title="Triangle"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/triangle.svg"
+					/>
+				</button>
+				<button
+					id="button-rec"
+					class="button"
+					onclick="addRect()"
+					title="Rectangle"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/rectangle.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addSingle()"
+					title="Single Bond"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/single-bond.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addDouble()"
+					title="Double Bond"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/double-bond.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addTriple()"
+					title="Triple Bond"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/triple-bond.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addWedge()"
+					title="Wedge"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/wedge.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addWedgeDash()"
+					title="Wedge Dash"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/wedge-dash.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addText()"
+					title="Text"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/text.svg"
+					/>
+				</button>
+				<button
+					id="button-subscript"
+					class="button"
+					onclick="subScript()"
+					title="Subscript"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/text-sub.svg"
+					/>
+				</button>
+				<button
+					id="button-superscript"
+					class="button"
+					onclick="superScript()"
+					title="Superscript"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/text-sup.svg"
+					/>
+				</button>
+				<button
+					id="button-line"
+					class="button"
+					onclick="addArrow()"
+					title="Arrow"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/arrow.svg"
+					/>
+				</button>
+
+				<!-- button-save for testing: output to console.log -->
+				<button
+					id="button-save"
+					class="button"
+					onclick="saveCanvas()"
+					style="display: none"
+				>
+					Save
+				</button>
+
+				<input id="filereader" type="file" accept="image/*" />
+				<label
+					for="filereader"
+					class="custom-file-upload"
+					title="Upload Image"
+				>
+					<img
+						src="https://raw.githubusercontent.com/craigmateo/chemistry-drawing/77de15031ab1d4dab25e25269d46334f9143ddaa/assets/svg/image.svg"
+					/>
+				</label>
+			</div>
+
+			<div id="context-menu">
+				<div class="item" id="toAdelante" hidden>Bring forward</div>
+				<div class="item" id="tofront" hidden>Bring to front</div>
+				<div class="item" id="toAtras" hidden>Send backwards</div>
+				<div class="item" id="toback" hidden>Send to back</div>
+			</div>
+
+			<canvas id="a" width="632px" height="500"></canvas>
+		</div>
+		<!-- partial -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.3.3/fabric.min.js"></script>
+		<script src="./script.js"></script>
+	</body>
+</html>
