@@ -24,6 +24,7 @@ const updatePersonal = async (data) => {
 					)}`
 			)
 			.join("&");
+			console.log(queryString)
 		const response = await axios.post(
 			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
 			{},
@@ -33,6 +34,7 @@ const updatePersonal = async (data) => {
 				},
 			}
 		);
+		
 		console.log("Update Personal Response :: ", response);
 		return response;
 	} catch (error) {

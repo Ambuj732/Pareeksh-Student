@@ -96,6 +96,7 @@ function StudentDashboardSidebar() {
 									</div>
 								</div>
 							</Link>
+							
 							<Link
 								to={
 									"/dashboard/student-profile/education-profile"

@@ -25,7 +25,7 @@ import fetchDepartments from "../../actions/MasterDataApi/getDepartments";
 import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 
-const AddEmployment = ({ onClose }) => {
+const AddEmployment = ({ onClose, type }) => {
 	const { register, handleSubmit } = useForm();
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
@@ -38,6 +38,7 @@ const AddEmployment = ({ onClose }) => {
 	const [departments, setDepartments] = useState([]);
 	const [selectedCity, setSelectedCity] = useState("");
 	const [town, setTown] = useState([]);
+	const users = JSON.parse(localStorage.getItem("ps_loguser"));
 
 	const preData = async () => {
 		try {
@@ -73,25 +74,28 @@ const AddEmployment = ({ onClose }) => {
 	const addEmploymentHandler = async (formData) => {
 		try {
 			console.log(formData);
+			// ?id_self_student={{id_self_student}}&usercode={{usercode}}&id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=1&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&id_student_employment=13&notice_period=3&salary=24
 			const data = {
-				id_employment_type: 2, // present
-				employer_name: "Suposham", // present
+				id_self_student: users?.id_self_student,
+				usercode : users?.usercode,
+				id_employment_type: 2,
+				employer_name: formData?.employerName,
 				id_town: 6,
-				id_city: 23406, // present
-				id_pincode: 6, // present
-				id_industry: 2, // present
-				current_employer: 0, // present
-				id_student_employment: 12,
-				id_department: 2, // present
-				date_of_joining: "2019-11-22", // present
-				id_self_student: 6, // present
-				date_of_exit: "2020-06-23", // present
-				usercode: "1DoYMEIQKG3t", // present
-				degignation: "Android%20developer%20", // present
-				id_state: 3654, // present
+				id_city: 23406,
+				id_pincode: 6,
+				id_industry: 2,
+				current_employer: 1,
+				id_department: 2,
+				date_of_joining: formData?.dateOfJoining,
+				degignation: formData?.degignation,
+				id_state: 3654,
+				id_student_employment: 13,
+				notice_period: formData?.noticePeriod,
+				salary: formData?.salary,
+				
 			};
-			console.log(data);
-			// const response = await addEmployment(data);
+			// console.log(data);
+			const response = await addEmployment(data);
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding employment :: ", error);
@@ -139,7 +143,7 @@ const AddEmployment = ({ onClose }) => {
 			<div className="w-1/2 h-2/3 rounded-md shadow-md ">
 				<div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
 					<h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-						Add Employment
+					{type==="edit" ? "Edit" : "Add"} Employment
 					</h1>
 					<img
 						className="mr-8 items-center mt-2 h-8  cursor-pointer"
@@ -202,6 +206,7 @@ const AddEmployment = ({ onClose }) => {
 										/>
 										<label
 											for="default-radio-3"
+
 											class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
 										>
 											Current
@@ -630,7 +635,7 @@ const AddEmployment = ({ onClose }) => {
 									</div>
 								</div>
 								<div className="flex gap-5 px-5 mt-5">
-									<div className="relative h-14 mb-3 w-1/2">
+									{/* <div className="relative h-14 mb-3 w-1/2">
 										<div>
 											<select
 												id="qualification_select"
@@ -654,7 +659,6 @@ const AddEmployment = ({ onClose }) => {
 												))}
 											</select>
 											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-												{/* <FaAngleDown /> */}
 											</div>
 											<div
 												htmlFor="floating_filled"
@@ -678,7 +682,7 @@ const AddEmployment = ({ onClose }) => {
 												{errors?.id_hq}
 											</div>
 										)}
-									</div>
+									</div> */}
 									<div className="relative h-14 mb-3 w-1/2">
 										<div>
 											<input

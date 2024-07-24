@@ -16,11 +16,15 @@ import * as Yup from "yup";
 import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
+import addApiData from "../../actions/Dashboard/addResumeHeading";
 
 const AddResume = ({ onClose }) => {
   const { register, handleSubmit } = useForm();
+  const {register:register2, handleSubmit:handleSubmit2} = useForm();
   const [highestQualication, setHighestQualication] = useState([]);
   const [errors, setErrors] = useState({});
+  const users = JSON.parse(localStorage.getItem("ps_loguser"));
+  const [file, setFile] = useState(null);
 
   const preData = async () => {
     try {
@@ -31,6 +35,32 @@ const AddResume = ({ onClose }) => {
         "Error while getting highest qualification or states :: ",
         error
       );
+    }
+  };
+
+  const handleFormSubmit = async (formData) => {
+    try {
+      console.log(formData);
+      // ?id_self_student={{id_self_student}}&usercode={{usercode}}&id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=1&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&id_student_employment=13&notice_period=3&salary=24
+      const data = {
+        id_self_student: users?.id_self_student,
+        usercode: users?.usercode,
+        resume_headlines: formData?.heading,
+      };
+      // console.log(data);
+      const response = await addApiData(data, "updateResumeHeadline");
+      console.log(response);
+    } catch (error) {
+      console.log("Error while adding employment :: ", error);
+    }
+  };
+
+  const handleUpdateResume = async (formData) => {
+    try {
+      console.log(formData);
+      const data = {};
+    } catch (error) {
+      console.log("Error while adding employment :: ", error);
     }
   };
 
@@ -50,8 +80,11 @@ const AddResume = ({ onClose }) => {
             onClick={onClose}
           />
         </div>
-        <div className="overflow-y-scroll h-[90%] bg-white">
-          <form>
+        <div className="overflow-y-scroll h-[30%] bg-white">
+          <form
+            className="flex flex-col"
+            onSubmit={handleSubmit(handleFormSubmit)}
+          >
             <div className=" px-5 mt-7">
               <div className="relative h-12 w-full">
                 <div>
@@ -60,7 +93,7 @@ const AddResume = ({ onClose }) => {
                     id="floating_filled"
                     className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-grey-500 focus:outline-none focus:ring-0 peer"
                     placeholder=""
-                    {...register("username", {
+                    {...register("heading", {
                       required: true,
                     })}
                   />
@@ -74,10 +107,55 @@ const AddResume = ({ onClose }) => {
                     </label>
                   </div>
                 </div>
+                <button
+                  type="submit"
+                  className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
+                >
+                  Save
+                </button>
               </div>
             </div>
           </form>
         </div>
+        
+        {/* <div className="overflow-y-scroll h-[30%] bg-white">
+      <form
+        className="flex flex-col"
+        onSubmit={handleSubmit2(handleUpdateResume)}
+      >
+        <div className="px-5 mt-7">
+
+          <div className="relative h-12 w-full">
+           
+            <div className="mt-4">
+              <select
+                id="file_type_select"
+                className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+                defaultValue=""
+                {...register2("fileType", { required: true })}
+              >
+                <option value="" disabled hidden>
+                  Select File Type
+                </option>
+                <option value="Document">Document</option>
+                <option value="PDF">PDF</option>
+                <option value="Video">Video</option>
+              </select>
+            </div>
+
+
+
+
+            <button
+              type="submit"
+              className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div> */}
       </div>
     </div>
   );

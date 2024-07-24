@@ -4,10 +4,12 @@ import PersonalProfile from "./PersonalProfile";
 import ProfileUpdate from "./ProfileUpdate";
 import openbook from "../../assets/Dashboard/openbook.png";
 import getEducations from "../../actions/Dashboard/getEducations";
+import AddEducation from "./AddEducation";
 
 function EducationProfile() {
   const [educations, setEducations] = useState([]);
   const [modelOpen, setModelOpen] = useState(false);
+  const [educationData, setEducationData] = useState({});
 
   const getEducationHandler = async () => {
     try {
@@ -25,9 +27,16 @@ function EducationProfile() {
     }
   };
 
+  const handleEdit =(data)=>{
+    console.log(data);
+   
+  }
+  const handleSave = (data) => {
+    setModelOpen(false);
+  };
   useEffect(() => {
     getEducationHandler();
-  }, []);
+  }, [ ]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -38,7 +47,10 @@ function EducationProfile() {
         >
           <div className="flex justify-between text-[#1C4481] font-medium px-8 text-lg h-16 items-center rounded-t-xl bg-[#EAF2FE] ">
             <span>{education?.highest_qualification}</span>
-            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8">
+            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8" onClick={()=>{
+               setEducationData(education);
+               setModelOpen(true);
+            }}>
               <img src={pen} alt="" className="h-5" />
               <span className="text-smf font-normal">Edit</span>
             </div>
@@ -105,7 +117,7 @@ function EducationProfile() {
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Town</span>
-                  <div className="font-medium text-base">Noida</div>
+                  <div className="font-medium text-base">{education.town}</div>
                 </div>
               </div>
               <div className="flex gap-2 text-sm w-1/5">
@@ -113,7 +125,7 @@ function EducationProfile() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">District</span>
                   <div className="font-medium text-base">
-                    Gautam Budha Nagar
+                   {education.city}
                   </div>
                 </div>
               </div>
@@ -121,21 +133,21 @@ function EducationProfile() {
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">State</span>
-                  <div className="font-medium text-base">Uttar Pradesh</div>
+                  <div className="font-medium text-base">{education.state}</div>
                 </div>
               </div>
               <div className="flex gap-2 text-sm w-1/5">
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Pin Code</span>
-                  <div className="font-medium text-base">201301</div>
+                  <div className="font-medium text-base">{education.pincode}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       ))}
-      <div className="h-36 shadow-allBorder rounded-xl">
+      {/* <div className="h-36 shadow-allBorder rounded-xl">
         <div className="flex justify-between text-[#1C4481] font-medium px-8 text-lg h-16 items-center rounded-t-xl bg-[#EAF2FE] ">
           <span>Professional Program</span>
           <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8">
@@ -172,7 +184,16 @@ function EducationProfile() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      {modelOpen && (
+					<AddEducation
+          educationData={educationData}
+						onClose={() => setModelOpen(false)}
+						onSave={handleSave}
+            type={"edit"}
+					/>
+				)}
+      
     </div>
   );
 }
