@@ -1,8 +1,7 @@
 import axios from "axios";
 import { PUBLIC_REST_API_ENDPOINT, BEARER_TOKEN } from "../../constants";
 
-
-const updateResume = async (data , formData) => {
+const addProject = async (data) => {
 	try {
 		const queryString = Object.keys(data)
 			.map(
@@ -12,22 +11,20 @@ const updateResume = async (data , formData) => {
 					)}`
 			)
 			.join("&");
-			console.log(queryString)
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
-			formData,
+			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentProfile/addKeySkill?${queryString}`,
+			{},
 			{
 				headers: {
 					Authorization: `Bearer ${BEARER_TOKEN}`,
 				},
 			}
 		);
-		
-		console.log("Update Personal Response :: ", response);
+		console.log("Add Project Response :: ", response);
 		return response;
 	} catch (error) {
-		console.log("Error while updating personal :: ", error);
+		console.log("Error while adding Project :: ", error);
 	}
 };
 
-export default updateResume;
+export default addProject;

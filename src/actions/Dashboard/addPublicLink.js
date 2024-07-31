@@ -1,8 +1,17 @@
 import axios from "axios";
 import { PUBLIC_REST_API_ENDPOINT, BEARER_TOKEN } from "../../constants";
 
+// const data = {
+// 	id_lang: 10,
+// 	usercode: "",
+// 	read: 1,
+// 	id_self_student: 6,
+// 	speak: 0,
+// 	prof: 2,
+// 	write: 1,
+// };
 
-const updateResume = async (data , formData) => {
+const addStudentLanguage = async (data) => {
 	try {
 		const queryString = Object.keys(data)
 			.map(
@@ -12,22 +21,20 @@ const updateResume = async (data , formData) => {
 					)}`
 			)
 			.join("&");
-			console.log(queryString)
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
-			formData,
+			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentProfile/UpdateLink?${queryString}`,
+			{},
 			{
 				headers: {
 					Authorization: `Bearer ${BEARER_TOKEN}`,
 				},
 			}
 		);
-		
-		console.log("Update Personal Response :: ", response);
+		console.log("Add Student Language Response :: ", response);
 		return response;
 	} catch (error) {
-		console.log("Error while updating personal :: ", error);
+		console.log("Error while adding student language :: ", error);
 	}
 };
 
-export default updateResume;
+export default addStudentLanguage;

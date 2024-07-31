@@ -1,8 +1,20 @@
 import axios from "axios";
 import { PUBLIC_REST_API_ENDPOINT, BEARER_TOKEN } from "../../constants";
 
+// const data = {
+// 	id_city: 24092,
+// 	gender: 1,
+// 	martial: 1,
+// 	differently_abled: 1,
+// 	dob: "1995-10-21",
+// 	id_cast_category: 2,
+// 	name: "",
+// 	id_self_student: 6,
+// 	usercode: "",
+// 	id_state: 3687,
+// };
 
-const updateResume = async (data , formData) => {
+const updatePersonal = async (data) => {
 	try {
 		const queryString = Object.keys(data)
 			.map(
@@ -12,17 +24,15 @@ const updateResume = async (data , formData) => {
 					)}`
 			)
 			.join("&");
-			console.log(queryString)
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
-			formData,
+			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentProfile/updateProfileSummary?${queryString}`,
+			{},
 			{
 				headers: {
 					Authorization: `Bearer ${BEARER_TOKEN}`,
 				},
 			}
 		);
-		
 		console.log("Update Personal Response :: ", response);
 		return response;
 	} catch (error) {
@@ -30,4 +40,4 @@ const updateResume = async (data , formData) => {
 	}
 };
 
-export default updateResume;
+export default updatePersonal;

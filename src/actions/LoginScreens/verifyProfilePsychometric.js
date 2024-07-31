@@ -5,7 +5,7 @@ const verifyProfilePsychometric = async (formdata,geoAddress,latlong,exam_id,use
 	console.log(userData);
 	try {
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/createAutoAccount`,
+			`${PUBLIC_REST_API_ENDPOINT}/exam/psyc/verifyStudent`,
 			{
 				usercode: userData['usercode'],
 				user_id: userData['userid'],

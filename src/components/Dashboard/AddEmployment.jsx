@@ -24,6 +24,7 @@ import getIndustry from "../../actions/MasterDataApi/getIndustry";
 import fetchDepartments from "../../actions/MasterDataApi/getDepartments";
 import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
+import { useSelector } from "react-redux";
 
 const AddEmployment = ({ onClose, type }) => {
 	const { register, handleSubmit } = useForm();
@@ -138,6 +139,11 @@ const AddEmployment = ({ onClose, type }) => {
 		loadTown();
 	}, [selectedCity]);
 
+	const handleEmployerChange = (e) => {
+		setIsCurrentEmployer(e.target.value);
+		console.log(e.target.value);
+	};
+
 	return (
 		<div className="flex h-screen w-screen items-center justify-center fixed top-0 left-0 z-50 bg-black bg-opacity-50">
 			<div className="w-1/2 h-2/3 rounded-md shadow-md ">
@@ -198,11 +204,15 @@ const AddEmployment = ({ onClose, type }) => {
 								<div className="h-10 flex items-center gap-4 px-5">
 									<div className="flex items-center">
 										<input
+											checked={
+												isCurrentEmployer == "current"
+											}
 											id="default-radio-3"
 											type="radio"
 											value="current"
-											name="location"
+											name="isCurrentEmployer"
 											className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-white-500 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+											onChange={handleEmployerChange}
 										/>
 										<label
 											for="default-radio-3"
@@ -214,12 +224,15 @@ const AddEmployment = ({ onClose, type }) => {
 									</div>
 									<div class="flex items-center">
 										<input
-											checked
+											checked={
+												isCurrentEmployer == "previous"
+											}
 											id="default-radio-4"
 											type="radio"
 											value="previous"
-											name="location"
+											name="isCurrentEmployer"
 											class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+											onChange={handleEmployerChange}
 										/>
 										<label
 											for="default-radio-4"
@@ -289,7 +302,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("startDate", {
 													required: true,
 												})}
 											/>
@@ -319,7 +332,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("endDate", {
 													required: true,
 												})}
 											/>
@@ -343,6 +356,68 @@ const AddEmployment = ({ onClose, type }) => {
 										)}
 									</div>
 								</div>
+								<div className="flex gap-5 px-5 mt-5">
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("noticePeriod", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Notice Period
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("salary", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Salary{" "}
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
 								<div className="flex gap-5 justify-around px-5 mt-5">
 									<div className="relative h-14 mb-3 w-1/2">
 										<div>
@@ -350,7 +425,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												{...register("qualification", {
+												{...register("department", {
 													required: true,
 												})}
 											>
@@ -406,12 +481,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												onChange={(e) =>
-													handleSelectQualification(
-														e.target.value
-													)
-												}
-												{...register("qualification", {
+												{...register("industry", {
 													required: true,
 												})}
 											>
@@ -690,7 +760,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("pincode", {
 													required: true,
 												})}
 											/>
@@ -716,14 +786,14 @@ const AddEmployment = ({ onClose, type }) => {
 								</div>
 							</>
 						)}
+						<button
+							type="submit"
+							className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
+						>
+							Save
+						</button>
 					</form>
 					{/* <div className="w-full flex items-center justify-center"> */}
-					<button
-						type="submit"
-						className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
-					>
-						Save
-					</button>
 					{/* </div> */}
 				</div>
 			</div>
