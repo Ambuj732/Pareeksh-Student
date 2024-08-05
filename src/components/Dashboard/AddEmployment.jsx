@@ -26,12 +26,13 @@ import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 
 const AddEmployment = ({ onClose, type , data }) => {
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit , getValues , formState: { errors } } = useForm();
+	console.log("data", errors);
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
 	const [selectedState, setSelectedState] = useState("");
 	const [cities, setCities] = useState([]);
-	const [errors, setErrors] = useState({});
+	// const [errors, setErrors] = useState({});
 	const [employmentType, setEmploymentType] = useState("experienced");
 	const [employmentTypes, setEmploymentTypes] = useState([]);
 	const [industries, setIndustries] = useState([]);
@@ -73,28 +74,32 @@ const AddEmployment = ({ onClose, type , data }) => {
 
 	const addEmploymentHandler = async (formData) => {
 		try {
-			console.log(formData);
-			const data = {
+			console.log(data);
+			// id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=0&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&notice_period=3&salary=24&id_student_employment=13&date_of_exit=2023-06-23
+			const data1 = {
 				id_self_student: users?.id_self_student,
 				usercode : users?.usercode,
-				id_employment_type: 2,
+				id_employment_type: formData?.empType,
 				employer_name: formData?.employerName,
+				id_city: selectedCity,
+				id_pincode: formData?.pincode,
+				id_industry: formData?.industry,
+				id_department: formData?.department,
+				date_of_joining: formData?.startDate,
+				date_of_exit: formData?.endDate,
+				degignation: formData?.designation,
+				id_state: selectedState,
 				id_town: 6,
-				id_city: 23406,
-				id_pincode: 6,
-				id_industry: 2,
-				current_employer: 1,
-				id_department: 2,
-				date_of_joining: formData?.dateOfJoining,
-				degignation: formData?.degignation,
-				id_state: 3654,
-				id_student_employment: 13,
-				notice_period: formData?.noticePeriod,
-				salary: formData?.salary,
+				current_employer:  0,
+				notice_period: 3,
+				salary: 13,
 				
 			};
+			if (type==="edit") {
+				data1.id_student_employment = data?.id
+			}
 			// console.log(data);
-			const response = await addEmployment(data);
+			const response = await addEmployment(data1);
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding employment :: ", error);
@@ -689,7 +694,7 @@ const AddEmployment = ({ onClose, type , data }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("pincode", {
 													required: true,
 												})}
 											/>
@@ -715,14 +720,15 @@ const AddEmployment = ({ onClose, type , data }) => {
 								</div>
 							</>
 						)}
-					</form>
-					{/* <div className="w-full flex items-center justify-center"> */}
-					<button
+						<button
 						type="submit"
 						className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
 					>
 						Save
 					</button>
+					</form>
+					{/* <div className="w-full flex items-center justify-center"> */}
+					
 					{/* </div> */}
 				</div>
 			</div>
