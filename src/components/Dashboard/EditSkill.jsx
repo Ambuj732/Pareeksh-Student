@@ -2,18 +2,9 @@ import React, { useState, useEffect } from "react";
 import close from "../../assets/Dashboard/close.png";
 import { IoPerson } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import getHighQualList from "../../actions/LoginScreens/getHighQualList";
-import message from "../../assets/LoginScreen/message.png";
-import addEducation from "../../actions/Dashboard/addEducation";
-import { useSelector } from "react-redux";
-import getCourses from "../../actions/MasterDataApi/getCourses";
-import getCities from "../../actions/LoginScreens/getCities";
-import getStates from "../../actions/LoginScreens/getStates";
-import getInstitutes from "../../actions/MasterDataApi/getInstitutes";
-import getBoards from "../../actions/MasterDataApi/getBoards";
-import getSpecialization from "../../actions/MasterDataApi/getSpecialization";
+import addProject from "../../actions/Dashboard/addITSkill";
 
-const EditSkill = ({ onClose, skillData }) => {
+const EditSkill = ({ onClose, skillData, mainData }) => {
     const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
             software_name: skillData?.software_name || "",
@@ -21,24 +12,29 @@ const EditSkill = ({ onClose, skillData }) => {
             last_used: skillData?.last_used || "",
         },
     });
-    console.log("skillData: ", skillData);
-    // You can use useEffect to set form values whenever skillData changes
-    React.useEffect(() => {
+    console.log("skillData: ", skillData,);
+    useEffect(() => {
         if (skillData) {
             setValue("software_name", skillData.software_name);
             setValue("experience", skillData.experience);
             setValue("last_used", skillData.last_used);
-            setValue("id_software", skillData.id_software);
-            setValue("id", skillData.id);
+            // setValue("id_software", skillData.id_software);
+            // setValue("id", skillData.id);
 
         }
     }, [skillData, setValue]);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log("Edited Data: ", data);
-        // Handle the updated data here, such as sending it to an API
+        try {
+            const combinedData = { ...mainData, ...data };
+            console.log("Combined Data: ", combinedData);
+            await addProject(combinedData);
 
-        onClose();
+            onClose();
+        } catch (error) {
+            console.error("Failed to update skill: ", error);
+        }
     };
 
     return (

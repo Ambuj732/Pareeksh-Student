@@ -10,6 +10,7 @@ import getProfileSummary from "../../actions/Dashboard/getProfileSummary";
 import getPublicLinks from "../../actions/Dashboard/getPublicLinks";
 import pen from "../../assets/Dashboard/pen.png";
 import EditSkill from "./EditSkill";
+import EditProject from "./EditProject";
 
 function Skills() {
   const [skills, setSkills] = useState([]);
@@ -18,8 +19,11 @@ function Skills() {
   const [profileSummary, setProfileSummary] = useState("");
   const [accomplishments, setAccomplishments] = useState("");
   const [publicLinks, setPublicLinks] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModalSkill, setopenModalSkill] = useState(false);
+  const [openModalProject, setopenModalProject] = useState(false);
   const [skillData, setSkillData] = useState({});
+  const [projectData, setProjectData] = useState({});
+  const [mainData, setMainData] = useState({});
 
   const getITSkillsHandler = async () => {
     try {
@@ -28,6 +32,7 @@ function Skills() {
         usercode: user?.usercode,
         id_self_student: user?.id_self_student,
       };
+      setMainData(data)
       const response = await getITSkills(data);
       if (response?.data?.code === 1000) setSkills(response?.data?.it_skills);
       console.log("IT Skills :: ", response?.data?.it_skills);
@@ -213,7 +218,7 @@ function Skills() {
               className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
               onClick={() => {
                 console.log(skill.id, skill.experience)
-                setOpenModal(true);
+                setopenModalSkill(true);
                 setSkillData(skill);
               }}
             >
@@ -290,9 +295,9 @@ function Skills() {
             <div
               className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
               onClick={() => {
-                console.log(skill.id, skill.experience)
-                setOpenModal(true);
-                setSkillData(skill);
+                console.log(project.id,)
+                setopenModalProject(true);
+                setProjectData(project);
               }}
             >
               <img src={pen} alt="Edit" className="h-5" />
@@ -370,9 +375,9 @@ function Skills() {
             <div
               className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
               onClick={() => {
-                console.log(skill.id, skill.experience)
-                setOpenModal(true);
-                setSkillData(skill);
+                console.log(certificate.id, "certificate")
+                // setopenModalSkill(true);
+                // setSkillData(skill);
               }}
             >
               <img src={pen} alt="Edit" className="h-5" />
@@ -497,10 +502,20 @@ function Skills() {
       ))}
 
 
-      {openModal && (
+      {openModalSkill && (
         <EditSkill
           skillData={skillData}
-          onClose={() => setOpenModal(false)}
+          mainData={mainData}
+          onClose={() => setopenModalSkill(false)}
+        />
+      )}
+
+
+      {openModalProject && (
+        <EditProject
+          projectData={projectData}
+          mainData={mainData}
+          onClose={() => setopenModalProject(false)}
         />
       )}
     </div>

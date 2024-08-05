@@ -8,6 +8,7 @@ const addProject = async (data) => {
         (key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
       )
       .join("&");
+    console.log("qs", queryString);
     const response = await axios.post(
       `${PUBLIC_REST_API_ENDPOINT}/amsapi/studentProfile/addITSkill?${queryString}`,
       {},
