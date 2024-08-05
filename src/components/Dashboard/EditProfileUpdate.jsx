@@ -568,11 +568,11 @@ const EditProfileUpdate = ({ onClose }) => {
                 Save
               </button>
             </form>
-            <div>
+            {/* <div>
               <h1 className="px-5 mt-7 font-semibold">Desired Work Location</h1>
-            </div>
-            <hr className="border-black mt-1 mx-4"></hr>
-            <div className="flex gap-5 justify-around px-5 mt-5">
+            </div> */}
+            {/* <hr className="border-black mt-1 mx-4"></hr> */}
+            {/* <div className="flex gap-5 justify-around px-5 mt-5">
               <div className="relative h-14 mb-3 w-1/2">
                 <div>
                   <select
@@ -594,7 +594,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                   
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -633,7 +633,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                   
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -674,7 +674,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                   
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -713,7 +713,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -731,8 +731,8 @@ const EditProfileUpdate = ({ onClose }) => {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="flex gap-5 justify-around px-5 mt-2">
+            </div> */}
+            {/* <div className="flex gap-5 justify-around px-5 mt-2">
               <div className="relative h-14 mb-3 w-1/2">
                 <div>
                   <select
@@ -754,7 +754,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                  
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -793,7 +793,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                 
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -834,7 +834,7 @@ const EditProfileUpdate = ({ onClose }) => {
                     ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                    {/* <FaAngleDown /> */}
+                   
                   </div>
                   <div
                     htmlFor="floating_filled"
@@ -852,12 +852,10 @@ const EditProfileUpdate = ({ onClose }) => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="flex justify-center items-center mt-5 mb-4">
-            {/* <button className="rounded-full bg-blue-900 px-8 py-1">
-							save
-						</button> */}
+          
           </div>
         </div>
       </div>

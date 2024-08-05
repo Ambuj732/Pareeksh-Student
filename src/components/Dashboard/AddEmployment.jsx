@@ -25,7 +25,7 @@ import fetchDepartments from "../../actions/MasterDataApi/getDepartments";
 import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 
-const AddEmployment = ({ onClose, type }) => {
+const AddEmployment = ({ onClose, type , data }) => {
 	const { register, handleSubmit } = useForm();
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
@@ -74,7 +74,6 @@ const AddEmployment = ({ onClose, type }) => {
 	const addEmploymentHandler = async (formData) => {
 		try {
 			console.log(formData);
-			// ?id_self_student={{id_self_student}}&usercode={{usercode}}&id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=1&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&id_student_employment=13&notice_period=3&salary=24
 			const data = {
 				id_self_student: users?.id_self_student,
 				usercode : users?.usercode,
@@ -289,7 +288,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("startDate", {
 													required: true,
 												})}
 											/>
@@ -319,7 +318,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="floating_filled"
 												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
 												placeholder=""
-												{...register("username", {
+												{...register("endDate", {
 													required: true,
 												})}
 											/>
@@ -350,7 +349,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												{...register("qualification", {
+												{...register("department", {
 													required: true,
 												})}
 											>
@@ -411,7 +410,7 @@ const AddEmployment = ({ onClose, type }) => {
 														e.target.value
 													)
 												}
-												{...register("qualification", {
+												{...register("industry", {
 													required: true,
 												})}
 											>
@@ -465,7 +464,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												{...register("qualification", {
+												{...register("empType", {
 													required: true,
 												})}
 											>
