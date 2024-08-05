@@ -26,7 +26,13 @@ import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 import { useSelector } from "react-redux";
 
-const AddEmployment = ({ onClose, type }) => {
+const AddEmployment = ({ onClose }) => {
+	const user = useSelector((state) => state?.auth?.userData);
+	console.log(user);
+	const studentProfile = useSelector(
+		(state) => state?.studentProfile?.studentProfileData
+	);
+
 	const { register, handleSubmit } = useForm();
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
@@ -39,7 +45,7 @@ const AddEmployment = ({ onClose, type }) => {
 	const [departments, setDepartments] = useState([]);
 	const [selectedCity, setSelectedCity] = useState("");
 	const [town, setTown] = useState([]);
-	const users = JSON.parse(localStorage.getItem("ps_loguser"));
+	const [isCurrentEmployer, setIsCurrentEmployer] = useState();
 
 	const preData = async () => {
 		try {
@@ -75,27 +81,31 @@ const AddEmployment = ({ onClose, type }) => {
 	const addEmploymentHandler = async (formData) => {
 		try {
 			console.log(formData);
-			// ?id_self_student={{id_self_student}}&usercode={{usercode}}&id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=1&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&id_student_employment=13&notice_period=3&salary=24
+			console.log(user);
+			console.log(studentProfile);
+			console.log(town);
 			const data = {
-				id_self_student: users?.id_self_student,
-				usercode : users?.usercode,
 				id_employment_type: 2,
 				employer_name: formData?.employerName,
-				id_town: 6,
-				id_city: 23406,
-				id_pincode: 6,
-				id_industry: 2,
-				current_employer: 1,
-				id_department: 2,
-				date_of_joining: formData?.dateOfJoining,
-				degignation: formData?.degignation,
-				id_state: 3654,
-				id_student_employment: 13,
-				notice_period: formData?.noticePeriod,
-				salary: formData?.salary,
-				
+				id_town: town[0]?.id,
+				id_city: selectedCity,
+				id_pincode: formData?.pincode,
+				id_industry: formData?.industry,
+				current_employer: isCurrentEmployer == "current" ? 1 : 0,
+				// id_student_employment: 12,
+				id_department: formData?.department,
+				date_of_joining: formData?.startDate,
+				id_self_student: user?.id_self_student,
+				date_of_exit: formData?.endDate,
+				usercode: user?.usercode,
+				degignation: formData?.designation,
+				id_state: selectedState,
 			};
-			// console.log(data);
+			if (isCurrentEmployer == "current") {
+				data["notice_period"] = formData?.noticePeriod;
+				data["salary"] = formData?.salary;
+			}
+			console.log(data);
 			const response = await addEmployment(data);
 			console.log(response);
 		} catch (error) {
@@ -149,7 +159,7 @@ const AddEmployment = ({ onClose, type }) => {
 			<div className="w-1/2 h-2/3 rounded-md shadow-md ">
 				<div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
 					<h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-					{type==="edit" ? "Edit" : "Add"} Employment
+						{type === "edit" ? "Edit" : "Add"} Employment
 					</h1>
 					<img
 						className="mr-8 items-center mt-2 h-8  cursor-pointer"
@@ -535,7 +545,7 @@ const AddEmployment = ({ onClose, type }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												{...register("qualification", {
+												{...register("empType", {
 													required: true,
 												})}
 											>

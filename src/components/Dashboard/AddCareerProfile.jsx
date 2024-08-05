@@ -16,6 +16,10 @@ import * as Yup from "yup";
 import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
+// import getApiData from "../../actions/LoginScreens/getApiData";
+import { id } from "date-fns/locale";
+import getCities from "../../actions/LoginScreens/getCities";
+// import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
 
 const AddCareerProfile = ({ onClose }) => {
 	const { register, handleSubmit } = useForm();
