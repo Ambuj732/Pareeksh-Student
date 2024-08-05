@@ -3,8 +3,10 @@ import close from "../../assets/Dashboard/close.png";
 import { IoPerson } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import addProject from "../../actions/Dashboard/addITSkill";
+import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
 
 const EditSkill = ({ onClose, skillData, mainData }) => {
+    console.log("skillData: ", skillData,);
     const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
             software_name: skillData?.software_name || "",
@@ -27,9 +29,10 @@ const EditSkill = ({ onClose, skillData, mainData }) => {
     const onSubmit = async (data) => {
         console.log("Edited Data: ", data);
         try {
-            const combinedData = { ...mainData, ...data };
+            const combinedData = { ...mainData, ...data  , id_it_skill : skillData?.id };
             console.log("Combined Data: ", combinedData);
-            await addProject(combinedData);
+           const response = await updateDataCommon('studentProfile/addITSkill', combinedData);
+           console.log("Response: ", response);
 
             onClose();
         } catch (error) {

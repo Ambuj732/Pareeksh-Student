@@ -7,6 +7,7 @@ import marital from "../../assets/Dashboard/marital.png";
 import category from "../../assets/Dashboard/category.png";
 
 const EditProject = ({ onClose, projectData, mainData }) => {
+    
     return (
         <div className="flex min-h-screen w-screen items-center justify-center fixed top-0 left-0 z-50 bg-black bg-opacity-50">
             <div className="w-1/2 h-2/3 rounded-md shadow-md bg-white">
