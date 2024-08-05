@@ -115,27 +115,27 @@ const AddCareerProfile = ({ onClose }) => {
 
 
   const getCitiesHandler = async (id) => {
-		try {
-			//console.log("Id :: ", id);
-			const data = {
-				id_state: id,
-			};
-			const response = await getCities(data);
-			setCityList(response?.data?.cities);
-			//console.log("Cities :: ", response?.data?.cities);
-		} catch (error) {
-			//onsole.log("Error while getting cities :: ", error);
-		}
-	};
+    try {
+      //console.log("Id :: ", id);
+      const data = {
+        id_state: id,
+      };
+      const response = await getCities(data);
+      setCityList(response?.data?.cities);
+      //console.log("Cities :: ", response?.data?.cities);
+    } catch (error) {
+      //onsole.log("Error while getting cities :: ", error);
+    }
+  };
 
   const handleStateChange = (e) => {
     console.log("State :: ", e.target.value);
-		setSelectState(e.target.value);
-		getCitiesHandler(e.target.value);
-		//console.log("State :: ", e.target.value);
-	};
+    setSelectState(e.target.value);
+    getCitiesHandler(e.target.value);
+    //console.log("State :: ", e.target.value);
+  };
 
-  const handleRoleCategory = (id)=>{
+  const handleRoleCategory = (id) => {
     setSelectJobRole(id);
     getJobRoles(id);
   }
@@ -155,7 +155,7 @@ const AddCareerProfile = ({ onClose }) => {
     try {
       console.log(formData);
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
- 
+
       // id_self_student={{id_self_student}}&usercode={{usercode}}&id_role_category=1&id_job_role=1&desired_job_type=1&id_industry=3&expected_salary=9.0&shift=1&id_department=2&id_employment_type=3&id_city=24092&id_state=3687
       const data = {
         usercode: user?.usercode,
@@ -177,7 +177,7 @@ const AddCareerProfile = ({ onClose }) => {
         console.log(response);
         onClose();
       } else {
-        console.log("Error while updating profile :: ",response.data.message);
+        console.log("Error while updating profile :: ", response.data.message);
       }
     } catch (error) {
       console.log("Error while editing profile :: ", error);
@@ -330,7 +330,7 @@ const AddCareerProfile = ({ onClose }) => {
                     id="qualification_select"
                     className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                     defaultValue=""
-                  
+
                     {...register("role_category", { required: true })}
                     onChange={(e) => handleRoleCategory(e.target.value)}
                   >
@@ -490,7 +490,7 @@ const AddCareerProfile = ({ onClose }) => {
                     {...register("shift", { required: true })}
                   >
                     <option value="" disabled hidden>
-                     Select
+                      Select
                     </option>
                     {shift?.map((shiftName) => (
                       <option key={shiftName?.id} value={shiftName.id}>
@@ -529,7 +529,7 @@ const AddCareerProfile = ({ onClose }) => {
                     <option value="1" disabled hidden>
                       1 lakhs
                     </option>
-                   {expectedSalary?.map((expectedSalaryName) => (
+                    {expectedSalary?.map((expectedSalaryName) => (
 
                       <option
                         key={expectedSalaryName?.id}
@@ -537,7 +537,7 @@ const AddCareerProfile = ({ onClose }) => {
                       >
                         {expectedSalaryName.expected_ctc}
                       </option>
-                   ))}
+                    ))}
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
                     {/* <FaAngleDown /> */}
@@ -566,17 +566,17 @@ const AddCareerProfile = ({ onClose }) => {
                     id="qualification_select"
                     className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                     defaultValue=""
-                   
+
                     {...register("state", { required: true })}
                     onChange={(e) => handleStateChange(e)}
                   >
                     <option value="" disabled hidden>
-                     State
+                      State
                     </option>
                     {stateList?.map((state) => (
-                      <option 
-                      key={state?.id_state}
-                      value={state.id_state}>
+                      <option
+                        key={state?.id_state}
+                        value={state.id_state}>
                         {state.state}
                       </option>
                     ))}

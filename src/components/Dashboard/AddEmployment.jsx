@@ -26,8 +26,8 @@ import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 import { useSelector } from "react-redux";
 
-const AddEmployment = ({ onClose, type , data }) => {
-	const { register, handleSubmit , getValues , formState: { errors } } = useForm();
+const AddEmployment = ({ onClose, type, data }) => {
+	const { register, handleSubmit, getValues, formState: { errors } } = useForm();
 	console.log("data", errors);
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
@@ -40,7 +40,7 @@ const AddEmployment = ({ onClose, type , data }) => {
 	const [departments, setDepartments] = useState([]);
 	const [selectedCity, setSelectedCity] = useState("");
 	const [town, setTown] = useState([]);
-	const users = JSON.parse(localStorage.getItem("ps_loguser"));
+	const [isCurrentEmployer, setIsCurrentEmployer] = useState();
 
 	const preData = async () => {
 		try {
@@ -79,7 +79,7 @@ const AddEmployment = ({ onClose, type , data }) => {
 			// id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=0&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&notice_period=3&salary=24&id_student_employment=13&date_of_exit=2023-06-23
 			const data1 = {
 				id_self_student: users?.id_self_student,
-				usercode : users?.usercode,
+				usercode: users?.usercode,
 				id_employment_type: formData?.empType,
 				employer_name: formData?.employerName,
 				id_city: selectedCity,
@@ -91,12 +91,12 @@ const AddEmployment = ({ onClose, type , data }) => {
 				degignation: formData?.designation,
 				id_state: selectedState,
 				id_town: 6,
-				current_employer:  0,
+				current_employer: 0,
 				notice_period: 3,
 				salary: 13,
-				
+
 			};
-			if (type==="edit") {
+			if (type === "edit") {
 				data1.id_student_employment = data?.id
 			}
 			// console.log(data);
@@ -153,7 +153,7 @@ const AddEmployment = ({ onClose, type , data }) => {
 			<div className="w-1/2 h-2/3 rounded-md shadow-md ">
 				<div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
 					<h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-					{type==="edit" ? "Edit" : "Add"} Employment
+						{type === "edit" ? "Edit" : "Add"} Employment
 					</h1>
 					<img
 						className="mr-8 items-center mt-2 h-8  cursor-pointer"
@@ -796,14 +796,14 @@ const AddEmployment = ({ onClose, type , data }) => {
 							</>
 						)}
 						<button
-						type="submit"
-						className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
-					>
-						Save
-					</button>
+							type="submit"
+							className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
+						>
+							Save
+						</button>
 					</form>
 					{/* <div className="w-full flex items-center justify-center"> */}
-					
+
 					{/* </div> */}
 				</div>
 			</div>
