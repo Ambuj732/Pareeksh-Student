@@ -458,7 +458,7 @@ const EditProfileUpdate = ({ onClose }) => {
                       id="qualification_select"
                       className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                       defaultValue=""
-					  {...registerForm3("state", { required: true })}
+                      {...registerForm3("state", { required: true })}
                       onChange={(e) => {
                         console.log(e.target);
                         setSelectedState(e.target.value);
@@ -498,7 +498,7 @@ const EditProfileUpdate = ({ onClose }) => {
                       id="city"
                       className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                       defaultValue=""
-					 
+
                       {...registerForm3("city", {
                         required: true,
                       })}
