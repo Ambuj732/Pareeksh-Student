@@ -5,9 +5,14 @@ import ProfileUpdate from "./ProfileUpdate";
 import openbook from "../../assets/Dashboard/openbook.png";
 import getEmployments from "../../actions/Dashboard/getEmployments";
 import formatDate from "../../utils/formatDate";
+import AddEmployment from "./AddEmployment";
 
 function Employment() {
   const [employments, setEmployments] = useState([]);
+  const [isAddEmployment , setIsAddEmployment] = useState(false)
+  const [employmentData , setEmploymentData] = useState({})
+
+
 
   const getEmploymentHandler = async () => {
     try {
@@ -23,6 +28,11 @@ function Employment() {
       console.log("Error while getting employments :: ", error);
     }
   };
+
+  const handleClick = (data) =>{
+    setIsAddEmployment(true)
+    setEmploymentData(data)
+  }
 
   useEffect(() => {
     getEmploymentHandler();
@@ -42,7 +52,7 @@ function Employment() {
               </div>
               <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8">
                 <img src={pen} alt="" className="h-5" />
-                <span className="text-smf font-normal">Edit</span>
+                <span className="text-smf font-normal" onClick={() => handleClick(employment)} >Edit</span>
               </div>
             </div>
           </div>
@@ -156,6 +166,9 @@ function Employment() {
           </div>
         </div>
       ))}
+      {isAddEmployment && (
+					<AddEmployment onClose={()=>{setIsAddEmployment(false)}} type={"edit"} data={employmentData} />
+				)}
     </div>
   );
 }

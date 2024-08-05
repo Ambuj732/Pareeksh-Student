@@ -193,7 +193,7 @@ function ProfileUpdate() {
 					/>
 				</div>
 			</div>
-			<div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
+			{/* <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
 				<span>Desired Work Location</span>
 			</div>
 			<div className="flex items-center">
@@ -286,7 +286,7 @@ function ProfileUpdate() {
 						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
 					/>
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 }

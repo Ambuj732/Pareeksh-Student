@@ -62,79 +62,23 @@ const AddEducation = ({ onClose, type, educationData }) => {
 
   useEffect(() => {
     if (type === "edit") {
-      // board_name
-      // :
-      // "Board-2"
-      // city
-      // :
-      // "Sidhi"
-      // course_name
-      // :
-      // "B.Tech and BE"
-      // highest_qualification
-      // :
-      // "Graduation"
-      // id
-      // :
-      // 32
-      // id_board
-      // :
-      // 2
-      // id_course
-      // :
-      // 1
-      // id_institute
-      // :
-      // 2
-      // id_qual
-      // :
-      // 4
-      // id_specilization
-      // :
-      // 1
-      // institute_name
-      // :
-      // "Institute-2"
-      // percentage
-      // :
-      // 99
-      // pincode
-      // :
-      // 999902
-      // specialization
-      // :
-      // "Computer Science Engineering"
-      // state
-      // :
-      // "Madhya Pradesh"
-      // town
-      // :
-      // "Town-2"
-      // year_of_passing
-      // :
-      // 2001
-      // console.log("educationData", educationData);
-      // setValue("id_institute", educationData?.id_institute )
-	  console.log("educationData", educationData);
-      setValue("specialization", educationData?.specialization);
-      setValue("year_of_passing", educationData?.year_of_passing);
-      setValue("percentage", educationData?.percentage);
-      setValue("board_name", educationData?.board_name);
-      setValue("city", educationData?.city);
-      setValue("state", educationData?.state);
-      setValue("town", educationData?.town);
-      setValue("pincode", educationData?.pincode);
-      setValue("institute_name", educationData?.institute_name);
-      setValue("course_name", educationData?.course_name);
-      setValue("highest_qualification", educationData?.highest_qualification);
-      setValue("id", educationData?.id);
-      setValue("id_board", educationData?.id_board);
-      setValue("id_institute", educationData?.id_institute);
-      setValue("id_qual", educationData?.id_qual);
-      setValue("id_specilization", educationData?.id_specilization);
-      setValue("id_course", educationData?.id_course);
-      setSelectedCourse(educationData?.id_course);
+      console.log("educationData", educationData);
+      // setValue("specialization", educationData?.specialization);
+      // setValue("year_of_passing", educationData?.year_of_passing);
+      // setValue("percentage", educationData?.percentage);
+      // setValue("board_name", educationData?.board_name);
+      // setValue("city", educationData?.city);
+      // setValue("state", educationData?.state);
+      // setValue("pincode", educationData?.pincode);
+      // setValue("institute_name", educationData?.institute_name);
+      // setValue("course_name", educationData?.course_name);
+      // setValue("highest_qualification", educationData?.highest_qualification);
+      // setValue("id_institute", educationData?.id_institute);
+      // setValue("id_specilization", educationData?.id_specilization);
+      // setValue("id_course", educationData?.id_course);
+      
     }
+
     preData();
   }, []);
 
@@ -182,19 +126,25 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const addEducationHandler = async (formData) => {
     try {
       console.log(formData);
-      const data = {
+      let  data = {
         id_self_student: user?.id_self_student,
         usercode: user?.usercode,
         year_of_passing: Number(formData?.year_of_passing),
-        id_qual: Number(formData?.high_qual),
-        id_institute: Number(formData?.institute),
-        // id_student_qualification: 16,
+        id_qual: Number(formData?.highest_qualification),
+        id_institute: Number(formData?.institute_name),
         id_course: Number(selectedCourse),
         percentage: Number(formData?.percentage),
         id_specilization: Number(formData?.specialization),
 
-        id_board: Number(formData?.board),
+        id_board: Number(formData?.board_name),
       };
+      if (type === "edit") {
+        data = {
+          ...data,
+          id: educationData?.id,
+        };
+      }
+        
       console.log(data);
       const response = await addEducation(data);
       console.log("res1", response);
@@ -224,9 +174,9 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 <select
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                  defaultValue={""}
+                  defaultValue={selectedCourse}
                   onChange={(e) => setSelectedCourse(e.target.value)}
-				  {...register("course_name", { required: true })}
+                  // {...register("course_name", { required: true })}
                 >
                   <option value="" disabled hidden>
                     Select
@@ -477,7 +427,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 <select
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                  defaultValue={""}
+                  defaultValue={selectedState}
                   onChange={(e) => setSelectedState(e.target?.value)}
                 >
                   <option value="" disabled hidden>

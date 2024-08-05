@@ -26,13 +26,7 @@ import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 import { useSelector } from "react-redux";
 
-const AddEmployment = ({ onClose }) => {
-	const user = useSelector((state) => state?.auth?.userData);
-	console.log(user);
-	const studentProfile = useSelector(
-		(state) => state?.studentProfile?.studentProfileData
-	);
-
+const AddEmployment = ({ onClose, type, data }) => {
 	const { register, handleSubmit } = useForm();
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
@@ -81,9 +75,6 @@ const AddEmployment = ({ onClose }) => {
 	const addEmploymentHandler = async (formData) => {
 		try {
 			console.log(formData);
-			console.log(user);
-			console.log(studentProfile);
-			console.log(town);
 			const data = {
 				id_employment_type: 2,
 				employer_name: formData?.employerName,
@@ -491,6 +482,11 @@ const AddEmployment = ({ onClose }) => {
 												id="qualification_select"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
+												onChange={(e) =>
+													handleSelectQualification(
+														e.target.value
+													)
+												}
 												{...register("industry", {
 													required: true,
 												})}
