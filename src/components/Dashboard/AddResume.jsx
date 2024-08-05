@@ -16,149 +16,252 @@ import * as Yup from "yup";
 import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
-import addApiData from "../../actions/Dashboard/addResumeHeading";
+import updateResumeHeadline from "../../actions/Dashboard/updateResumeHeadline";
+import { useSelector } from "react-redux";
+import updateResume from "../../actions/Dashboard/updateResume";
+import RecordVideoResume from "../../components/Dashboard/RecordVideoResume";
 
 const AddResume = ({ onClose }) => {
-  const { register, handleSubmit } = useForm();
-  const {register:register2, handleSubmit:handleSubmit2} = useForm();
-  const [highestQualication, setHighestQualication] = useState([]);
-  const [errors, setErrors] = useState({});
-  const users = JSON.parse(localStorage.getItem("ps_loguser"));
-  const [file, setFile] = useState(null);
+	const user = useSelector((state) => state?.auth?.userData);
+	console.log(user);
+	const studentProfile = useSelector(
+		(state) => state?.studentProfile?.studentProfileData
+	);
+	const { register, handleSubmit } = useForm();
+	const [highestQualication, setHighestQualication] = useState([]);
+	const [errors, setErrors] = useState({});
+	const [videoResumeModal, setVideoResumeModal] = useState(false);
+	const [videoResume, setVideoResume] = useState("");
 
-  const preData = async () => {
-    try {
-      const highQual = await getHighQualList();
-      setHighestQualication(highQual?.data?.high_qual);
-    } catch (error) {
-      console.log(
-        "Error while getting highest qualification or states :: ",
-        error
-      );
-    }
-  };
+	const videoResumeModalOpen = () => {
+		setVideoResumeModal(true);
+	};
 
-  const handleFormSubmit = async (formData) => {
-    try {
-      console.log(formData);
-      // ?id_self_student={{id_self_student}}&usercode={{usercode}}&id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=1&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&id_student_employment=13&notice_period=3&salary=24
-      const data = {
-        id_self_student: users?.id_self_student,
-        usercode: users?.usercode,
-        resume_headlines: formData?.heading,
-      };
-      // console.log(data);
-      const response = await addApiData(data, "updateResumeHeadline");
-      console.log(response);
-    } catch (error) {
-      console.log("Error while adding employment :: ", error);
-    }
-  };
+	const videoResumeModalClose = () => {
+		setVideoResumeModal(false);
+	};
 
-  const handleUpdateResume = async (formData) => {
-    try {
-      console.log(formData);
-      const data = {};
-    } catch (error) {
-      console.log("Error while adding employment :: ", error);
-    }
-  };
+	const {
+		register: registerResumeHeadline,
+		handleSubmit: handleSubmitResumeHeadline,
+	} = useForm();
 
-  useEffect(() => {
-    preData();
-  }, []);
-  return (
-    <div className="flex h-screen w-screen items-center justify-center  fixed top-0 left-0 z-50 bg-black bg-opacity-50 ">
-      <div className="w-1/2 h-2/3 rounded-md shadow-md ">
-        <div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
-          <h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-            Add Resume
-          </h1>
-          <img
-            className="mr-8 items-center mt-2 h-8  cursor-pointer"
-            src={close}
-            onClick={onClose}
-          />
-        </div>
-        <div className="overflow-y-scroll h-[30%] bg-white">
-          <form
-            className="flex flex-col"
-            onSubmit={handleSubmit(handleFormSubmit)}
-          >
-            <div className=" px-5 mt-7">
-              <div className="relative h-12 w-full">
-                <div>
-                  <input
-                    type="text"
-                    id="floating_filled"
-                    className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-grey-500 focus:outline-none focus:ring-0 peer"
-                    placeholder=""
-                    {...register("heading", {
-                      required: true,
-                    })}
-                  />
-                  <div
-                    htmlFor="floating_filled"
-                    className="absolute text-base pl-5 text-[#f1f2f3] dark:text-[#8b8e93] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#6c6d6f] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
-                  >
-                    <IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
-                    <label htmlFor="" className="pl-2">
-                      Resume Headline
-                    </label>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        
-        {/* <div className="overflow-y-scroll h-[30%] bg-white">
-      <form
-        className="flex flex-col"
-        onSubmit={handleSubmit2(handleUpdateResume)}
-      >
-        <div className="px-5 mt-7">
+	const { register: registerResume, handleSubmit: handleSubmitResume } =
+		useForm();
 
-          <div className="relative h-12 w-full">
-           
-            <div className="mt-4">
-              <select
-                id="file_type_select"
-                className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                defaultValue=""
-                {...register2("fileType", { required: true })}
-              >
-                <option value="" disabled hidden>
-                  Select File Type
-                </option>
-                <option value="Document">Document</option>
-                <option value="PDF">PDF</option>
-                <option value="Video">Video</option>
-              </select>
-            </div>
+	const {
+		register: registerVideoResume,
+		handleSubmit: handleSubmitVideoResume,
+	} = useForm();
 
+	const preData = async () => {
+		try {
+			const highQual = await getHighQualList();
+			setHighestQualication(highQual?.data?.high_qual);
+		} catch (error) {
+			console.log(
+				"Error while getting highest qualification or states :: ",
+				error
+			);
+		}
+	};
 
+	useEffect(() => {
+		preData();
+	}, []);
 
+	const updateResumeHeadlineHandler = async (formData) => {
+		try {
+			console.log(formData);
+			const data = {
+				id_self_student: user?.id_self_student,
+				usercode: user?.usercode,
+				resume_headlines: formData?.headline,
+			};
+			console.log(data);
+			const response = await updateResumeHeadline(data);
+			console.log(response);
+		} catch (error) {
+			console.log("Error while updating resume headline :: ", error);
+		}
+	};
 
-            <button
-              type="submit"
-              className="mt-5 mb-4 rounded-full bg-blue-900 px-8 py-1 text-white"
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      </form>
-    </div> */}
-      </div>
-    </div>
-  );
+	function fileToBase64(file) {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+
+			reader.onloadend = () => {
+				resolve(reader.result);
+			};
+
+			reader.onerror = reject;
+
+			reader.readAsDataURL(file);
+		});
+	}
+
+	const updateResumeHandler = async (formData) => {
+		try {
+			console.log(formData);
+			const originalFile = formData?.resumeFile[0];
+			const file = await fileToBase64(formData?.resumeFile[0]);
+			let docType = 0;
+			if (originalFile && originalFile.type === "application/pdf") {
+				docType = 2;
+			} else if (
+				originalFile.type === "application/msword" ||
+				originalFile.type ===
+					"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+			) {
+				docType = 1;
+			}
+			const data = {
+				id_self_student: user?.id_self_student,
+				usercode: user?.usercode,
+				file_name: formData?.resumeFile[0].name,
+				doc_type: docType,
+				file: file,
+			};
+			console.log(data);
+			const response = await updateResume(data);
+			console.log(response);
+		} catch (error) {
+			console.log("Error while updating resume :: ", error);
+		}
+	};
+
+	const updateVideoResumeHandler = async () => {
+		try {
+			const data = {
+				id_self_student: user?.id_self_student,
+				usercode: user?.usercode,
+				file_name: `VideoResume-${Math.floor(
+					Math.random() * 10000
+				)}.mp4`,
+				doc_type: 3,
+				file: videoResume,
+			};
+			console.log(data);
+			const response = await updateResume(data);
+			console.log(response);
+		} catch (error) {
+			console.log("Error while updating resume :: ", error);
+		}
+	};
+
+	return (
+		<div className="flex h-screen w-screen items-center justify-center fixed top-0 left-0 z-50 bg-black bg-opacity-50 ">
+			<div className="w-1/2 h-2/3 rounded-md shadow-md">
+				<div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
+					<h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
+						Add Resume
+					</h1>
+					<img
+						className="mr-8 items-center mt-2 h-8  cursor-pointer"
+						src={close}
+						onClick={onClose}
+					/>
+				</div>
+				<div className="overflow-y-scroll h-[90%] bg-white">
+					<div>
+						<h1 className="px-5 mt-4 font-semibold">
+							Add Resume Headline
+						</h1>
+					</div>
+					<hr className="border-black mt-1 mx-4"></hr>
+					<form
+						onSubmit={handleSubmitResumeHeadline(
+							updateResumeHeadlineHandler
+						)}
+						className="flex flex-col gap-4"
+					>
+						<div className=" px-5 mt-7">
+							<div className="relative h-12 w-full">
+								<div>
+									<input
+										type="text"
+										id="floating_filled"
+										className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-grey-500 focus:outline-none focus:ring-0 peer"
+										placeholder=""
+										{...registerResumeHeadline("headline", {
+											required: true,
+										})}
+									/>
+									<div
+										htmlFor="floating_filled"
+										className="absolute text-base pl-5 text-[#f1f2f3] dark:text-[#8b8e93] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#6c6d6f] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+									>
+										<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+										<label
+											htmlFor=""
+											className="pl-2 text-black"
+										>
+											Resume Headline
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button
+							type="submit"
+							className="text-white font-sans text-lg  px-8 py-1 rounded-full bg-blue-800 w-1/4 mx-5"
+						>
+							Save
+						</button>
+					</form>
+					<div>
+						<h1 className="px-5 mt-4 font-semibold">Add Resume</h1>
+					</div>
+					<hr className="border-black mt-1 mx-4"></hr>
+					<form
+						onSubmit={handleSubmitResume(updateResumeHandler)}
+						className="flex flex-col gap-2"
+					>
+						<div className="border mx-5 mt-3 h-12 flex items-center justify-center">
+							<input
+								type="file"
+								id="resumeFile"
+								{...registerResume("resumeFile")}
+							/>
+							<label
+								htmlFor="resumeFile"
+								className="text-[#1C4481]"
+							>
+								Upload Resume (docs/pdf)
+							</label>
+						</div>
+						<button
+							type="submit"
+							className="text-white font-sans text-lg  px-8 py-1 rounded-full bg-blue-800 w-1/4 mx-5"
+						>
+							Save
+						</button>
+					</form>
+					<div>
+						<h1 className="px-5 mt-4 font-semibold">
+							Add Video Resume
+						</h1>
+					</div>
+					<hr className="border-black mt-1 mx-4"></hr>
+					<div className="flex flex-col gap-2">
+						<div
+							onClick={videoResumeModalOpen}
+							className="h-14 mx-5 border rounded-md text-white text-xl font-semibold cursor-pointer mt-3 bg-[#1C4481] flex justify-center items-center mb-4"
+						>
+							<span>Record</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			{videoResumeModal && (
+				<RecordVideoResume
+					videoResumeModalClose={videoResumeModalClose}
+					setVideoResume={setVideoResume}
+					updateVideoResumeHandler={updateVideoResumeHandler}
+				/>
+			)}
+		</div>
+	);
 };
 
 export default AddResume;

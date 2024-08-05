@@ -115,7 +115,7 @@ function VerifyProfile() {
 								userData
 							);
 						} else if (settings.entered_psyc == 1) {
-							response = await verifyProfileTheory2(
+							response = await verifyProfilePsychometric(
 								formData,
 								geoAddress,
 								latlong,
@@ -214,10 +214,7 @@ function VerifyProfile() {
 									vivaexam = 0;
 									theoryexam = 1;
 								}
-								if (
-									settings.camera == 1 &&
-									this.globals.theoryexam == 1
-								) {
+								if (settings.camera == 1 && theoryexam == 1) {
 									//var parms = this.globals.getRandUrl('upload-idpic');
 									navigate("/login-with-passcode/upload-id");
 								} else {

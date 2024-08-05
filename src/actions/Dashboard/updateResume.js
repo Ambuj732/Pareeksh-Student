@@ -1,28 +1,27 @@
 import axios from "axios";
 import { PUBLIC_REST_API_ENDPOINT, BEARER_TOKEN } from "../../constants";
 
-
-const updateResume = async (data , formData) => {
+const updatePersonal = async (data) => {
 	try {
-		const queryString = Object.keys(data)
-			.map(
-				(key) =>
-					`${encodeURIComponent(key)}=${encodeURIComponent(
-						data[key]
-					)}`
-			)
-			.join("&");
-			console.log(queryString)
+		// const formData = new FormData();
+
+		// for (const key in data) {
+		// 	formData.append(key, data[key]);
+		// }
+
+		// for (const pair of formData?.entries()) {
+		// 	console.log(pair[0], pair[1]);
+		// }
+
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
-			formData,
+			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentProfile/uploadResumeWeb`,
+			data,
 			{
 				headers: {
 					Authorization: `Bearer ${BEARER_TOKEN}`,
 				},
 			}
 		);
-		
 		console.log("Update Personal Response :: ", response);
 		return response;
 	} catch (error) {
@@ -30,4 +29,4 @@ const updateResume = async (data , formData) => {
 	}
 };
 
-export default updateResume;
+export default updatePersonal;

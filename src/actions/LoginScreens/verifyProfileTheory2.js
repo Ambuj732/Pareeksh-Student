@@ -5,7 +5,7 @@ const verifyProfileTheory2 = async (formdata,geoAddress,latlong,exam_id,userData
 	console.log(userData);
 	try {
 		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/createAutoAccount`,
+			`${PUBLIC_REST_API_ENDPOINT}/exam/theorySecond/verifyStudentWeb`,
 			{
 				usercode: userData['usercode'],
 				user_id: userData['userid'],
