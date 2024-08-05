@@ -21,22 +21,23 @@ function EducationProfile() {
       const response = await getEducations(data);
       if (response?.data?.code === 1000)
         setEducations(response.data.qualifications);
-      console.log(response.data.qualifications);
+      console.log('kk', response.data.qualifications);
     } catch (error) {
       console.log("Error while getting education :: ", error);
     }
   };
 
-  const handleEdit =(data)=>{
+  const handleEdit = (data) => {
     console.log(data);
-   
+
+
   }
   const handleSave = (data) => {
     setModelOpen(false);
   };
   useEffect(() => {
     getEducationHandler();
-  }, [ ]);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -47,9 +48,9 @@ function EducationProfile() {
         >
           <div className="flex justify-between text-[#1C4481] font-medium px-8 text-lg h-16 items-center rounded-t-xl bg-[#EAF2FE] ">
             <span>{education?.highest_qualification}</span>
-            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8" onClick={()=>{
-               setEducationData(education);
-               setModelOpen(true);
+            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8" onClick={() => {
+              setEducationData(education);
+              setModelOpen(true);
             }}>
               <img src={pen} alt="" className="h-5" />
               <span className="text-smf font-normal">Edit</span>
@@ -125,7 +126,7 @@ function EducationProfile() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">District</span>
                   <div className="font-medium text-base">
-                   {education.city}
+                    {education.city}
                   </div>
                 </div>
               </div>
@@ -186,14 +187,14 @@ function EducationProfile() {
         </div>
       </div> */}
       {modelOpen && (
-					<AddEducation
+        <AddEducation
           educationData={educationData}
-						onClose={() => setModelOpen(false)}
-						onSave={handleSave}
-            type={"edit"}
-					/>
-				)}
-      
+          onClose={() => setModelOpen(false)}
+          onSave={handleSave}
+          type={"edit"}
+        />
+      )}
+
     </div>
   );
 }
