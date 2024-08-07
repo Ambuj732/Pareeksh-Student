@@ -5,72 +5,38 @@ import marital from "../../assets/Dashboard/marital.png";
 import category from "../../assets/Dashboard/category.png";
 import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
 
-const EditProject = ({ onClose, projectData, mainData }) => {
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        watch,
-    } = useForm({
+const EditCertificate = ({ onClose, certificateData, mainData }) => {
+    console.log("Certificate Data: ", certificateData);
+    const { register, handleSubmit, setValue, watch } = useForm({
         defaultValues: {
-            project_name: projectData?.project_name || "",
-            project_description: projectData?.project_description || "",
-            role_in_project: projectData?.role_in_project || "",
-            project_start_date: projectData?.project_start_date?.split('T')[0] || "",
-            project_end_date: projectData?.project_end_date?.split('T')[0] || "",
-        },
+            cert_name: certificateData?.cert_name || "",
+            cert_provider: certificateData?.cert_provider || "",
+            cert_completion_id: certificateData?.cert_completion_id || "",
+            cert_url: certificateData?.cert_url || "",
+            end_year: certificateData?.end_year || "",
+        }
     });
 
-    // Function to calculate duration
-    function calculateDuration(startDate, endDate) {
-        if (!startDate || !endDate) return '';
-
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        // Calculate the difference in milliseconds
-        const durationMs = Math.abs(end - start);
-
-        // Convert milliseconds to days
-        const days = Math.floor(durationMs / (1000 * 60 * 60 * 24));
-
-        if (days > 30) {
-            // Convert days to months
-            const months = Math.floor(days / 30);
-            return months.toString() + " month" + (months > 1 ? "s" : "");
-        } else {
-            return days.toString() + " day" + (days > 1 ? "s" : "");
-        }
-    }
-
-    // Watch the start and end dates
-    const startDate = watch("project_start_date");
-    const endDate = watch("project_end_date");
-
-    // Calculate duration
-    const duration = calculateDuration(startDate, endDate);
-
     useEffect(() => {
-        if (projectData) {
-            setValue("project_name", projectData?.project_name);
-            setValue("project_description", projectData?.project_description);
-            setValue("role_in_project", projectData?.role_in_project);
-            setValue("project_start_date", projectData?.project_start_date?.split('T')[0]);
-            setValue("project_end_date", projectData?.project_end_date?.split('T')[0]);
+        if (certificateData) {
+            setValue("cert_name", certificateData?.cert_name);
+            setValue("cert_provider", certificateData?.cert_provider);
+            setValue("cert_completion_id", certificateData?.cert_completion_id);
+            setValue("cert_url", certificateData?.cert_url);
+            setValue("end_year", certificateData?.end_year || "");
         }
-    }, [projectData, setValue]);
+    }, [certificateData, setValue]);
 
     const onSubmit = async (data) => {
-        console.log("Edited Data: ", data);
-        try {
-            const combinedData = { ...mainData, ...data, id_student_project: projectData?.id };
-            console.log("Combined Data: ", combinedData);
-            const response = await updateDataCommon('studentProfile/addProject', combinedData);
-            console.log("Response: ", response);
+        const combinedData = { ...mainData, ...data, id_certificate: certificateData?.id };
 
+        console.log("Combined Data: ", combinedData);
+
+        try {
+            // const response = await updateDataCommon('studentProfile/addCertificate', combinedData);
             onClose();
         } catch (error) {
-            console.error("Failed to update project: ", error);
+            console.error("Failed to update certificate: ", error);
         }
     };
 
@@ -79,7 +45,7 @@ const EditProject = ({ onClose, projectData, mainData }) => {
             <div className="w-1/2 h-2/3 rounded-md shadow-md bg-white">
                 <div className="flex justify-between items-center bg-blue-100 rounded-t-md h-12">
                     <h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-                        Edit Project
+                        Edit Certificate
                     </h1>
                     <img
                         className="mr-8 items-center mt-2 h-8 cursor-pointer"
@@ -94,23 +60,23 @@ const EditProject = ({ onClose, projectData, mainData }) => {
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={marital} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">Project Name</span>
+                                    <span className="text-sm text-[#1C4481]">Certificate Name</span>
                                 </div>
                                 <input
                                     type="text"
                                     className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    {...register("project_name", { required: "Project Name is required" })}
+                                    {...register("cert_name", { required: "Certificate Name is required" })}
                                 />
                             </div>
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={category} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">Role in Project</span>
+                                    <span className="text-sm text-[#1C4481]">Certificate Provider</span>
                                 </div>
                                 <input
                                     type="text"
                                     className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    {...register("role_in_project", { required: "Role in Project is required" })}
+                                    {...register("cert_provider", { required: "Provider is required" })}
                                 />
                             </div>
                         </div>
@@ -118,23 +84,23 @@ const EditProject = ({ onClose, projectData, mainData }) => {
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={category} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">Project Description</span>
+                                    <span className="text-sm text-[#1C4481]">Certificate Completion Id</span>
                                 </div>
                                 <input
                                     type="text"
                                     className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    {...register("project_description", { required: "Project Description is required" })}
+                                    {...register("cert_completion_id", { required: "Completion Id is required" })}
                                 />
                             </div>
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={category} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">Start Date</span>
+                                    <span className="text-sm text-[#1C4481]">Certificate URL</span>
                                 </div>
                                 <input
-                                    type="date"
+                                    type="url"
                                     className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    {...register("project_start_date", { required: "Start Date is required" })}
+                                    {...register("cert_url", { required: "URL is required" })}
                                 />
                             </div>
                         </div>
@@ -142,24 +108,14 @@ const EditProject = ({ onClose, projectData, mainData }) => {
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={category} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">End Date</span>
+                                    <span className="text-sm text-[#1C4481]">Completion Year</span>
                                 </div>
                                 <input
-                                    type="date"
+                                    type="number"
+                                    min="1900"
+                                    max="2100"
                                     className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    {...register("project_end_date", { required: "End Date is required" })}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2 w-1/2">
-                                <div className="flex items-center gap-2">
-                                    <img src={category} alt="" className="h-4" />
-                                    <span className="text-sm text-[#1C4481]">Project Duration</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    value={duration || 'N/A'}
-                                    className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md font-medium"
-                                    readOnly
+                                    {...register("end_year", { required: "Completion Year is required" })}
                                 />
                             </div>
                         </div>
@@ -176,6 +132,6 @@ const EditProject = ({ onClose, projectData, mainData }) => {
             </div>
         </div>
     );
-};
+}
 
-export default EditProject;
+export default EditCertificate;

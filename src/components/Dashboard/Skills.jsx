@@ -11,6 +11,7 @@ import getPublicLinks from "../../actions/Dashboard/getPublicLinks";
 import pen from "../../assets/Dashboard/pen.png";
 import EditSkill from "./EditSkill";
 import EditProject from "./EditProject";
+import EditCertificate from "./EditCertificate";
 
 function Skills() {
   const [skills, setSkills] = useState([]);
@@ -21,8 +22,10 @@ function Skills() {
   const [publicLinks, setPublicLinks] = useState([]);
   const [openModalSkill, setopenModalSkill] = useState(false);
   const [openModalProject, setopenModalProject] = useState(false);
+  const [openModalCertificate, setopenModalCertificate] = useState(false);
   const [skillData, setSkillData] = useState({});
   const [projectData, setProjectData] = useState({});
+  const [certificateData, setCertificateData] = useState({});
   const [mainData, setMainData] = useState({});
 
   const getITSkillsHandler = async () => {
@@ -376,8 +379,8 @@ function Skills() {
               className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
               onClick={() => {
                 console.log(certificate.id, "certificate")
-                // setopenModalSkill(true);
-                // setSkillData(skill);
+                setopenModalCertificate(true);
+                setCertificateData(certificate);
               }}
             >
               <img src={pen} alt="Edit" className="h-5" />
@@ -402,7 +405,7 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-            <div className="flex flex-col gap-2 w-1/3">
+            {/* <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
                 <span className="text-sm text-[#1C4481]">Role in Project</span>
@@ -412,9 +415,7 @@ function Skills() {
                 type="text"
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
-            </div>
-          </div>
-          <div className="flex items-center">
+            </div> */}
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -429,6 +430,9 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
+          </div>
+          <div className="flex items-center">
+
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -443,8 +447,6 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-          </div>
-          <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -459,6 +461,9 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
+          </div>
+          <div className="flex items-center">
+
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -469,12 +474,12 @@ function Skills() {
               <input
                 disabled
                 type="text"
-                value={certificate?.end_month + certificate?.end_year}
+                value={certificate?.end_year}
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
           </div>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -485,10 +490,11 @@ function Skills() {
               <input
                 disabled
                 type="text"
+                value={certificate?.end_year}
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex gap-2 items-center">
             <span>This is certificate does not expire</span>
             <input
@@ -516,6 +522,14 @@ function Skills() {
           projectData={projectData}
           mainData={mainData}
           onClose={() => setopenModalProject(false)}
+        />
+      )}
+
+      {openModalCertificate && (
+        <EditCertificate
+          certificateData={certificateData}
+          mainData={mainData}
+          onClose={() => setopenModalCertificate(false)}
         />
       )}
     </div>
