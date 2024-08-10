@@ -12,6 +12,7 @@ import getStates from "../../actions/LoginScreens/getStates";
 import getInstitutes from "../../actions/MasterDataApi/getInstitutes";
 import getBoards from "../../actions/MasterDataApi/getBoards";
 import getSpecialization from "../../actions/MasterDataApi/getSpecialization";
+import { toast } from "react-toastify";
 
 const AddEducation = ({ onClose, type, educationData }) => {
   const user = useSelector((state) => state?.auth?.userData);
@@ -84,7 +85,6 @@ const AddEducation = ({ onClose, type, educationData }) => {
 
   const onSubmit = (data) => {
     addEducationHandler(data);
-    onClose();
   };
 
   useEffect(() => {
@@ -141,13 +141,22 @@ const AddEducation = ({ onClose, type, educationData }) => {
       if (type === "edit") {
         data = {
           ...data,
-          id: educationData?.id,
+          id_student_qualification: educationData?.id,
         };
       }
         
       console.log(data);
-      const response = await addEducation(data);
-      console.log("res1", response);
+      const res = await addEducation(data);
+      if (res?.data?.code ===1000){
+        console.log("res1", res);
+        // toast.success(`${type === "edit" ? "Edited" : "Added"} Successfully`);
+        onClose();
+
+      }else{
+        // toast.error(`${type === "edit" ? "Edited" : "Added"} Not Added`);
+      }
+
+      console.log("res1", res);
     } catch (error) {
       console.log("Error while adding education :: ", error);
     }
