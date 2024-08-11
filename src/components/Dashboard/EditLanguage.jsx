@@ -3,9 +3,12 @@ import close from "../../assets/Dashboard/close.png";
 import { useForm } from "react-hook-form";
 import language from "../../assets/Dashboard/language.png";
 import getLanguageList from "../../actions/MasterDataApi/getLanguageList";
+import { useDispatch } from "react-redux";
+import { recallData } from "../../store/studentProfileSlice";
 
 const EditLanguage = ({ onClose, languageData }) => {
     const [languageList, setLanguageList] = useState([]);
+    const dispatch = useDispatch();
 
     const [proficient, setProficient] = useState([
         { id: 1, proficiency: "Beginner" },
@@ -56,8 +59,9 @@ const EditLanguage = ({ onClose, languageData }) => {
         };
 
         console.log("Form Data: ", transformedData);
-
+        dispatch(recallData());
         onClose(); // Close the modal after submission
+       
     };
 
     return (
@@ -166,7 +170,7 @@ const EditLanguage = ({ onClose, languageData }) => {
                                 type="submit"
                                 className="text-white font-sans text-lg px-8 py-1 mb-4 mt-3 rounded-full bg-blue-800"
                             >
-                                Edit
+                                Save
                             </button>
                         </div>
                     </div>

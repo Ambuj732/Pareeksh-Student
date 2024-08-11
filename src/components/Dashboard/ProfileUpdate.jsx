@@ -6,6 +6,7 @@ import language from "../../assets/Dashboard/language.png";
 import studentLanguages from "../../actions/Dashboard/studentLanguages";
 import pen from "../../assets/Dashboard/pen.png";
 import EditLanguage from "./EditLanguage";
+import { useSelector } from "react-redux";
 
 function ProfileUpdate() {
 	const [languages, setLanguages] = useState([]);
@@ -13,6 +14,8 @@ function ProfileUpdate() {
 	const [languageData, setLanguageData] = useState({});
 
 	const user = JSON.parse(localStorage.getItem("student_profile"));
+	const recallCount = useSelector((state)=>state.call.recallCount)
+  
 
 	const getStudentLanguagesHandler = async () => {
 		try {
@@ -31,7 +34,7 @@ function ProfileUpdate() {
 
 	useEffect(() => {
 		getStudentLanguagesHandler();
-	}, []);
+	}, [recallCount]);
 
 	return (
 		<div className="flex flex-col gap-8">
