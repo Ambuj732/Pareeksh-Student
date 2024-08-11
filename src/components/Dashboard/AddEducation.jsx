@@ -12,8 +12,8 @@ import getStates from "../../actions/LoginScreens/getStates";
 import getInstitutes from "../../actions/MasterDataApi/getInstitutes";
 import getBoards from "../../actions/MasterDataApi/getBoards";
 import getSpecialization from "../../actions/MasterDataApi/getSpecialization";
-import { toast } from "react-toastify";
 import { recallData } from "../../store/studentProfileSlice";
+import { toast } from "react-toastify";
 
 const AddEducation = ({ onClose, type, educationData }) => {
   const user = useSelector((state) => state?.auth?.userData);
@@ -21,8 +21,8 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const studentProfile = useSelector(
     (state) => state?.studentProfile?.studentProfileData
   );
-const dispatch = useDispatch()
-  console.log(studentProfile);
+  const dispatch = useDispatch();
+
   const { register, handleSubmit, setValue } = useForm();
   const [highestQualication, setHighestQualication] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -49,49 +49,63 @@ const dispatch = useDispatch()
       const institutesList = await getInstitutes();
       console.log(institutesList);
       setInstitutes(institutesList?.data?.institutes);
-
       let speData = {
         id_course: 1,
       };
-      const specializationList = await getSpecialization(speData);
-      setSpecialization(specializationList?.data?.specializations);
-
       const data = {
         is_grad: 1,
       };
+
+      const cityData = {
+        id_state: 1,
+      };
       const boardList = await getBoards(data);
-      console.log(boardList?.data?.boards);
+      console.log("board",boardList?.data?.boards);
       setBoards(boardList?.data?.boards);
+
       if (type === "edit") {
         console.log("educationData", educationData);
         setValue("course_name", educationData?.id_course);
         setValue("institute_name", educationData?.id_institute);
+        // const hq_id = highestQualication?.find(
+        //   (hq) => hq?.highest_qualification === educationData?.highest_qualification
+        // ).id
         setValue("highest_qualification", educationData?.highest_qualification);
-        const speData = {
+        // console.log("hq_id", hq_id);
+        // setValue("highest_qualification", hq_id);
+
+        speData = {
           id_course: educationData?.id_course,
         };
-  
-        const specializationList = await getSpecialization(speData);
-        setSpecialization(specializationList?.data?.specializations);
-  
-        
-
-        setValue("specialization", educationData?.specialization);
         setValue("year_of_passing", educationData?.year_of_passing);
         setValue("percentage", educationData?.percentage);
+        // const board_id = boardList?.data?.boards?.find(
+        //   (board) => board?.board_name === educationData?.board_name
+        // )?.id
+        // console.log("board_id", board_id);
         setValue("board_name", educationData?.board_name);
-        // setValue("state", educationData?.state);
+        // setValue("board_name", board_id);
+        setValue("state", educationData?.state);
         setSelectedState(educationData?.state);
+        const state_id = states?.find(
+          (state) => state?.state === educationData?.state
+        )?.id_state;
+
+        cityData.id_state = state_id;
         setValue("city", educationData?.city);
-       
 
         setValue("pincode", educationData?.pincode);
-        
-        setValue("specilization", educationData?.id_specilization);
         setValue("id_course", educationData?.id_course);
-       
-        
       }
+      console.log("speData", speData);
+      const cityList = await getCities(cityData);
+      console.log(cityList?.data?.cities);
+      setCities(cityList?.data?.cities);
+      const specializationList = await getSpecialization(speData);
+      console.log("spe", specializationList?.data?.specializations);
+      setSpecialization(specializationList?.data?.specializations);
+      setValue("specialization", educationData?.id_specilization);
+      console.log("edu", educationData?.id_specilization);
     } catch (error) {
       console.log(
         "Error while getting highest qualification or states :: ",
@@ -102,45 +116,51 @@ const dispatch = useDispatch()
 
   useEffect(() => {
     preData();
-
-   
   }, []);
 
   const onSubmit = (data) => {
     addEducationHandler(data);
   };
 
-
-  useEffect(() => {
-    const loadCities = async () => {
-      try {
-        console.log(selectedState);
-        const data = {
-          id_state: Number(selectedState),
-        };
-        console.log(data);
-        const citiesList = await getCities(data);
-        console.log(citiesList?.data?.cities);
-        setCities(citiesList?.data?.cities);
-      } catch (error) {
-        console.log("Error while getting cities :: ", error);
-      }
-    };
-    loadCities();
-  }, [selectedState]);
+ 
 
   const handleCourseChange = (event) => {
-    console.log(event.target)
+    // console.log(event.target)
     setSelectedCourse(event.target.value);
     loadSpecialization(event.target.value);
-
   };
 
-  const loadSpecialization = async () => {
+ const  handleStateChange = (e) => {
+    // console.log("State :: ", e.target.value);
+    setSelectedState(e.target.value);
+    const id = states?.find(
+      (state) => state?.state === e.target.value
+      
+    ).id_state;
+    console.log("id", id);
+    loadCities(id);
+  }
+
+  const loadCities = async (value) => {
     try {
-      console.log(selectedCourse);
+      console.log(value);
       const data = {
-        id_course: Number(selectedCourse),
+        id_state: Number(value),
+      };
+      console.log(data);
+      const citiesList = await getCities(data);
+      console.log("cities",citiesList?.data?.cities);
+      setCities(citiesList?.data?.cities);
+    } catch (error) {
+      console.log("Error while getting cities :: ", error);
+    }
+  };
+
+  const loadSpecialization = async (value) => {
+    try {
+      console.log(value);
+      const data = {
+        id_course: Number(value),
       };
       console.log(data);
       const specializationList = await getSpecialization(data);
@@ -152,24 +172,30 @@ const dispatch = useDispatch()
   };
 
   // useEffect(() => {
-  
+
   //   loadSpecialization();
   // }, [selectedCourse]);
 
   const addEducationHandler = async (formData) => {
     try {
       console.log(formData);
-      let  data = {
+       const board_id = boards?.find(
+          (board) => board?.board_name === formData?.board_name
+        )?.id
+         const hq_id = highestQualication?.find(
+          (hq) => hq?.highest_qualification === formData?.highest_qualification
+        )?.id
+      let data = {
         id_self_student: user?.id_self_student,
         usercode: user?.usercode,
         year_of_passing: Number(formData?.year_of_passing),
-        id_qual: Number(formData?.highest_qualification),
+        id_qual: Number(hq_id),
         id_institute: Number(formData?.institute_name),
         id_course: Number(selectedCourse),
         percentage: Number(formData?.percentage),
         id_specilization: Number(formData?.specialization),
 
-        id_board: Number(formData?.board_name),
+        id_board: Number(board_id),
       };
       if (type === "edit") {
         data = {
@@ -177,16 +203,15 @@ const dispatch = useDispatch()
           id_student_qualification: educationData?.id,
         };
       }
-        
+
       console.log(data);
       const res = await addEducation(data);
-      if (res?.data?.code ===1000){
+      if (res?.data?.code === 1000) {
         console.log("res1", res);
-        // toast.success(`${type === "edit" ? "Edited" : "Added"} Successfully`);
+        toast.success(`${type === "edit" ? "Edited" : "Added"} Successfully`);
         onClose();
         dispatch(recallData());
-
-      }else{
+      } else {
         // toast.error(`${type === "edit" ? "Edited" : "Added"} Not Added`);
       }
 
@@ -217,9 +242,9 @@ const dispatch = useDispatch()
                 <select
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                  defaultValue={selectedCourse}
+                  defaultValue={""}
+                  {...register("course_name", { required: true })}
                   onChange={handleCourseChange}
-                  // {...register("course_name", { required: true })}
                 >
                   <option value="" disabled hidden>
                     Select
@@ -342,7 +367,7 @@ const dispatch = useDispatch()
                     Select
                   </option>
                   {boards?.map((institute) => (
-                    <option key={institute?.id} value={institute.board_name}>
+                    <option key={institute?.id} value={institute?.board_name}>
                       {institute?.board_name}
                     </option>
                   ))}
@@ -373,7 +398,7 @@ const dispatch = useDispatch()
                 <select
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                  defaultValue={""}
+                  // defaultValue={""}
                   {...register("specialization", {
                     required: true,
                   })}
@@ -471,8 +496,9 @@ const dispatch = useDispatch()
                 <select
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                  defaultValue={selectedState}
-                  onChange={(e) => setSelectedState(e.target?.value)}
+                  defaultValue={""}
+                  {...register("state", { required: true })}
+                  onChange={handleStateChange}
                 >
                   <option value="" disabled hidden>
                     Select
@@ -518,7 +544,7 @@ const dispatch = useDispatch()
                     Select
                   </option>
                   {cities?.map((city) => (
-                    <option key={city?.id} value={city.id_city}>
+                    <option key={city?.id} value={city.city}>
                       {city.city}
                     </option>
                   ))}
