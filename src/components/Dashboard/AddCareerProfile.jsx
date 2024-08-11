@@ -17,14 +17,20 @@ import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
 import getApiData from "../../actions/LoginScreens/getApiData";
-import { id } from "date-fns/locale";
 import getCities from "../../actions/LoginScreens/getCities";
 import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
+import getCommonApiData from "../../actions/LoginScreens/getCommonApiData";
+import { useDispatch, useSelector } from "react-redux";
+import { hideLoader, recallData, showLoader } from "../../store/studentProfileSlice";
 
 const AddCareerProfile = ({ onClose }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors  } } = useForm();
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.loader.isLoading);
+
+  // console.log("err", error);
   const [highestQualication, setHighestQualication] = useState([]);
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
   const [industry, setIndustry] = useState([]);
   const [department, setDepartment] = useState([]);
   const [roleCategory, setRoleCategory] = useState([]);
@@ -70,7 +76,19 @@ const AddCareerProfile = ({ onClose }) => {
     {
       id: 3,
       expected_ctc: "3 LPA",
-    }
+    },
+    {
+      id: 5,
+      expected_ctc: "5 LPA",
+    },
+    {
+      id: 7,
+      expected_ctc: "7 LPA",
+    },
+    {
+      id: 9,
+      expected_ctc: "9 LPA",
+    },
   ]);
 
   const [selectHighestQual, setSelectHighestQual] = useState("");
@@ -88,10 +106,10 @@ const AddCareerProfile = ({ onClose }) => {
     preData();
   }, []);
 
-
-
   const preData = async () => {
     try {
+      dispatch(showLoader());
+      console.log("preData", isLoading);
       const highQual = await getHighQualList();
       setHighestQualication(highQual?.data?.high_qual);
       const industries = await getApiData("masterData/fetchIndustry");
@@ -105,14 +123,45 @@ const AddCareerProfile = ({ onClose }) => {
 
       const states = await getApiData("studentSelf/getStates");
       setStateList(states?.data?.states);
+      const response = await getCommonApiData(
+        `studentProfile/getDesiredJobDetails`
+      );
+      console.log("careerData", response);
+      if (response?.data?.code === 1000) {
+        const careerData = response?.data?.desired_job;
+        setValue("industry", careerData?.id_industry);
+        setSelectIndustry(careerData?.id_industry);
+        setValue("department", careerData?.id_department);
+        setSelectDepartment(careerData?.id_department);
+        setValue("role_category", careerData?.id_role_category);
+        setSelectRole(careerData?.id_role_category);
+        setValue("job_role", careerData?.id_job_role);
+        setSelectJobRole(careerData?.id_job_role);
+        getJobRoles(careerData?.id_role_category);
+        setValue("state", careerData?.id_state);
+        setSelectState(careerData?.id_state);
+        setValue("city", careerData?.id_city);
+        setSelectCity(careerData?.id_city);
+        getCitiesHandler(careerData?.id_state);
+        setValue("employment_type", careerData?.id_employment_type);
+        setSelectEmploymentType(careerData?.id_employment_type);
+        setValue("shift", careerData?.shift);
+        setSelectShift(careerData?.shift);
+        setValue("job_type", careerData?.desired_job_type);
+        setSelectJobType(careerData?.desired_job_type);
+        setValue("expected_ctc", careerData?.expected_salary);
+        setSelectExpectedSalary(careerData?.expected_salary);
+      }
     } catch (error) {
       console.log(
         "Error while getting highest qualification or states :: ",
         error
       );
+    }finally{
+      dispatch(hideLoader());
+      console.log("finally", isLoading)
     }
   };
-
 
   const getCitiesHandler = async (id) => {
     try {
@@ -138,7 +187,7 @@ const AddCareerProfile = ({ onClose }) => {
   const handleRoleCategory = (id) => {
     setSelectJobRole(id);
     getJobRoles(id);
-  }
+  };
 
   const getJobRoles = async (id) => {
     try {
@@ -169,12 +218,16 @@ const AddCareerProfile = ({ onClose }) => {
         id_department: formData?.department,
         id_employment_type: formData?.employment_type,
         id_city: formData?.city,
-        id_state: formData?.state
+        id_state: formData?.state,
       };
 
-      const response = await updateDataCommon('studentProfile/updateDesiredJobDetails', data)
+      const response = await updateDataCommon(
+        "studentProfile/updateDesiredJobDetails",
+        data
+      );
       if (response.data.code === 1000) {
         console.log(response);
+        dispatch(recallData());
         onClose();
       } else {
         console.log("Error while updating profile :: ", response.data.message);
@@ -272,7 +325,7 @@ const AddCareerProfile = ({ onClose }) => {
                   >
                     <img src={message} alt="" className="h-5 w-5" />
                     <label htmlFor="" className="pl-2">
-                      Department
+                      Industry
                     </label>
                   </div>
                 </div>
@@ -330,7 +383,6 @@ const AddCareerProfile = ({ onClose }) => {
                     id="qualification_select"
                     className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                     defaultValue=""
-
                     {...register("role_category", { required: true })}
                     onChange={(e) => handleRoleCategory(e.target.value)}
                   >
@@ -530,7 +582,6 @@ const AddCareerProfile = ({ onClose }) => {
                       1 lakhs
                     </option>
                     {expectedSalary?.map((expectedSalaryName) => (
-
                       <option
                         key={expectedSalaryName?.id}
                         value={expectedSalaryName.id}
@@ -566,7 +617,6 @@ const AddCareerProfile = ({ onClose }) => {
                     id="qualification_select"
                     className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                     defaultValue=""
-
                     {...register("state", { required: true })}
                     onChange={(e) => handleStateChange(e)}
                   >
@@ -574,9 +624,7 @@ const AddCareerProfile = ({ onClose }) => {
                       State
                     </option>
                     {stateList?.map((state) => (
-                      <option
-                        key={state?.id_state}
-                        value={state.id_state}>
+                      <option key={state?.id_state} value={state.id_state}>
                         {state.state}
                       </option>
                     ))}
@@ -617,7 +665,6 @@ const AddCareerProfile = ({ onClose }) => {
                         {cityName.city}
                       </option>
                     ))}
-
                   </select>
                   <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
                     {/* <FaAngleDown /> */}

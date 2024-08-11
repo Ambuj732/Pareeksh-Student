@@ -3,11 +3,13 @@ import close from "../../assets/Dashboard/close.png";
 import { IoPerson } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import updatePersonal from "../../actions/Dashboard/updatePersonal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { recallData } from "../../store/studentProfileSlice";
 
 // eslint-disable-next-line react/prop-types
 function EditProfile({ onClose }) {
   const { register, handleSubmit, setValue } = useForm();
+  const dispatch = useDispatch()
   const user = useSelector((state) => state?.auth?.userData);
   console.log(user);
   const studentProfile = useSelector(
@@ -53,6 +55,7 @@ function EditProfile({ onClose }) {
       if (response.data.code === 1000) {
         console.log(response);
         onClose();
+        dispatch(recallData());
       } else {
         console.log("Error while updating profile :: ",response.data.message);
       }

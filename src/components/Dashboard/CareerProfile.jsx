@@ -4,9 +4,11 @@ import category from "../../assets/Dashboard/category.png";
 
 import getApiData from "../../actions/LoginScreens/getApiData";
 import getCommonApiData from "../../actions/LoginScreens/getCommonApiData";
+import { useSelector } from "react-redux";
 
 
 function CareerProfile() {
+  const recallCount = useSelector((state)=>state.call.recallCount)
   const [selectIndustry, setSelectIndustry] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
   const [selectJobCategory, setSleectJobCategory] = useState("");
@@ -20,7 +22,7 @@ function CareerProfile() {
 
   useEffect(() => {
     getProfileSummary();
-  }, []);
+  }, [recallCount]);
 
   const getProfileSummary = async () => {
     try {
