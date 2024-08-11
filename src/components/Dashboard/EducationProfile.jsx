@@ -5,9 +5,14 @@ import ProfileUpdate from "./ProfileUpdate";
 import openbook from "../../assets/Dashboard/openbook.png";
 import getEducations from "../../actions/Dashboard/getEducations";
 import AddEducation from "./AddEducation";
+import { recallData } from "../../store/studentProfileSlice";
+import { useSelector } from "react-redux";
+
 
 function EducationProfile() {
   const [educations, setEducations] = useState([]);
+  const recallCount = useSelector((state)=>state.call.recallCount)
+  
   const [modelOpen, setModelOpen] = useState(false);
   const [educationData, setEducationData] = useState({});
 
@@ -27,17 +32,12 @@ function EducationProfile() {
     }
   };
 
-  const handleEdit = (data) => {
-    console.log(data);
-
-
-  }
   const handleSave = (data) => {
     setModelOpen(false);
   };
   useEffect(() => {
     getEducationHandler();
-  }, []);
+  }, [recallCount]);
 
   return (
     <div className="flex flex-col gap-8">

@@ -10,7 +10,7 @@ import profilePercentage from "../../actions/Dashboard/profilePercentage";
 import EditProfile from "./EditProfile";
 import formatDate from "../../utils/formatDate";
 import UserProfile from "./UserProfile";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";	
 
 function PersonalUpdate() {
 	const [studentProfile, setStudentProfile] = useState({});

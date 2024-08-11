@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
 import message from "../../assets/LoginScreen/message.png";
 import addEducation from "../../actions/Dashboard/addEducation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getCourses from "../../actions/MasterDataApi/getCourses";
 import getCities from "../../actions/LoginScreens/getCities";
 import getStates from "../../actions/LoginScreens/getStates";
@@ -13,6 +13,7 @@ import getInstitutes from "../../actions/MasterDataApi/getInstitutes";
 import getBoards from "../../actions/MasterDataApi/getBoards";
 import getSpecialization from "../../actions/MasterDataApi/getSpecialization";
 import { toast } from "react-toastify";
+import { recallData } from "../../store/studentProfileSlice";
 
 const AddEducation = ({ onClose, type, educationData }) => {
   const user = useSelector((state) => state?.auth?.userData);
@@ -20,6 +21,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const studentProfile = useSelector(
     (state) => state?.studentProfile?.studentProfileData
   );
+const dispatch = useDispatch()
   console.log(studentProfile);
   const { register, handleSubmit, setValue } = useForm();
   const [highestQualication, setHighestQualication] = useState([]);
@@ -29,7 +31,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const [cities, setCities] = useState([]);
   const [institutes, setInstitutes] = useState([]);
   const [boards, setBoards] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [specialization, setSpecialization] = useState([]);
   const [errors, setErrors] = useState({});
 
@@ -47,12 +49,49 @@ const AddEducation = ({ onClose, type, educationData }) => {
       const institutesList = await getInstitutes();
       console.log(institutesList);
       setInstitutes(institutesList?.data?.institutes);
+
+      let speData = {
+        id_course: 1,
+      };
+      const specializationList = await getSpecialization(speData);
+      setSpecialization(specializationList?.data?.specializations);
+
       const data = {
         is_grad: 1,
       };
       const boardList = await getBoards(data);
       console.log(boardList?.data?.boards);
       setBoards(boardList?.data?.boards);
+      if (type === "edit") {
+        console.log("educationData", educationData);
+        setValue("course_name", educationData?.id_course);
+        setValue("institute_name", educationData?.id_institute);
+        setValue("highest_qualification", educationData?.highest_qualification);
+        const speData = {
+          id_course: educationData?.id_course,
+        };
+  
+        const specializationList = await getSpecialization(speData);
+        setSpecialization(specializationList?.data?.specializations);
+  
+        
+
+        setValue("specialization", educationData?.specialization);
+        setValue("year_of_passing", educationData?.year_of_passing);
+        setValue("percentage", educationData?.percentage);
+        setValue("board_name", educationData?.board_name);
+        // setValue("state", educationData?.state);
+        setSelectedState(educationData?.state);
+        setValue("city", educationData?.city);
+       
+
+        setValue("pincode", educationData?.pincode);
+        
+        setValue("specilization", educationData?.id_specilization);
+        setValue("id_course", educationData?.id_course);
+       
+        
+      }
     } catch (error) {
       console.log(
         "Error while getting highest qualification or states :: ",
@@ -62,30 +101,15 @@ const AddEducation = ({ onClose, type, educationData }) => {
   };
 
   useEffect(() => {
-    if (type === "edit") {
-      console.log("educationData", educationData);
-      // setValue("specialization", educationData?.specialization);
-      // setValue("year_of_passing", educationData?.year_of_passing);
-      // setValue("percentage", educationData?.percentage);
-      // setValue("board_name", educationData?.board_name);
-      // setValue("city", educationData?.city);
-      // setValue("state", educationData?.state);
-      // setValue("pincode", educationData?.pincode);
-      // setValue("institute_name", educationData?.institute_name);
-      // setValue("course_name", educationData?.course_name);
-      // setValue("highest_qualification", educationData?.highest_qualification);
-      // setValue("id_institute", educationData?.id_institute);
-      // setValue("id_specilization", educationData?.id_specilization);
-      // setValue("id_course", educationData?.id_course);
-      
-    }
-
     preData();
+
+   
   }, []);
 
   const onSubmit = (data) => {
     addEducationHandler(data);
   };
+
 
   useEffect(() => {
     const loadCities = async () => {
@@ -105,23 +129,32 @@ const AddEducation = ({ onClose, type, educationData }) => {
     loadCities();
   }, [selectedState]);
 
-  useEffect(() => {
-    const loadSpecialization = async () => {
-      try {
-        console.log(selectedCourse);
-        const data = {
-          id_course: Number(selectedCourse),
-        };
-        console.log(data);
-        const specializationList = await getSpecialization(data);
-        console.log(specializationList);
-        setSpecialization(specializationList?.data?.specializations);
-      } catch (error) {
-        console.log("Error while getting specialization :: ", error);
-      }
-    };
-    loadSpecialization();
-  }, [selectedCourse]);
+  const handleCourseChange = (event) => {
+    console.log(event.target)
+    setSelectedCourse(event.target.value);
+    loadSpecialization(event.target.value);
+
+  };
+
+  const loadSpecialization = async () => {
+    try {
+      console.log(selectedCourse);
+      const data = {
+        id_course: Number(selectedCourse),
+      };
+      console.log(data);
+      const specializationList = await getSpecialization(data);
+      console.log(specializationList);
+      setSpecialization(specializationList?.data?.specializations);
+    } catch (error) {
+      console.log("Error while getting specialization :: ", error);
+    }
+  };
+
+  // useEffect(() => {
+  
+  //   loadSpecialization();
+  // }, [selectedCourse]);
 
   const addEducationHandler = async (formData) => {
     try {
@@ -151,6 +184,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
         console.log("res1", res);
         // toast.success(`${type === "edit" ? "Edited" : "Added"} Successfully`);
         onClose();
+        dispatch(recallData());
 
       }else{
         // toast.error(`${type === "edit" ? "Edited" : "Added"} Not Added`);
@@ -184,7 +218,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   id="qualification_select"
                   className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                   defaultValue={selectedCourse}
-                  onChange={(e) => setSelectedCourse(e.target.value)}
+                  onChange={handleCourseChange}
                   // {...register("course_name", { required: true })}
                 >
                   <option value="" disabled hidden>
@@ -224,6 +258,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("institute_name", {
                     required: true,
                   })}
+                  // onChange={(e) => setInstituteName(e.target.value)}
                 >
                   <option value="" disabled hidden>
                     Select
@@ -269,7 +304,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                     Select
                   </option>
                   {highestQualication?.map((qual) => (
-                    <option key={qual?.id} value={qual.id}>
+                    <option key={qual?.id} value={qual.highest_qualification}>
                       {qual.highest_qualification}
                     </option>
                   ))}
@@ -307,7 +342,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                     Select
                   </option>
                   {boards?.map((institute) => (
-                    <option key={institute?.id} value={institute.id}>
+                    <option key={institute?.id} value={institute.board_name}>
                       {institute?.board_name}
                     </option>
                   ))}
@@ -443,7 +478,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                     Select
                   </option>
                   {states?.map((state) => (
-                    <option key={state?.id} value={state.id_state}>
+                    <option key={state?.id} value={state.state}>
                       {state.state}
                     </option>
                   ))}
