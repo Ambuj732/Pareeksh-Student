@@ -23,14 +23,17 @@ import addPublicLink from "../../actions/Dashboard/addPublicLink";
 import addAccomplishment from "../../actions/Dashboard/addAccomplishment";
 import addKeySkill from "../../actions/Dashboard/addKeySkill";
 import addITSkill from "../../actions/Dashboard/addITSkill";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getKeySkills from "../../actions/MasterDataApi/getKeySkills";
 import addProject from "../../actions/Dashboard/addProject";
 import updateProfileSummary from "../../actions/Dashboard/updateProfileSummary";
 import addCertificate from "../../actions/Dashboard/addCertificate";
+import { toast } from "react-toastify";
+import { recallData } from "../../store/studentProfileSlice";
 
 const AddSkills = ({ onClose }) => {
 	const user = useSelector((state) => state?.auth?.userData);
+	const dispatch = useDispatch();
 	console.log(user);
 	const studentProfile = useSelector(
 		(state) => state?.studentProfile?.studentProfileData
@@ -117,6 +120,12 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addPublicLink(data);
+			if (response?.data?.code ===1000) {
+				dispatch(recallData())
+				toast.success("Public link added successfully!");
+				onClose();
+				
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding public link :: ", error);
@@ -133,6 +142,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addAccomplishment(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Accomplishment added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding accomplishment :: ", error);
@@ -148,6 +162,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addKeySkill(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Key skill added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding key skills :: ", error);
@@ -168,6 +187,12 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addITSkill(data);
+			if (response?.data?.code === 1000) {
+				
+				dispatch(recallData())
+				toast.success("IT Skill added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding IT Skill :: ", error);
@@ -188,6 +213,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addProject(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Project added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding project :: ", error);
@@ -204,6 +234,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await updateProfileSummary(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Profile summary updated successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while updating profile summary :: ", error);
@@ -249,6 +284,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addCertificate(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Certificate added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding certificate :: ", error);
