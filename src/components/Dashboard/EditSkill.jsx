@@ -4,9 +4,13 @@ import { IoPerson } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import addProject from "../../actions/Dashboard/addITSkill";
 import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
+import { recallData } from "../../store/studentProfileSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const EditSkill = ({ onClose, skillData, mainData }) => {
     console.log("skillData: ", skillData,);
+    const dispatch = useDispatch()
     const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
             software_name: skillData?.software_name || "",
@@ -32,6 +36,11 @@ const EditSkill = ({ onClose, skillData, mainData }) => {
             const combinedData = { ...mainData, ...data  , id_it_skill : skillData?.id };
             console.log("Combined Data: ", combinedData);
            const response = await updateDataCommon('studentProfile/addITSkill', combinedData);
+           if (response?.data?.code === 1000) {
+               dispatch(recallData());
+               toast.success("IT Skill Update successfully");
+               onClose();
+           }
            console.log("Response: ", response);
 
             onClose();

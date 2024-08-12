@@ -12,6 +12,7 @@ import pen from "../../assets/Dashboard/pen.png";
 import EditSkill from "./EditSkill";
 import EditProject from "./EditProject";
 import EditCertificate from "./EditCertificate";
+import { useSelector } from "react-redux";
 
 function Skills() {
   const [skills, setSkills] = useState([]);
@@ -27,6 +28,7 @@ function Skills() {
   const [projectData, setProjectData] = useState({});
   const [certificateData, setCertificateData] = useState({});
   const [mainData, setMainData] = useState({});
+  const recallCount = useSelector((state)=>state.call.recallCount)
 
   const getITSkillsHandler = async () => {
     try {
@@ -110,7 +112,7 @@ function Skills() {
     getCertificatesHandler();
     getProfileSummaryHandler();
     getPublicLinksHandler();
-  }, []);
+  }, [recallCount]);
 
   function calculateDuration(startDate, endDate) {
     const start = new Date(startDate);

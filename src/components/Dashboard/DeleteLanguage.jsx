@@ -5,10 +5,14 @@ import language from "../../assets/Dashboard/language.png";
 import getLanguageList from "../../actions/MasterDataApi/getLanguageList";
 import { useDispatch } from "react-redux";
 import { recallData } from "../../store/studentProfileSlice";
+import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
+import { toast } from "react-toastify";
 
-const EditLanguage = ({ onClose, languageData }) => {
+const DeleteLanguage = ({ onClose, languageData }) => {
     const [languageList, setLanguageList] = useState([]);
     const dispatch = useDispatch();
+    console.log("Language Data: ", languageData);
+    const user  = JSON.parse(localStorage.getItem("ps_loguser"));
 
     const [proficient, setProficient] = useState([
         { id: 1, proficiency: "Beginner" },
@@ -50,16 +54,22 @@ const EditLanguage = ({ onClose, languageData }) => {
         }
     }, [languageData, setValue]);
 
-    const onSubmit = async (data) => {
-        const transformedData = {
-            ...data,
-            read: data.read ? 1 : 0,
-            write: data.write ? 1 : 0,
-            speak: data.speak ? 1 : 0,
-        };
-
-        console.log("Form Data: ", transformedData);
+    const onSubmit = async (d) => {
+        // const transformedData = {
+        //     ...data,
+        //     read: data.read ? 1 : 0,
+        //     write: data.write ? 1 : 0,
+        //     speak: data.speak ? 1 : 0,
+        // };
+        const data = {
+            id_student_lang : languageData.id,
+            usercode : user.usercode,
+            id_self_student : user.id_self_student
+        }
+        const res = await updateDataCommon('studentProfile/removeStudentLang',data )
+        console.log("Response: ", res);
         dispatch(recallData());
+        toast.success("Language deleted successfully!");
         onClose(); // Close the modal after submission
        
     };
@@ -69,12 +79,12 @@ const EditLanguage = ({ onClose, languageData }) => {
             <div className="w-1/2 h-2/3 rounded-md shadow-md bg-white">
                 <div className="flex justify-between items-center bg-blue-100 rounded-t-md h-12">
                     <h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-                        Edit Language
+                        Delete Language
                     </h1>
                     <img
                         className="mr-8 items-center mt-2 h-8 cursor-pointer"
                         src={close}
-                        onClick={onClose}
+                        onClick={() => onClose()}
                         alt="Close"
                     />
                 </div>
@@ -170,7 +180,7 @@ const EditLanguage = ({ onClose, languageData }) => {
                                 type="submit"
                                 className="text-white font-sans text-lg px-8 py-1 mb-4 mt-3 rounded-full bg-blue-800"
                             >
-                                Save
+                                Delete
                             </button>
                         </div>
                     </div>
@@ -180,4 +190,4 @@ const EditLanguage = ({ onClose, languageData }) => {
     );
 };
 
-export default EditLanguage;
+export default DeleteLanguage;

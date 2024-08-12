@@ -4,8 +4,12 @@ import { useForm } from "react-hook-form";
 import marital from "../../assets/Dashboard/marital.png";
 import category from "../../assets/Dashboard/category.png";
 import updateDataCommon from "../../actions/Dashboard/updateDataCommon";
+import { toast } from "react-toastify";
+import { recallData } from "../../store/studentProfileSlice";
+import { useDispatch } from "react-redux";
 
 const EditProject = ({ onClose, projectData, mainData }) => {
+    const dispatch = useDispatch()
     const {
         register,
         handleSubmit,
@@ -66,6 +70,12 @@ const EditProject = ({ onClose, projectData, mainData }) => {
             const combinedData = { ...mainData, ...data, id_student_project: projectData?.id };
             console.log("Combined Data: ", combinedData);
             const response = await updateDataCommon('studentProfile/addProject', combinedData);
+            if (response?.data?.code ===1000){
+                dispatch(recallData());
+                toast.success("Project Update successfully");
+                onClose();
+
+            }
             console.log("Response: ", response);
 
             onClose();
