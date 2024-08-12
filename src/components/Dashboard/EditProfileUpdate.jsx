@@ -16,12 +16,14 @@ import * as Yup from "yup";
 import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getLanguageList from "../../actions/MasterDataApi/getLanguageList";
 import updatePersonal from "../../actions/Dashboard/updatePersonal";
 import addStudentLanguage from "../../actions/Dashboard/addStudentLanguage";
 import getCities from "../../actions/LoginScreens/getCities";
 import getStates from "../../actions/LoginScreens/getStates";
+import { recallData } from "../../store/studentProfileSlice";
+import { toast } from "react-toastify";
 
 const EditProfileUpdate = ({ onClose }) => {
   const { register, handleSubmit } = useForm();
@@ -60,6 +62,7 @@ const EditProfileUpdate = ({ onClose }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedState, setSelectedState] = useState("");
+  const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
   const user = useSelector((state) => state?.auth?.userData);
@@ -148,6 +151,16 @@ const EditProfileUpdate = ({ onClose }) => {
       };
       console.log(data);
       const response = await updatePersonal(data);
+      console.log("res", response);
+      if (response.data.code === 1000) {
+        console.log(response);
+        toast.success("The martial status updated successfully");
+        onClose();
+        dispatch(recallData());
+      } else {
+        console.log("Error while updating martial status :: ", response.data.message);
+      }
+      
       console.log(response);
     } catch (error) {
       console.log("Error while updating language :: ", error);

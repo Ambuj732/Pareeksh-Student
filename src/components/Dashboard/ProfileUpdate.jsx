@@ -7,10 +7,12 @@ import studentLanguages from "../../actions/Dashboard/studentLanguages";
 import pen from "../../assets/Dashboard/pen.png";
 import EditLanguage from "./EditLanguage";
 import { useSelector } from "react-redux";
+import DeleteLanguage from "./DeleteLanguage";
 
 function ProfileUpdate() {
 	const [languages, setLanguages] = useState([]);
 	const [openModalLanguage, setOpenModalLanguage] = useState(false);
+	const [deleteLanguage, setDeleteLanguage] = useState(false);
 	const [languageData, setLanguageData] = useState({});
 
 	const user = JSON.parse(localStorage.getItem("student_profile"));
@@ -49,11 +51,11 @@ function ProfileUpdate() {
 					<input
 						disabled
 						type="text"
-						value={user && user.martial}
+						value={user && user.martial === 1 ? "Married" : "Unmarried"}
 						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
 					/>
 				</div>
-				<div className="flex flex-col gap-2 w-1/3">
+				{/* <div className="flex flex-col gap-2 w-1/3">
 					<div className="flex items-center gap-2">
 						<img src={category} alt="" className="h-4" />
 						<span className="text-sm text-[#1C4481]">Category</span>
@@ -64,7 +66,7 @@ function ProfileUpdate() {
 						value={user && user.id_cast_category}
 						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
 					/>
-				</div>
+				</div> */}
 			</div>
 			<div className="flex items-center">
 				<div className="flex flex-col gap-2 w-1/3">
@@ -77,7 +79,7 @@ function ProfileUpdate() {
 					<input
 						disabled
 						type="text"
-						value={user?.differently_abled}
+						value={user?.differently_abled === 1 ? "Yes" : "No"}
 						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
 					/>
 				</div>
@@ -91,12 +93,14 @@ function ProfileUpdate() {
 							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
 							onClick={() => {
 								console.log(language, "language");
-								setOpenModalLanguage(true);
+								// setOpenModalLanguage(true);
+								setDeleteLanguage(true);
 								setLanguageData(language);
 							}}
 						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
+							{/* <img src={pen} alt="Edit" className="h-5" />
+							<span className="text-sm font-normal">Edit</span> */}
+							<span className="text-sm font-normal">Delete</span>
 						</div>
 					</div>
 					<div >
@@ -313,6 +317,12 @@ function ProfileUpdate() {
 				openModalLanguage &&
 				<EditLanguage
 					onClose={() => setOpenModalLanguage(false)}
+					languageData={languageData}
+				/>
+			}
+			{
+				deleteLanguage && <DeleteLanguage
+					onClose={() => setDeleteLanguage(false)}
 					languageData={languageData}
 				/>
 			}
