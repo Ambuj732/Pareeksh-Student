@@ -11,8 +11,8 @@ import { useSelector } from "react-redux";
 
 function EducationProfile() {
   const [educations, setEducations] = useState([]);
-  const recallCount = useSelector((state)=>state.call.recallCount)
-  
+  const recallCount = useSelector((state) => state.call.recallCount)
+
   const [modelOpen, setModelOpen] = useState(false);
   const [educationData, setEducationData] = useState({});
 
@@ -114,7 +114,7 @@ function EducationProfile() {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2 text-sm w-1/5">
+              {/* <div className="flex gap-2 text-sm w-1/5">
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Town</span>
@@ -143,7 +143,7 @@ function EducationProfile() {
                   <span className="text-[#1C4481]">Pin Code</span>
                   <div className="font-medium text-base">{education.pincode}</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

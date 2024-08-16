@@ -16,8 +16,8 @@ function ProfileUpdate() {
 	const [languageData, setLanguageData] = useState({});
 
 	const user = JSON.parse(localStorage.getItem("student_profile"));
-	const recallCount = useSelector((state)=>state.call.recallCount)
-  
+	const recallCount = useSelector((state) => state.call.recallCount)
+
 
 	const getStudentLanguagesHandler = async () => {
 		try {
@@ -185,7 +185,7 @@ function ProfileUpdate() {
 				<div className="flex flex-col gap-2 w-1/3">
 					<div className="flex items-center gap-2">
 						<img src={category} alt="" className="h-4" />
-						<span className="text-sm text-[#1C4481]">District</span>
+						<span className="text-sm text-[#1C4481]">State</span>
 					</div>
 					<input
 						disabled
@@ -196,18 +196,7 @@ function ProfileUpdate() {
 				</div>
 			</div>
 			<div className="flex items-center">
-				<div className="flex flex-col gap-2 w-1/3">
-					<div className="flex items-center gap-2">
-						<img src={category} alt="" className="h-4" />
-						<span className="text-sm text-[#1C4481]">State</span>
-					</div>
-					<input
-						disabled
-						type="text"
-						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
-					/>
-				</div>
-				<div className="flex flex-col gap-2 w-1/3">
+				{/* <div className="flex flex-col gap-2 w-1/3">
 					<div className="flex items-center gap-2">
 						<img src={category} alt="" className="h-4" />
 						<span className="text-sm text-[#1C4481]">Pin Code</span>
@@ -217,7 +206,18 @@ function ProfileUpdate() {
 						type="text"
 						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
 					/>
-				</div>
+				</div> */}
+				{/* <div className="flex flex-col gap-2 w-1/3">
+					<div className="flex items-center gap-2">
+						<img src={category} alt="" className="h-4" />
+						<span className="text-sm text-[#1C4481]">Pin Code</span>
+					</div>
+					<input
+						disabled
+						type="text"
+						className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
+					/>
+				</div> */}
 			</div>
 			{/* <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
 				<span>Desired Work Location</span>

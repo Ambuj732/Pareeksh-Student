@@ -60,7 +60,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
         id_state: 1,
       };
       const boardList = await getBoards(data);
-      console.log("board",boardList?.data?.boards);
+      console.log("board", boardList?.data?.boards);
       setBoards(boardList?.data?.boards);
 
       if (type === "edit") {
@@ -122,7 +122,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
     addEducationHandler(data);
   };
 
- 
+
 
   const handleCourseChange = (event) => {
     // console.log(event.target)
@@ -130,12 +130,12 @@ const AddEducation = ({ onClose, type, educationData }) => {
     loadSpecialization(event.target.value);
   };
 
- const  handleStateChange = (e) => {
+  const handleStateChange = (e) => {
     // console.log("State :: ", e.target.value);
     setSelectedState(e.target.value);
     const id = states?.find(
       (state) => state?.state === e.target.value
-      
+
     ).id_state;
     console.log("id", id);
     loadCities(id);
@@ -149,7 +149,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
       };
       console.log(data);
       const citiesList = await getCities(data);
-      console.log("cities",citiesList?.data?.cities);
+      console.log("cities", citiesList?.data?.cities);
       setCities(citiesList?.data?.cities);
     } catch (error) {
       console.log("Error while getting cities :: ", error);
@@ -179,24 +179,26 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const addEducationHandler = async (formData) => {
     try {
       console.log(formData);
-       const board_id = boards?.find(
-          (board) => board?.board_name === formData?.board_name
-        )?.id
-         const hq_id = highestQualication?.find(
-          (hq) => hq?.highest_qualification === formData?.highest_qualification
-        )?.id
+      const board_id = boards?.find(
+        (board) => board?.board_name === formData?.board_name
+      )?.id
+      const hq_id = highestQualication?.find(
+        (hq) => hq?.highest_qualification === formData?.highest_qualification
+      )?.id
       let data = {
-        id_self_student: user?.id_self_student,
-        usercode: user?.usercode,
-        year_of_passing: Number(formData?.year_of_passing),
-        id_qual: Number(hq_id),
-        id_institute: Number(formData?.institute_name),
-        id_course: Number(selectedCourse),
-        percentage: Number(formData?.percentage),
-        id_specilization: Number(formData?.specialization),
-
-        id_board: Number(board_id),
+        id_self_student: user?.id_self_student || "",
+        usercode: user?.usercode || "",
+        year_of_passing: Number(formData?.year_of_passing) || 0,
+        id_qual: Number(hq_id) || 0,
+        id_institute: Number(formData?.institute_name) || 0,
+        id_course: Number(selectedCourse) || 0,
+        percentage: Number(formData?.percentage) || 0,
+        id_specilization: Number(formData?.specialization) || 0,
+        id_board: Number(board_id) || 0,
       };
+
+
+      console.log('data edit wala', data);
       if (type === "edit") {
         data = {
           ...data,
@@ -283,7 +285,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("institute_name", {
                     required: true,
                   })}
-                  // onChange={(e) => setInstituteName(e.target.value)}
+                // onChange={(e) => setInstituteName(e.target.value)}
                 >
                   <option value="" disabled hidden>
                     Select
@@ -491,7 +493,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 </div>
               )}
             </div>
-            <div className="relative h-14 mb-3 w-1/2">
+            {/* <div className="relative h-14 mb-3 w-1/2">
               <div>
                 <select
                   id="qualification_select"
@@ -510,7 +512,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   ))}
                 </select>
                 <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                  {/* <FaAngleDown /> */}
+                  <FaAngleDown />
                 </div>
                 <div
                   htmlFor="floating_filled"
@@ -527,9 +529,9 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {errors?.id_hq}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
-          <div className="flex gap-5 justify-around px-5 mt-2">
+          {/* <div className="flex gap-5 justify-around px-5 mt-2">
             <div className="relative h-14 mb-3 w-1/2">
               <div>
                 <select
@@ -550,7 +552,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   ))}
                 </select>
                 <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                  {/* <FaAngleDown /> */}
+                  <FaAngleDown />
                 </div>
                 <div
                   htmlFor="floating_filled"
@@ -597,7 +599,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 </div>
               )}
             </div>
-          </div>
+          </div> */}
 
           <div
             onClick={addEducationHandler}

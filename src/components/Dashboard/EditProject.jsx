@@ -20,8 +20,8 @@ const EditProject = ({ onClose, projectData, mainData }) => {
             project_name: projectData?.project_name || "",
             project_description: projectData?.project_description || "",
             role_in_project: projectData?.role_in_project || "",
-            project_start_date: projectData?.project_start_date?.split('T')[0] || "",
-            project_end_date: projectData?.project_end_date?.split('T')[0] || "",
+            start_date: projectData?.project_start_date || "",
+            project_end_date: projectData?.project_end_date || "",
         },
     });
 
@@ -64,25 +64,74 @@ const EditProject = ({ onClose, projectData, mainData }) => {
         }
     }, [projectData, setValue]);
 
+    // const onSubmit = async (data) => {
+    //     console.log("Edited Data: ", data);
+    //     try {
+    //         const combinedData = {
+    //             ...mainData,
+    //             ...data,
+    //             id_student_project: projectData?.id,  
+    //         };
+
+    //         console.log("Combined Data: ", combinedData);
+
+    //         const response = await updateDataCommon('studentProfile/addProject', combinedData);
+
+    //         if (response?.data?.code === 1000) {
+    //             dispatch(recallData());
+    //             toast.success("Project updated successfully");
+    //             onClose();
+    //         } else {
+    //             toast.error("Failed to update project");
+    //         }
+
+    //     } catch (error) {
+    //         console.error("Failed to update project: ", error);
+    //         toast.error("An error occurred while updating the project");
+    //     }
+    // };
+
     const onSubmit = async (data) => {
-        console.log("Edited Data: ", data);
         try {
-            const combinedData = { ...mainData, ...data, id_student_project: projectData?.id };
-            console.log("Combined Data: ", combinedData);
-            const response = await updateDataCommon('studentProfile/addProject', combinedData);
-            if (response?.data?.code ===1000){
+            // Combine form data with existing project data
+            const updatedData = {
+                ...projectData, // Include existing project data
+                ...data,        // Override with new form data
+                id_student_project: projectData?.id // Ensure the project ID is included
+            };
+
+            // Create the payload for updating the project
+            const payload = {
+                desc: updatedData.project_description,  // Ensure keys match API's expected format
+                end_date: updatedData.project_end_date,
+                id_self_student: mainData.id_self_student,
+                name: updatedData.project_name,
+                role: updatedData.role_in_project,
+                start_date: updatedData.project_start_date,
+                usercode: mainData.usercode,
+                id_student_project: updatedData.id_student_project // ID for identifying which project to update
+            };
+
+            console.log("Update Payload: ", payload);
+
+            // Call API to update the project
+            const response = await updateDataCommon('studentProfile/addProject', payload);
+
+            if (response?.data?.code === 1000) {
                 dispatch(recallData());
-                toast.success("Project Update successfully");
+                toast.success("Project updated successfully");
                 onClose();
-
+            } else {
+                toast.error("Failed to update project");
             }
-            console.log("Response: ", response);
 
-            onClose();
         } catch (error) {
             console.error("Failed to update project: ", error);
+            toast.error("An error occurred while updating the project");
         }
     };
+
+
 
     return (
         <div className="flex min-h-screen w-screen items-center justify-center fixed top-0 left-0 z-50 bg-black bg-opacity-50">

@@ -25,14 +25,18 @@ import fetchDepartments from "../../actions/MasterDataApi/getDepartments";
 import getDepartments from "../../actions/MasterDataApi/getDepartments";
 import getTown from "../../actions/MasterDataApi/getTown";
 import { useSelector } from "react-redux";
+import { LiaEtsy } from "react-icons/lia";
+import { toast } from "react-toastify";
+import { useDispatch, } from "react-redux";
+import { recallData } from "../../store/studentProfileSlice";
 
-const AddEmployment = ({ onClose, type, data }) => {
-	const { register, handleSubmit, getValues, formState: { errors } } = useForm();
-	console.log("data", errors);
+const AddEmployment = ({ onClose, type, employmentData }) => {
+	const { register, handleSubmit, getValues, setValue, formState: { errors } } = useForm();
 	const [highestQualication, setHighestQualication] = useState([]);
 	const [states, setStates] = useState([]);
 	const [selectedState, setSelectedState] = useState("");
 	const [cities, setCities] = useState([]);
+	const dispatch = useDispatch();
 	// const [errors, setErrors] = useState({});
 	const [employmentType, setEmploymentType] = useState("experienced");
 	const [employmentTypes, setEmploymentTypes] = useState([]);
@@ -41,6 +45,25 @@ const AddEmployment = ({ onClose, type, data }) => {
 	const [selectedCity, setSelectedCity] = useState("");
 	const [town, setTown] = useState([]);
 	const [isCurrentEmployer, setIsCurrentEmployer] = useState();
+	const [mainData, setMainData] = useState({});
+
+	console.log('emp', employmentData)
+	console.log('cities', cities)
+
+
+	const getEmploymentHandler = async () => {
+		try {
+			const user = JSON.parse(localStorage.getItem("ps_loguser"));
+			const employmentData = {
+				usercode: user?.usercode,
+				id_self_student: user?.id_self_student,
+			};
+			console.log('data', employmentData);
+			setMainData(employmentData);
+		} catch (error) {
+			console.log("Error while getting employments :: ", error);
+		}
+	};
 
 	const preData = async () => {
 		try {
@@ -56,6 +79,35 @@ const AddEmployment = ({ onClose, type, data }) => {
 			const departmentsList = await getDepartments();
 			console.log(departmentsList?.data?.departments);
 			setDepartments(departmentsList?.data?.departments);
+
+
+			if (type === "edit") {
+				console.log("data", employmentData);
+				setValue('employerName', employmentData?.employer_name);
+				setValue('empType', employmentData?.id_employment_type);
+				setValue('industry', employmentData?.id_industry);
+				setValue('department', employmentData?.id_department);
+				setValue('startDate', employmentData?.date_of_joining.split("T")[0]);
+				setValue('endDate', employmentData?.date_of_exit.split("T")[0]);
+				setValue('pincode', employmentData?.id_pincode);
+				setValue('noticePeriod', employmentData?.notice_period);
+				setValue('salary', employmentData?.salary);
+				setValue('isCurrentEmployer', employmentData?.current_employer);
+				setValue('designation', employmentData?.degignation);
+				setValue('state', employmentData?.id_state);
+				setSelectedState(employmentData?.id_state);
+				const state_id = states?.find(
+					(state) => state?.id_state === employmentData?.id_state
+				)?.id_state;
+				const cityData = {
+					id_state: employmentData?.id_state,
+				};
+
+				setValue("city", employmentData?.id_city);
+
+			}
+
+
 		} catch (error) {
 			console.log(
 				"Error while getting highest qualification or states :: ",
@@ -64,8 +116,10 @@ const AddEmployment = ({ onClose, type, data }) => {
 		}
 	};
 
+
 	useEffect(() => {
 		preData();
+		getEmploymentHandler();
 	}, []);
 
 	const handleChange = (event) => {
@@ -74,16 +128,17 @@ const AddEmployment = ({ onClose, type, data }) => {
 	};
 
 	const addEmploymentHandler = async (formData) => {
+		console.log(formData);
 		try {
-			console.log(data);
+			console.log(employmentData);
 			// id_employment_type=2&employer_name=Aadrika Global&id_town=6&id_city=23406&id_pincode=6&id_industry=2&current_employer=0&id_department=2&date_of_joining=2021-02-22&degignation=Android developer&id_state=3654&notice_period=3&salary=24&id_student_employment=13&date_of_exit=2023-06-23
-			const data1 = {
-				id_self_student: users?.id_self_student,
-				usercode: users?.usercode,
+			let data1 = {
+				id_self_student: mainData?.id_self_student,
+				usercode: mainData?.usercode,
 				id_employment_type: formData?.empType,
 				employer_name: formData?.employerName,
 				id_city: selectedCity,
-				id_pincode: formData?.pincode,
+				id_pincode: Number(formData?.pincode),
 				id_industry: formData?.industry,
 				id_department: formData?.department,
 				date_of_joining: formData?.startDate,
@@ -92,38 +147,74 @@ const AddEmployment = ({ onClose, type, data }) => {
 				id_state: selectedState,
 				id_town: 6,
 				current_employer: 0,
-				notice_period: 3,
-				salary: 13,
+				notice_period: formData?.noticePeriod,
+				salary: formData?.salary,
 
 			};
+			console.log("edit data", employmentData);
 			if (type === "edit") {
-				data1.id_student_employment = data?.id
+				data1 = {
+					...data1,
+					id_student_employment: employmentData?.id,
+				};
 			}
-			// console.log(data);
+
+			console.log(data1);
 			const response = await addEmployment(data1);
 			console.log(response);
+			if (response?.data?.code === 1000) {
+				console.log("res1", response);
+				toast.success(`${type === "edit" ? "Edited" : "Added"} Successfully`);
+				onClose();
+				dispatch(recallData());
+			} else {
+				// toast.error(`${type === "edit" ? "Edited" : "Added"} Not Added`);
+			}
 		} catch (error) {
 			console.log("Error while adding employment :: ", error);
 		}
 	};
 
+	// useEffect(() => {
+	// 	const loadCities = async () => {
+	// 		try {
+	// 			console.log(selectedState);
+	// 			const data = {
+	// 				id_state: Number(selectedState),
+	// 			};
+	// 			console.log(data);
+	// 			const citiesList = await getCities(data);
+	// 			console.log(citiesList);
+	// 			setCities(citiesList?.data?.cities);
+	// 		} catch (error) {
+	// 			console.log("Error while getting cities :: ", error);
+	// 		}
+	// 	};
+	// 	loadCities();
+	// }, [selectedState]);
 	useEffect(() => {
 		const loadCities = async () => {
 			try {
-				console.log(selectedState);
 				const data = {
 					id_state: Number(selectedState),
 				};
-				console.log(data);
 				const citiesList = await getCities(data);
-				console.log(citiesList);
 				setCities(citiesList?.data?.cities);
+
+				// Set selected city to the value from employmentData if editing
+				if (type === "edit") {
+					setSelectedCity(employmentData?.id_city);
+				}
 			} catch (error) {
 				console.log("Error while getting cities :: ", error);
 			}
 		};
-		loadCities();
-	}, [selectedState]);
+
+		if (selectedState) {
+			loadCities();
+		}
+	}, [selectedState, type, employmentData?.id_city]);
+
 
 	useEffect(() => {
 		const loadTown = async () => {
@@ -147,6 +238,13 @@ const AddEmployment = ({ onClose, type, data }) => {
 		setIsCurrentEmployer(e.target.value);
 		console.log(e.target.value);
 	};
+
+	useEffect(() => {
+		if (!selectedState) {
+			setSelectedCity("");
+		}
+	}, [selectedState]);
+
 
 	return (
 		<div className="flex h-screen w-screen items-center justify-center fixed top-0 left-0 z-50 bg-black bg-opacity-50">
@@ -208,9 +306,8 @@ const AddEmployment = ({ onClose, type, data }) => {
 								<div className="h-10 flex items-center gap-4 px-5">
 									<div className="flex items-center">
 										<input
-											checked={
-												isCurrentEmployer == "current"
-											}
+											// employment?.current_employer === 1 ? "Current" : "Previous"
+											checked={isCurrentEmployer == "current"} // Check "Current" if isCurrentEmployer is not 0
 											id="default-radio-3"
 											type="radio"
 											value="current"
@@ -219,28 +316,25 @@ const AddEmployment = ({ onClose, type, data }) => {
 											onChange={handleEmployerChange}
 										/>
 										<label
-											for="default-radio-3"
-
-											class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+											htmlFor="default-radio-3"
+											className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
 										>
 											Current
 										</label>
 									</div>
-									<div class="flex items-center">
+									<div className="flex items-center">
 										<input
-											checked={
-												isCurrentEmployer == "previous"
-											}
+											checked={isCurrentEmployer === 'previous'} // Check "Previous" if isCurrentEmployer is 0
 											id="default-radio-4"
 											type="radio"
 											value="previous"
 											name="isCurrentEmployer"
-											class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+											className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
 											onChange={handleEmployerChange}
 										/>
 										<label
-											for="default-radio-4"
-											class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+											htmlFor="default-radio-4"
+											className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
 										>
 											Previous
 										</label>
@@ -607,27 +701,17 @@ const AddEmployment = ({ onClose, type, data }) => {
 									<div className="relative h-14 mb-3 w-1/2">
 										<div>
 											<select
-												id="qualification_select"
+												id="state"
 												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
 												defaultValue=""
-												onChange={(e) =>
-													setSelectedState(
-														e.target.value
-													)
-												}
+												{...register("state", { required: true })}
+												onChange={(e) => setSelectedState(e.target.value)}
 											>
-												<option
-													value=""
-													disabled
-													hidden
-												>
+												<option value="" disabled hidden>
 													Select
 												</option>
 												{states?.map((state) => (
-													<option
-														key={state?.id}
-														value={state.id_state}
-													>
+													<option key={state?.id} value={state.id_state}>
 														{state.state}
 													</option>
 												))}
@@ -661,31 +745,22 @@ const AddEmployment = ({ onClose, type, data }) => {
 									<div className="relative h-14 mb-3 w-1/2">
 										<div>
 											<select
-												id="qualification_select"
-												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-												defaultValue=""
-												onChange={(e) =>
-													setSelectedCity(
-														e.target.value
-													)
-												}
+												id="city"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none"
+												{...register("city", { required: true })}
+												value={selectedCity} // Make sure value is correctly set
+												onChange={(e) => setSelectedCity(e.target.value)}
 											>
-												<option
-													value=""
-													disabled
-													hidden
-												>
+												<option value="" disabled hidden>
 													Select
 												</option>
-												{cities?.map((qualName) => (
-													<option
-														key={qualName?.id_city}
-														value={qualName.id_city}
-													>
-														{qualName.city}
+												{cities?.map((city) => (
+													<option key={city?.id_city} value={city.id_city}>
+														{city.city}
 													</option>
 												))}
 											</select>
+
 											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
 												{/* <FaAngleDown /> */}
 											</div>

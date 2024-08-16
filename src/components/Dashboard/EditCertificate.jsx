@@ -104,7 +104,7 @@ const EditCertificate = ({ onClose, certificateData, mainData }) => {
                                 />
                             </div>
                         </div>
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                             <div className="flex flex-col gap-2 w-1/2">
                                 <div className="flex items-center gap-2">
                                     <img src={category} alt="" className="h-4" />
@@ -118,7 +118,7 @@ const EditCertificate = ({ onClose, certificateData, mainData }) => {
                                     {...register("end_year", { required: "Completion Year is required" })}
                                 />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="flex justify-center">
                         <button

@@ -42,6 +42,7 @@ const EditProfileUpdate = ({ onClose }) => {
   const {
     register: registerForm3,
     handleSubmit: handleSubmitForm3,
+    setValue: setValueForm3,
     formState: { errors: errorsForm3 },
   } = useForm();
   const [highestQualication, setHighestQualication] = useState([]);
@@ -62,7 +63,10 @@ const EditProfileUpdate = ({ onClose }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const dispatch = useDispatch();
+
+  console.log(states)
 
   const [errors, setErrors] = useState({});
   const user = useSelector((state) => state?.auth?.userData);
@@ -70,19 +74,21 @@ const EditProfileUpdate = ({ onClose }) => {
     (state) => state?.studentProfile?.studentProfileData
   );
   console.log(user);
-  console.log(studentProfile);
+  console.log('kk', studentProfile);
 
   useEffect(() => {
     if (studentProfile) {
       setValueForm1("differentlyAbled", studentProfile?.differently_abled);
       setValueForm1("martialStatus", studentProfile?.martial);
-
-
-      // Add more setValue calls for other fields as needed
     }
-
-
   }, [studentProfile, setValueForm1]);
+
+  useEffect(() => {
+    if (studentProfile) {
+      setValueForm3("state", studentProfile?.id_state);
+
+    }
+  }, [studentProfile, setValueForm3]);
 
   const preData = async () => {
     try {
@@ -160,7 +166,6 @@ const EditProfileUpdate = ({ onClose }) => {
       } else {
         console.log("Error while updating martial status :: ", response.data.message);
       }
-      
       console.log(response);
     } catch (error) {
       console.log("Error while updating language :: ", error);
@@ -468,12 +473,11 @@ const EditProfileUpdate = ({ onClose }) => {
                 <div className="relative h-14 mb-3 w-1/2">
                   <div>
                     <select
-                      id="qualification_select"
+                      id="state"
                       className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                      defaultValue=""
                       {...registerForm3("state", { required: true })}
                       onChange={(e) => {
-                        console.log(e.target);
+                        console.log(e.target.value);
                         setSelectedState(e.target.value);
                       }}
                     >
@@ -481,11 +485,12 @@ const EditProfileUpdate = ({ onClose }) => {
                         Select
                       </option>
                       {states?.map((state) => (
-                        <option key={state?.id} value={state.id_state}>
+                        <option key={state?.id_state} value={state.id_state}>
                           {state.state}
                         </option>
                       ))}
                     </select>
+
                     <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
                       {/* <FaAngleDown /> */}
                     </div>
@@ -508,19 +513,24 @@ const EditProfileUpdate = ({ onClose }) => {
                 <div className="relative h-14 mb-3 w-1/2">
                   <div>
                     <select
-                      id="city"
+                      id="id_city"
                       className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
                       defaultValue=""
 
                       {...registerForm3("city", {
                         required: true,
                       })}
+                      onChange={(e) => {
+                        console.log('Hii', e.target.value);
+                        setSelectedCity(e.target.value);
+                      }}
+                      value={selectedCity}
                     >
                       <option value="" disabled hidden>
                         Select
                       </option>
                       {cities?.map((city) => (
-                        <option key={city?.id} value={city.id_city}>
+                        <option key={city?.id_city} value={city?.id_city}>
                           {city.city}
                         </option>
                       ))}
@@ -546,7 +556,7 @@ const EditProfileUpdate = ({ onClose }) => {
                 </div>
               </div>
               <div className="flex justify-between px-5 mt-2">
-                <div className="relative h-14 mb-3 w-[48%]">
+                {/* <div className="relative h-14 mb-3 w-[48%]">
                   <div>
                     <input
                       type="text"
@@ -572,7 +582,7 @@ const EditProfileUpdate = ({ onClose }) => {
                       {errors?.id_hq}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
               <button
                 type="submit"
@@ -868,7 +878,7 @@ const EditProfileUpdate = ({ onClose }) => {
             </div> */}
           </div>
           <div className="flex justify-center items-center mt-5 mb-4">
-          
+
           </div>
         </div>
       </div>

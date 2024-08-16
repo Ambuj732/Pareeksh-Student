@@ -6,14 +6,47 @@ import openbook from "../../assets/Dashboard/openbook.png";
 import getEmployments from "../../actions/Dashboard/getEmployments";
 import formatDate from "../../utils/formatDate";
 import AddEmployment from "./AddEmployment";
+import getStates from "../../actions/LoginScreens/getStates";
+import getCities from "../../actions/LoginScreens/getCities";
 
 function Employment() {
   const [employments, setEmployments] = useState([]);
-  const [isAddEmployment , setIsAddEmployment] = useState(false)
-  const [employmentData , setEmploymentData] = useState({})
+  const [isAddEmployment, setIsAddEmployment] = useState(false);
+  const [employmentData, setEmploymentData] = useState({});
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState({});
+  const [loadingCities, setLoadingCities] = useState(false);
 
+  // Load states
+  const loadStates = async () => {
+    try {
+      const statesList = await getStates();
+      setStates(statesList?.data?.states || []);
+    } catch (error) {
+      console.log("Error while getting states :: ", error);
+    }
+  };
 
+  // Load cities based on selected state
+  const loadCities = async (stateId) => {
+    if (stateId) {
+      setLoadingCities(true);
+      try {
+        const data = { id_state: Number(stateId) };
+        const citiesList = await getCities(data);
+        setCities((prevCities) => ({
+          ...prevCities,
+          [stateId]: citiesList?.data?.cities || []
+        }));
+      } catch (error) {
+        console.log("Error while getting cities :: ", error);
+      } finally {
+        setLoadingCities(false);
+      }
+    }
+  };
 
+  // Get employment data
   const getEmploymentHandler = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
@@ -22,19 +55,24 @@ function Employment() {
         id_self_student: user?.id_self_student,
       };
       const response = await getEmployments(data);
-      if (response?.data?.code === 1000)
-        setEmployments(response?.data?.employments);
+      if (response?.data?.code === 1000) {
+        setEmployments(response?.data?.employments || []);
+        // Trigger city loading for all states found in employment data
+        const stateIds = [...new Set(response.data.employments.map(emp => emp.id_state))];
+        stateIds.forEach(id => loadCities(id));
+      }
     } catch (error) {
       console.log("Error while getting employments :: ", error);
     }
   };
 
-  const handleClick = (data) =>{
-    setIsAddEmployment(true)
-    setEmploymentData(data)
-  }
+  const handleClick = (data) => {
+    setIsAddEmployment(true);
+    setEmploymentData(data);
+  };
 
   useEffect(() => {
+    loadStates();
     getEmploymentHandler();
   }, []);
 
@@ -50,9 +88,13 @@ function Employment() {
                   {employment?.current_employer === 1 ? "Current" : "Previous"}
                 </span>
               </div>
-              <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8">
+              <div
+                className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8"
+                onClick={() => handleClick(employment)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img src={pen} alt="" className="h-5" />
-                <span className="text-smf font-normal" onClick={() => handleClick(employment)} >Edit</span>
+                <span className="text-smf font-normal">Edit</span>
               </div>
             </div>
           </div>
@@ -135,40 +177,36 @@ function Employment() {
               </div>
             </div>
             <div className="flex justify-between w-full">
-              <div className="flex gap-2 text-sm w-1/3">
-                <img src={openbook} alt="" className="h-5" />
-                <div className="flex flex-col">
-                  <span className="text-[#1C4481]">Town</span>
-                  <div className="font-medium text-base">
-                    {employment.id_town}
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2 text-sm w-1/3">
+              <div className="flex gap-2 text-sm w-1/2">
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">District</span>
-                  <div className="font-medium text-base">
-                    {employment.id_city}
-                  </div>
+                  {cities[employment.id_state]?.map((city) => (
+                    <div key={city.id_city} className="font-medium text-base">
+                      {employment.id_city === city.id_city ? city.city : null}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="flex gap-2 text-sm w-1/3">
+              <div className="flex gap-2 text-sm w-1/2">
                 <img src={openbook} alt="" className="h-5" />
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">State</span>
-                  <div className="font-medium text-base">
-                    {employment.id_state}
-                  </div>
+                  {states.map((s) => (
+                    <div key={s.id_state} className="font-medium text-base">
+                      {employment.id_state === s.id_state ? s.state : null}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
       ))}
+
       {isAddEmployment && (
-					<AddEmployment onClose={()=>{setIsAddEmployment(false)}} type={"edit"} data={employmentData} />
-				)}
+        <AddEmployment onClose={() => { setIsAddEmployment(false) }} type={"edit"} employmentData={employmentData} />
+      )}
     </div>
   );
 }
