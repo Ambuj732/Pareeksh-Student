@@ -81,6 +81,7 @@ const AddResume = ({ onClose }) => {
       console.log(data);
       const response = await updateResumeHeadline(data);
       console.log(response);
+      onClose();
     } catch (error) {
       console.log("Error while updating resume headline :: ", error);
     }
@@ -125,6 +126,7 @@ const AddResume = ({ onClose }) => {
       console.log(data);
       const response = await updateResume(data);
       console.log(response);
+      onClose();
     } catch (error) {
       console.log("Error while updating resume :: ", error);
     }
@@ -144,6 +146,7 @@ const AddResume = ({ onClose }) => {
       console.log(data);
       const response = await updateResume(data);
       console.log(response);
+      onClose();
     } catch (error) {
       console.log("Error while updating resume :: ", error);
     }

@@ -72,7 +72,7 @@ function EducationProfile() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Specialization</span>
                   <div className="font-medium text-base">
-                    {education.id_specilization}
+                    {education.specialization}
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import marital from "../../assets/Dashboard/marital.png";
 import category from "../../assets/Dashboard/category.png";
 
@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 
 function CareerProfile() {
-  const recallCount = useSelector((state)=>state.call.recallCount)
+  const recallCount = useSelector((state) => state.call.recallCount)
   const [selectIndustry, setSelectIndustry] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
   const [selectJobCategory, setSleectJobCategory] = useState("");
@@ -85,8 +85,8 @@ function CareerProfile() {
       );
       setSelectJobRole(
         jobRoles?.data?.job_roles?.find(
-          (item) => item.id === response.data?.desired_job.id_job_role
-        ).job_role
+          (item) => item.id === response.data?.desired_job?.id_job_role
+        )?.job_role
       );
       setSelectEmpType(
         empTypes?.data?.emp_types?.find(

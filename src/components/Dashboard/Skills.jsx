@@ -28,7 +28,7 @@ function Skills() {
   const [projectData, setProjectData] = useState({});
   const [certificateData, setCertificateData] = useState({});
   const [mainData, setMainData] = useState({});
-  const recallCount = useSelector((state)=>state.call.recallCount)
+  const recallCount = useSelector((state) => state.call.recallCount)
 
   const getITSkillsHandler = async () => {
     try {
@@ -99,6 +99,8 @@ function Skills() {
       const response = await getProfileSummary(data);
       if (response?.data?.code === 1000) {
         setProfileSummary(response?.data?.profile_summary);
+        console.log("Profile Summary :: ", response?.data?.profile_summary);
+        console.log("Accomplishments :: ", response?.data?.accomplishment);
         setAccomplishments(response?.data?.accomplishment);
       }
     } catch (error) {
