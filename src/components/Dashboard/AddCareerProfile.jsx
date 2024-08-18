@@ -27,9 +27,8 @@ const AddCareerProfile = ({ onClose }) => {
   const { register, handleSubmit, setValue, formState: { errors  } } = useForm();
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loader.isLoading);
+  const [careerData, setCareerData] = useState({});
 
-  // console.log("err", error);
-  const [highestQualication, setHighestQualication] = useState([]);
   // const [errors, setErrors] = useState({});
   const [industry, setIndustry] = useState([]);
   const [department, setDepartment] = useState([]);
@@ -91,7 +90,7 @@ const AddCareerProfile = ({ onClose }) => {
     },
   ]);
 
-  const [selectHighestQual, setSelectHighestQual] = useState("");
+ 
   const [selectIndustry, setSelectIndustry] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
   const [selectRole, setSelectRole] = useState("");
@@ -102,6 +101,7 @@ const AddCareerProfile = ({ onClose }) => {
   const [selectShift, setSelectShift] = useState("");
   const [selectJobType, setSelectJobType] = useState("");
   const [selectExpectedSalary, setSelectExpectedSalary] = useState("");
+  const [isLoadingCities, setIsLoadingCities] = useState(false);
   useEffect(() => {
     preData();
   }, []);
@@ -110,8 +110,8 @@ const AddCareerProfile = ({ onClose }) => {
     try {
       dispatch(showLoader());
       console.log("preData", isLoading);
-      const highQual = await getHighQualList();
-      setHighestQualication(highQual?.data?.high_qual);
+      // const highQual = await getHighQualList();
+      // setHighestQualication(highQual?.data?.high_qual);
       const industries = await getApiData("masterData/fetchIndustry");
       setIndustry(industries?.data?.industries);
       const departments = await getApiData("masterData/fetchDepartments");
@@ -129,6 +129,8 @@ const AddCareerProfile = ({ onClose }) => {
       console.log("careerData", response);
       if (response?.data?.code === 1000) {
         const careerData = response?.data?.desired_job;
+        setCareerData(careerData);
+        getCitiesHandler(careerData?.id_state);
         setValue("industry", careerData?.id_industry);
         setSelectIndustry(careerData?.id_industry);
         setValue("department", careerData?.id_department);
@@ -140,9 +142,9 @@ const AddCareerProfile = ({ onClose }) => {
         getJobRoles(careerData?.id_role_category);
         setValue("state", careerData?.id_state);
         setSelectState(careerData?.id_state);
-        setValue("city", careerData?.id_city);
+        setValue("city", careerData?.id_city );
         setSelectCity(careerData?.id_city);
-        getCitiesHandler(careerData?.id_state);
+        // getCitiesHandler(careerData?.id_state);
         setValue("employment_type", careerData?.id_employment_type);
         setSelectEmploymentType(careerData?.id_employment_type);
         setValue("shift", careerData?.shift);
@@ -163,14 +165,33 @@ const AddCareerProfile = ({ onClose }) => {
     }
   };
 
+
+  useEffect(() => {
+    // Ensure careerData and cityList are available before setting the city
+    if (careerData && cityList.length > 0 && careerData.id_city) {
+      console.log("Setting city:", careerData.id_city);
+      setValue("city", careerData.id_city);  // Set the city in the form
+      setSelectCity(careerData.id_city);     // Update the local state
+    }
+  }, [careerData, cityList, setValue]);
+  
+  
+
+  
+
+
+
   const getCitiesHandler = async (id) => {
     try {
       //console.log("Id :: ", id);
       const data = {
         id_state: id,
       };
+
+      setIsLoadingCities(true);
       const response = await getCities(data);
       setCityList(response?.data?.cities);
+      setIsLoadingCities(false);
       //console.log("Cities :: ", response?.data?.cities);
     } catch (error) {
       //onsole.log("Error while getting cities :: ", error);
@@ -650,18 +671,21 @@ const AddCareerProfile = ({ onClose }) => {
               </div>
               <div className="relative h-14 mb-3 w-1/2">
                 <div>
+                  {/* {console.log("city", )} */}
                   <select
                     id="qualification_select"
                     className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                    defaultValue=""
-                    onChange={(e) => setSelectCity(e.target.value)}
+                    // defaultValue=""
+                   
                     {...register("city", { required: true })}
+                    // onChange={(e) => console.log("city", e.target.value)}
+                    onChange={(e) => setSelectCity(e.target.value)}
                   >
                     <option value="" disabled hidden>
                       Select
                     </option>
                     {cityList?.map((cityName) => (
-                      <option key={cityName?.id} value={cityName.id_city}>
+                      <option key={cityName?.id_city} value={cityName.id_city}>
                         {cityName.city}
                       </option>
                     ))}
