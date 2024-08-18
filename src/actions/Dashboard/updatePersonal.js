@@ -15,31 +15,28 @@ import { PUBLIC_REST_API_ENDPOINT, BEARER_TOKEN } from "../../constants";
 // };
 
 const updatePersonal = async (data) => {
-	try {
-		const queryString = Object.keys(data)
-			.map(
-				(key) =>
-					`${encodeURIComponent(key)}=${encodeURIComponent(
-						data[key]
-					)}`
-			)
-			.join("&");
-			console.log(queryString)
-		const response = await axios.post(
-			`${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
-			{},
-			{
-				headers: {
-					Authorization: `Bearer ${BEARER_TOKEN}`,
-				},
-			}
-		);
-		
-		console.log("Update Personal Response :: ", response);
-		return response;
-	} catch (error) {
-		console.log("Error while updating personal :: ", error);
-	}
+  try {
+    const queryString = Object.keys(data)
+      .map(
+        (key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+      )
+      .join("&");
+    console.log(queryString);
+    const response = await axios.post(
+      `${PUBLIC_REST_API_ENDPOINT}/amsapi/studentSelf/updatePersonal?${queryString}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+        },
+      }
+    );
+
+    console.log("Update Personal Response :: ", response);
+    return response;
+  } catch (error) {
+    console.log("Error while updating personal :: ", error);
+  }
 };
 
 export default updatePersonal;

@@ -148,7 +148,7 @@ function Employment() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Current Salary</span>
                   <div className="font-medium text-base">
-                    {employment?.salary}
+                    {employment?.salary} LPA
                   </div>
                 </div>
               </div>
@@ -157,7 +157,7 @@ function Employment() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Notice period</span>
                   <div className="font-medium text-base">
-                    {employment.notice_period} Days
+                    {employment.notice_period} Weeks
                   </div>
                 </div>
               </div>

@@ -48,7 +48,6 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 	const [mainData, setMainData] = useState({});
 
 	console.log('emp', employmentData)
-	console.log('cities', cities)
 
 
 	const getEmploymentHandler = async () => {
@@ -68,16 +67,16 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 	const preData = async () => {
 		try {
 			const statesList = await getStates();
-			console.log(statesList?.data?.states);
+			// console.log(statesList?.data?.states);
 			setStates(statesList?.data?.states);
 			const employmentTypeList = await getEmpTypes();
-			console.log(employmentTypeList?.data?.emp_types);
+			// console.log(employmentTypeList?.data?.emp_types);
 			setEmploymentTypes(employmentTypeList?.data?.emp_types);
 			const industryList = await getIndustry();
-			console.log(industryList?.data?.industries);
+			// console.log(industryList?.data?.industries);
 			setIndustries(industryList?.data?.industries);
 			const departmentsList = await getDepartments();
-			console.log(departmentsList?.data?.departments);
+			// console.log(departmentsList?.data?.departments);
 			setDepartments(departmentsList?.data?.departments);
 
 
@@ -87,13 +86,15 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 				setValue('empType', employmentData?.id_employment_type);
 				setValue('industry', employmentData?.id_industry);
 				setValue('department', employmentData?.id_department);
-				setValue('startDate', employmentData?.date_of_joining.split("T")[0]);
-				setValue('endDate', employmentData?.date_of_exit.split("T")[0]);
+				const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+				setValue('startDate', employmentData?.date_of_joining ? employmentData.date_of_joining.split("T")[0] : today);
+				setValue('endDate', employmentData?.date_of_exit ? employmentData.date_of_exit.split("T")[0] : today);
 				setValue('pincode', employmentData?.id_pincode);
 				setValue('noticePeriod', employmentData?.notice_period);
 				setValue('salary', employmentData?.salary);
 				setValue('isCurrentEmployer', employmentData?.current_employer);
 				setValue('designation', employmentData?.degignation);
+				console.log('designation', employmentData?.degignation)
 				setValue('state', employmentData?.id_state);
 				setSelectedState(employmentData?.id_state);
 				const state_id = states?.find(
@@ -146,7 +147,7 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 				degignation: formData?.designation,
 				id_state: selectedState,
 				id_town: 6,
-				current_employer: 0,
+				current_employer: 1,
 				notice_period: formData?.noticePeriod,
 				salary: formData?.salary,
 
@@ -175,23 +176,6 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	const loadCities = async () => {
-	// 		try {
-	// 			console.log(selectedState);
-	// 			const data = {
-	// 				id_state: Number(selectedState),
-	// 			};
-	// 			console.log(data);
-	// 			const citiesList = await getCities(data);
-	// 			console.log(citiesList);
-	// 			setCities(citiesList?.data?.cities);
-	// 		} catch (error) {
-	// 			console.log("Error while getting cities :: ", error);
-	// 		}
-	// 	};
-	// 	loadCities();
-	// }, [selectedState]);
 	useEffect(() => {
 		const loadCities = async () => {
 			try {
@@ -475,7 +459,7 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 													htmlFor=""
 													className="pl-2"
 												>
-													Notice Period
+													Notice Period (in weeks)
 												</label>
 											</div>
 										</div>
@@ -505,7 +489,582 @@ const AddEmployment = ({ onClose, type, employmentData }) => {
 													htmlFor=""
 													className="pl-2"
 												>
-													Salary{" "}
+													Salary (in lacs){" "}
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+								<div className="flex gap-5 justify-around px-5 mt-5">
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="qualification_select"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+												defaultValue=""
+												{...register("department", {
+													required: true,
+												})}
+											>
+												<option
+													value=""
+													disabled
+													hidden
+												>
+													Select
+												</option>
+												{departments?.map(
+													(qualName) => (
+														<option
+															key={qualName?.id}
+															value={qualName.id}
+														>
+															{
+																qualName?.department_name
+															}
+														</option>
+													)
+												)}
+											</select>
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+												{/* <FaAngleDown /> */}
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Department
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="qualification_select"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+												defaultValue=""
+												onChange={(e) =>
+													handleSelectQualification(
+														e.target.value
+													)
+												}
+												{...register("industry", {
+													required: true,
+												})}
+											>
+												<option
+													value=""
+													disabled
+													hidden
+												>
+													Select
+												</option>
+												{industries?.map((qualName) => (
+													<option
+														key={qualName?.id}
+														value={qualName.id}
+													>
+														{qualName.industry_name}
+													</option>
+												))}
+											</select>
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+												{/* <FaAngleDown /> */}
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Industry
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+								<div className="flex px-5 mt-5">
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="qualification_select"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+												defaultValue=""
+												{...register("empType", {
+													required: true,
+												})}
+											>
+												<option
+													value=""
+													disabled
+													hidden
+												>
+													Select
+												</option>
+												{employmentTypes?.map(
+													(qualName) => (
+														<option
+															key={qualName?.id}
+															value={qualName.id}
+														>
+															{
+																qualName.employment_type
+															}
+														</option>
+													)
+												)}
+											</select>
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+												{/* <FaAngleDown /> */}
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Employment Type
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+								<div>
+									<h1 className="px-5 mt-7 font-semibold">
+										{" "}
+										Location
+									</h1>
+								</div>
+								<hr className="border-black mt-1 mx-4"></hr>
+
+								<div className="flex gap-5 justify-around px-5 mt-5">
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="state"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+												defaultValue=""
+												{...register("state", { required: true })}
+												onChange={(e) => setSelectedState(e.target.value)}
+											>
+												<option value="" disabled hidden>
+													Select
+												</option>
+												{states?.map((state) => (
+													<option key={state?.id} value={state.id_state}>
+														{state.state}
+													</option>
+												))}
+											</select>
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+												{/* <FaAngleDown /> */}
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													State
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="city"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none"
+												{...register("city", { required: true })}
+												value={selectedCity} // Make sure value is correctly set
+												onChange={(e) => setSelectedCity(e.target.value)}
+											>
+												<option value="" disabled hidden>
+													Select
+												</option>
+												{cities?.map((city) => (
+													<option key={city?.id_city} value={city.id_city}>
+														{city.city}
+													</option>
+												))}
+											</select>
+
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+												{/* <FaAngleDown /> */}
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													City
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+								<div className="flex gap-5 px-5 mt-5">
+									{/* <div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<select
+												id="qualification_select"
+												className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+												defaultValue=""
+											>
+												<option
+													value=""
+													disabled
+													hidden
+												>
+													Select
+												</option>
+												{town?.map((state) => (
+													<option
+														key={state?.id}
+														value={state.id_state}
+													>
+														{state.town_name}
+													</option>
+												))}
+											</select>
+											<div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
+											</div>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<img
+													src={message}
+													alt=""
+													className="h-5 w-5"
+												/>
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Town
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div> */}
+									<div className="relative h-14 mb-3 w-1/2">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("pincode", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Pincode
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+							</>
+						)}
+						{employmentType == "fresher" && (
+							<>
+								<div>
+									<h1 className="px-5 mt-7 font-semibold">
+										Desired Work Location
+									</h1>
+								</div>
+								<hr className="border-black mt-1 mx-4"></hr>
+								<div className="h-10 flex items-center gap-4 px-5">
+									<div className="flex items-center">
+										<input
+											// employment?.current_employer === 1 ? "Current" : "Previous"
+											checked={isCurrentEmployer == "current"} // Check "Current" if isCurrentEmployer is not 0
+											id="default-radio-3"
+											type="radio"
+											value="current"
+											name="isCurrentEmployer"
+											className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-white-500 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+											onChange={handleEmployerChange}
+										/>
+										<label
+											htmlFor="default-radio-3"
+											className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+										>
+											Current
+										</label>
+									</div>
+									<div className="flex items-center">
+										<input
+											checked={isCurrentEmployer === 'previous'} // Check "Previous" if isCurrentEmployer is 0
+											id="default-radio-4"
+											type="radio"
+											value="previous"
+											name="isCurrentEmployer"
+											className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+											onChange={handleEmployerChange}
+										/>
+										<label
+											htmlFor="default-radio-4"
+											className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+										>
+											Previous
+										</label>
+									</div>
+								</div>
+								<div className="flex gap-5 justify-around px-5 mt-4">
+									<div className="relative h-12 w-1/2">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("employerName", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Employer Name
+												</label>
+											</div>
+										</div>
+									</div>
+									<div className="relative h-12 w-1/2">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("designation", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Designation
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className="flex gap-5 px-5 mt-5">
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="date"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("startDate", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Start Date
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="date"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("endDate", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													End Date
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+								</div>
+								<div className="flex gap-5 px-5 mt-5">
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("noticePeriod", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Notice Period (in weeks)
+												</label>
+											</div>
+										</div>
+										{errors.id_hq && (
+											<div className="error text-red-600 font-medium text-sm">
+												{errors?.id_hq}
+											</div>
+										)}
+									</div>
+									<div className="relative h-14 mb-3 w-[48%]">
+										<div>
+											<input
+												type="text"
+												id="floating_filled"
+												className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+												placeholder=""
+												{...register("salary", {
+													required: true,
+												})}
+											/>
+											<div
+												htmlFor="floating_filled"
+												className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+											>
+												<IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
+												<label
+													htmlFor=""
+													className="pl-2"
+												>
+													Salary (in lacs){" "}
 												</label>
 											</div>
 										</div>

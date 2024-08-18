@@ -66,15 +66,15 @@ const EditProfileUpdate = ({ onClose }) => {
   const [selectedCity, setSelectedCity] = useState("");
   const dispatch = useDispatch();
 
-  console.log(states)
+  // console.log(states)
 
   const [errors, setErrors] = useState({});
   const user = useSelector((state) => state?.auth?.userData);
   const studentProfile = useSelector(
     (state) => state?.studentProfile?.studentProfileData
   );
-  console.log(user);
-  console.log('kk', studentProfile);
+  // console.log(user);
+  console.log('profileData', studentProfile);
 
   useEffect(() => {
     if (studentProfile) {
@@ -86,19 +86,29 @@ const EditProfileUpdate = ({ onClose }) => {
   useEffect(() => {
     if (studentProfile) {
       setValueForm3("state", studentProfile?.id_state);
-
+      setSelectedState(studentProfile?.id_state); // Set selected state
     }
   }, [studentProfile, setValueForm3]);
+
+  useEffect(() => {
+    if (studentProfile && cities.length > 0) {
+      setValueForm3("city", studentProfile?.id_city);
+      setSelectedCity(studentProfile?.id_city); // Set selected city
+    }
+  }, [studentProfile, cities, setValueForm3]);
+
+
+
 
   const preData = async () => {
     try {
       const highQual = await getHighQualList();
       setHighestQualication(highQual?.data?.high_qual);
       const langs = await getLanguageList();
-      console.log(langs?.data?.lang_list);
+      // console.log(langs?.data?.lang_list);
       setLanguages(langs?.data?.lang_list);
       const statesList = await getStates();
-      console.log(statesList);
+      // console.log(statesList);
       setStates(statesList?.data?.states);
     } catch (error) {
       console.log(
@@ -112,16 +122,17 @@ const EditProfileUpdate = ({ onClose }) => {
     preData();
   }, []);
 
+
   useEffect(() => {
     const loadCities = async () => {
       try {
-        console.log(selectedState);
+        // console.log(selectedState);
         const data = {
           id_state: Number(selectedState),
         };
         console.log(data);
         const citiesList = await getCities(data);
-        console.log(citiesList);
+        // console.log(citiesList);
         setCities(citiesList?.data?.cities);
       } catch (error) {
         console.log("Error while getting cities :: ", error);
@@ -155,7 +166,7 @@ const EditProfileUpdate = ({ onClose }) => {
         usercode: user?.usercode,
         id_state: studentProfile?.id_state,
       };
-      console.log(data);
+      console.log('after marital', data);
       const response = await updatePersonal(data);
       console.log("res", response);
       if (response.data.code === 1000) {
@@ -174,7 +185,7 @@ const EditProfileUpdate = ({ onClose }) => {
 
   const addLanguageHandler = async (formData) => {
     try {
-      console.log(formData);
+      console.log('before language', formData);
       const data = {
         id_lang: Number(formData?.language),
         usercode: user?.usercode,
@@ -184,40 +195,23 @@ const EditProfileUpdate = ({ onClose }) => {
         prof: Number(formData?.proficient),
         write: formData?.write ? 1 : 0,
       };
-      console.log(data);
+      console.log('after language', data);
       const response = await addStudentLanguage(data);
       console.log(response);
+      toast.success("The language is added successfully...");
+      onClose();
+      dispatch(recallData());
     } catch (error) {
       console.log("Error while adding language :: ", error);
     }
   };
 
-  const updateLocationHandler = async (formData) => {
-    try {
-      const data = {
-        id_city: studentProfile?.id_city,
-        gender: studentProfile?.gender,
-        martial: Number(formData?.martialStatus),
-        differently_abled: Number(formData?.differentlyAbled),
-        dob: extractDate(studentProfile?.date_of_birth),
-        id_cast_category: studentProfile?.id_cast_category,
-        name: studentProfile?.student_name,
-        id_self_student: user?.id_self_student,
-        usercode: user?.usercode,
-        id_state: studentProfile?.id_state,
-      };
-      const response = await updatePersonal(data);
-      console.log(response);
-    } catch (error) {
-      console.log("Error while updating location :: ", error);
-    }
-  };
 
   const updateCurrentLocationHandler = async (formData) => {
     try {
       console.log(formData);
       console.log(user);
-      console.log(studentProfile);
+      console.log('before api', studentProfile);
       const data = {
         id_city: Number(formData?.city),
         gender: studentProfile?.gender,
@@ -230,9 +224,12 @@ const EditProfileUpdate = ({ onClose }) => {
         usercode: user?.usercode,
         id_state: Number(selectedState),
       };
-      console.log(data);
+      console.log('after api', data);
       const response = await updatePersonal(data);
       console.log(response);
+      toast.success("The location updated successfully.....");
+      onClose();
+      dispatch(recallData());
     } catch (error) {
       console.log("Error while updating current location :: ", error);
     }
@@ -471,39 +468,26 @@ const EditProfileUpdate = ({ onClose }) => {
               </div>
               <div className="flex gap-5 justify-around px-5 mt-5">
                 <div className="relative h-14 mb-3 w-1/2">
-                  <div>
-                    <select
-                      id="state"
-                      className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                      {...registerForm3("state", { required: true })}
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setSelectedState(e.target.value);
-                      }}
-                    >
-                      <option value="" disabled hidden>
-                        Select
-                      </option>
-                      {states?.map((state) => (
-                        <option key={state?.id_state} value={state.id_state}>
-                          {state.state}
-                        </option>
-                      ))}
-                    </select>
-
-                    <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                      {/* <FaAngleDown /> */}
+                  {states.length > 0 && (
+                    <div>
+                      <select
+                        className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+                        id="state"
+                        {...registerForm3("state", { required: true })}
+                        onChange={(e) => {
+                          setSelectedState(e.target.value);
+                        }}
+                        value={selectedState} // Ensure controlled component
+                      >
+                        <option value="" disabled hidden>Select State</option>
+                        {states.map((state) => (
+                          <option key={state.id_state} value={state.id_state}>
+                            {state.state}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                    <div
-                      htmlFor="floating_filled"
-                      className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
-                    >
-                      <img src={message} alt="" className="h-5 w-5" />
-                      <label htmlFor="" className="pl-2">
-                        State
-                      </label>
-                    </div>
-                  </div>
+                  )}
                   {errors.id_hq && (
                     <div className="error text-red-600 font-medium text-sm">
                       {errors?.id_hq}
@@ -511,43 +495,26 @@ const EditProfileUpdate = ({ onClose }) => {
                   )}
                 </div>
                 <div className="relative h-14 mb-3 w-1/2">
-                  <div>
-                    <select
-                      id="id_city"
-                      className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
-                      defaultValue=""
-
-                      {...registerForm3("city", {
-                        required: true,
-                      })}
-                      onChange={(e) => {
-                        console.log('Hii', e.target.value);
-                        setSelectedCity(e.target.value);
-                      }}
-                      value={selectedCity}
-                    >
-                      <option value="" disabled hidden>
-                        Select
-                      </option>
-                      {cities?.map((city) => (
-                        <option key={city?.id_city} value={city?.id_city}>
-                          {city.city}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between">
-                      {/* <FaAngleDown /> */}
+                  {selectedState && cities.length > 0 && (
+                    <div>
+                      <select
+                        id="city"
+                        className="block pl-8 pr-3 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0"
+                        {...registerForm3("city", { required: true })}
+                        onChange={(e) => {
+                          setSelectedCity(e.target.value);
+                        }}
+                        value={selectedCity} // Ensure controlled component
+                      >
+                        <option value="" disabled hidden>Select City</option>
+                        {cities.map((city) => (
+                          <option key={city.id_city} value={city.id_city}>
+                            {city.city}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                    <div
-                      htmlFor="floating_filled"
-                      className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
-                    >
-                      <img src={message} alt="" className="h-5 w-5" />
-                      <label htmlFor="" className="pl-2">
-                        City
-                      </label>
-                    </div>
-                  </div>
+                  )}
                   {errors.id_hq && (
                     <div className="error text-red-600 font-medium text-sm">
                       {errors?.id_hq}
