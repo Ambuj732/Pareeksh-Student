@@ -48,7 +48,7 @@ function EducationProfile() {
         >
           <div className="flex justify-between text-[#1C4481] font-medium px-8 text-lg h-16 items-center rounded-t-xl bg-[#EAF2FE] ">
             <span>{education?.highest_qualification}</span>
-            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8" onClick={() => {
+            <div className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8" style={{ cursor: 'pointer' }} onClick={() => {
               setEducationData(education);
               setModelOpen(true);
             }}>
@@ -63,7 +63,7 @@ function EducationProfile() {
                 <div className="flex flex-col">
                   <span className="text-[#1C4481]">Course</span>
                   <div className="font-medium text-base">
-                    {education?.course_name}
+                    {education?.course_name || "NA"}
                   </div>
                 </div>
               </div>

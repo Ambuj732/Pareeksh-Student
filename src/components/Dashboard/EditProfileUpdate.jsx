@@ -240,7 +240,7 @@ const EditProfileUpdate = ({ onClose }) => {
       <div className="w-1/2 h-2/3 rounded-md shadow-md ">
         <div className="flex justify-between items-center bg-blue-100  rounded-t-md h-12">
           <h1 className="ml-8 items-center mt-3 font-semibold text-blue-800">
-            Edit Profile
+            Edit Profile ..
           </h1>
           <img
             className="mr-8 items-center mt-2 h-8  cursor-pointer"
@@ -486,7 +486,17 @@ const EditProfileUpdate = ({ onClose }) => {
                           </option>
                         ))}
                       </select>
+                      <div
+                        htmlFor="floating_filled"
+                        className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+                      >
+                        <img src={message} alt="" className="h-5 w-5" />
+                        <label htmlFor="" className="pl-2">
+                          State
+                        </label>
+                      </div>
                     </div>
+
                   )}
                   {errors.id_hq && (
                     <div className="error text-red-600 font-medium text-sm">
@@ -513,6 +523,15 @@ const EditProfileUpdate = ({ onClose }) => {
                           </option>
                         ))}
                       </select>
+                      <div
+                        htmlFor="floating_filled"
+                        className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
+                      >
+                        <img src={message} alt="" className="h-5 w-5" />
+                        <label htmlFor="" className="pl-2">
+                          City
+                        </label>
+                      </div>
                     </div>
                   )}
                   {errors.id_hq && (

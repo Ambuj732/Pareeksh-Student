@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 
 const AddEducation = ({ onClose, type, educationData }) => {
   const user = useSelector((state) => state?.auth?.userData);
-  console.log(user);
+  // console.log(user);
   const studentProfile = useSelector(
     (state) => state?.studentProfile?.studentProfileData
   );
@@ -38,16 +38,16 @@ const AddEducation = ({ onClose, type, educationData }) => {
   const preData = async () => {
     try {
       const highQual = await getHighQualList();
-      console.log(highQual?.data?.high_qual);
+      // console.log(highQual?.data?.high_qual);
       setHighestQualication(highQual?.data?.high_qual);
       const coursesList = await getCourses();
-      console.log(coursesList);
+      // console.log(coursesList);
       setCourses(coursesList?.data?.courses);
       const statesList = await getStates();
-      console.log(statesList);
+      // console.log(statesList);
       setStates(statesList?.data?.states);
       const institutesList = await getInstitutes();
-      console.log(institutesList);
+      // console.log(institutesList);
       setInstitutes(institutesList?.data?.institutes);
       let speData = {
         id_course: 1,
@@ -60,7 +60,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
         id_state: 1,
       };
       const boardList = await getBoards(data);
-      console.log("board", boardList?.data?.boards);
+      // console.log("board", boardList?.data?.boards);
       setBoards(boardList?.data?.boards);
 
       if (type === "edit") {
@@ -97,15 +97,15 @@ const AddEducation = ({ onClose, type, educationData }) => {
         setValue("pincode", educationData?.pincode);
         setValue("id_course", educationData?.id_course);
       }
-      console.log("speData", speData);
+      // console.log("speData", speData);
       const cityList = await getCities(cityData);
-      console.log(cityList?.data?.cities);
+      // console.log(cityList?.data?.cities);
       setCities(cityList?.data?.cities);
       const specializationList = await getSpecialization(speData);
-      console.log("spe", specializationList?.data?.specializations);
+      // console.log("spe", specializationList?.data?.specializations);
       setSpecialization(specializationList?.data?.specializations);
       setValue("specialization", educationData?.id_specilization);
-      console.log("edu", educationData?.id_specilization);
+      // console.log("edu", educationData?.id_specilization);
     } catch (error) {
       console.log(
         "Error while getting highest qualification or states :: ",
@@ -137,19 +137,19 @@ const AddEducation = ({ onClose, type, educationData }) => {
       (state) => state?.state === e.target.value
 
     ).id_state;
-    console.log("id", id);
+    // console.log("id", id);
     loadCities(id);
   }
 
   const loadCities = async (value) => {
     try {
-      console.log(value);
+      // console.log(value);
       const data = {
         id_state: Number(value),
       };
-      console.log(data);
+      // console.log(data);
       const citiesList = await getCities(data);
-      console.log("cities", citiesList?.data?.cities);
+      // console.log("cities", citiesList?.data?.cities);
       setCities(citiesList?.data?.cities);
     } catch (error) {
       console.log("Error while getting cities :: ", error);
@@ -158,13 +158,13 @@ const AddEducation = ({ onClose, type, educationData }) => {
 
   const loadSpecialization = async (value) => {
     try {
-      console.log(value);
+      // console.log(value);
       const data = {
         id_course: Number(value),
       };
-      console.log(data);
+      // console.log(data);
       const specializationList = await getSpecialization(data);
-      console.log(specializationList);
+      // console.log(specializationList);
       setSpecialization(specializationList?.data?.specializations);
     } catch (error) {
       console.log("Error while getting specialization :: ", error);
@@ -247,6 +247,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   defaultValue={""}
                   {...register("course_name", { required: true })}
                   onChange={handleCourseChange}
+                  required
                 >
                   <option value="" disabled hidden>
                     Select
@@ -266,7 +267,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 >
                   <img src={message} alt="" className="h-5 w-5" />
                   <label htmlFor="" className="pl-2">
-                    Course Name
+                    Course Name<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -285,6 +286,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("institute_name", {
                     required: true,
                   })}
+                  required
                 // onChange={(e) => setInstituteName(e.target.value)}
                 >
                   <option value="" disabled hidden>
@@ -305,7 +307,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 >
                   <img src={message} alt="" className="h-5 w-5" />
                   <label htmlFor="" className="pl-2">
-                    Institute Name
+                    Institute Name<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -326,6 +328,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("highest_qualification", {
                     required: true,
                   })}
+                  required
                 >
                   <option value="" disabled hidden>
                     Select
@@ -345,7 +348,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 >
                   <img src={message} alt="" className="h-5 w-5" />
                   <label htmlFor="" className="pl-2">
-                    Highest Qualification
+                    Highest Qualification<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -364,6 +367,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("board_name", {
                     required: true,
                   })}
+                  required
                 >
                   <option value="" disabled hidden>
                     Select
@@ -383,7 +387,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 >
                   <img src={message} alt="" className="h-5 w-5" />
                   <label htmlFor="" className="pl-2">
-                    Board
+                    Board<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -404,6 +408,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                   {...register("specialization", {
                     required: true,
                   })}
+                  required
                 >
                   <option value="" disabled hidden>
                     Select
@@ -423,7 +428,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 >
                   <img src={message} alt="" className="h-5 w-5" />
                   <label htmlFor="" className="pl-2">
-                    Specialization
+                    Specialization<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -438,20 +443,26 @@ const AddEducation = ({ onClose, type, educationData }) => {
                 <input
                   type="text"
                   id="floating_filled"
-                  className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+                  className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
                   placeholder=""
                   defaultValue={""}
                   {...register("percentage", {
-                    required: true,
+                    required: "This field is required",
+                    validate: {
+                      lessThanHundred: (value) =>
+                        Number(value) < 100 || "Percentage must be less than 100"
+                    }
                   })}
+                  required
                 />
+
                 <div
                   htmlFor="floating_filled"
                   className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
                 >
                   <IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
                   <label htmlFor="" className="pl-2">
-                    Percentage
+                    Percentage<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -467,22 +478,34 @@ const AddEducation = ({ onClose, type, educationData }) => {
             <div className="relative h-12 w-1/2">
               <div>
                 <input
-                  type="text"
+                  type="number"
                   id="floating_filled"
-                  className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+                  className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
                   placeholder=""
-                  defaultValue={""}
+                  defaultValue=""
+                  min={new Date().getFullYear() - 50}  // 50 years ago
+                  max={new Date().getFullYear()}       // Current year
                   {...register("year_of_passing", {
-                    required: true,
+                    required: "This field is required",
+                    validate: (value) => {
+                      const currentYear = new Date().getFullYear();
+                      const minYear = currentYear - 50;
+
+                      return value >= minYear && value <= currentYear
+                        ? true
+                        : `Year must be between ${minYear} and ${currentYear}`;
+                    }
                   })}
+                  required
                 />
+
                 <div
                   htmlFor="floating_filled"
                   className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
                 >
                   <IoPerson className="absolute top-1/2 left-2 transform -translate-y-1/2 text-[#1C4481]" />
                   <label htmlFor="" className="pl-2">
-                    Year of Passing
+                    Year of Passing<span style={{ color: "red" }}>*</span>
                   </label>
                 </div>
               </div>
@@ -607,7 +630,7 @@ const AddEducation = ({ onClose, type, educationData }) => {
           >
             <button
               type="Submit"
-              className="rounded-full bg-blue-900 text-white px-8 py-1 "
+              className="rounded-full bg-blue-900 text-white px-8 py-1 mt-3 mb-3 "
             >
               Save
             </button>
