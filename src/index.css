@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		/* IE and Edge */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+}
+
+@layer utilities {
+	.no-spin::-webkit-outer-spin-button,
+	.no-spin::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	[type="number"].no-spin {
+		-moz-appearance: textfield;
+	}
+}
+
+/* custom-scrollbar.css */
+.scrollbar-blue {
+	scrollbar-width: thin;
+	scrollbar-color: #1c4481 #edf2ff;
+}
+
+/* Webkit-based browsers */
+.scrollbar-blue::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+.scrollbar-blue::-webkit-scrollbar-thumb {
+	background-color: #1c4481;
+	border-radius: 9999px;
+}
+
+.scrollbar-blue::-webkit-scrollbar-track {
+	background: #edf2ff;
+}
+
+@keyframes marquee {
+	0% {
+		transform: translateX(50%);
+	}
+
+	100% {
+		transform: translateX(-100%);
+	}
+}
+
+.animate-marquee {
+	display: inline-block;
+	animation: marquee 8s linear infinite;
+}
+
+.element-outline-none {
+	outline: none !important;
+}
+
+@keyframes blink {
+	0%,
+	50%,
+	100% {
+		opacity: 1;
+	}
+	25%,
+	75% {
+		opacity: 0;
+	}
+}
+
+.blink {
+	animation: blink 2s infinite;
+}

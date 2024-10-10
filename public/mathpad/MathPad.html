@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MathPad</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-submenu/2.0.4/css/bootstrap-submenu.min.css"
+          rel="stylesheet">
+    <!-- include summernote css/js-->
+    <link href="https://cdn.bootcss.com/summernote/0.8.10/summernote.css" rel="stylesheet">
+    <!--<style>
+      .note-editable.panel-body {
+        max-height: 200px;
+        overflow-y: scroll;
+      }
+
+    </style>-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="https://cdn.bootcss.com/fullPage.js/2.9.5/jquery.fullpage.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/fullPage.js/2.9.5/vendors/scrolloverflow.min.js"></script>
+    <script src="https://cdn.bootcss.com/fullPage.js/2.9.5/jquery.fullpage.min.js"></script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        elements:['MathPreview','math-menus','math-example', 'hintstmpls'],
+        showProcessingMessages: false,
+        tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
+        SVG: { scale: 100 },
+        TeX: { equationNumbers: {  autoNumber: "AMS"  }}
+      });
+
+    </script>
+    <script src="https://cdn.bootcss.com/mathjax/2.7.6/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="mobile-wapper">
+    <div id="fullpage">
+
+        <!-- SECTION EDIT -->
+        <div id="page-edit" class="section fp-noscroll" data-anchor="edit">
+            <div class="container-fluid">
+                <div class="row clearfix">
+                    <div class="col-xs-12 column">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"
+                                 style="margin:0px;padding-top:0px;padding-bottom:0px;">
+                                <div id="math-menus" class="row clearfix">
+                                    <!-- MATH BUTTON -->
+                                    <div class="btn-group btn-group-sm math-menu">
+                                        <button type="button" class="btn btn-default" value="$$"
+                                                title="$$">
+                                            <i class="fa fa-lg fa-dollar"></i><i
+                                                class="fa fa-lg fa-dollar"></i>
+                                        </button>
+                                    </div>
+                                    <!-- MATH MENUS -->
+                                    <!-- common -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="common" title="Common"><i
+                                                class="fa fa-lg fa-star-o"></i></button>
+                                        <ul class="dropdown-menu" role="menu"
+                                            aria-labelledby="common">
+                                            <li>
+                                                <div id="mnu-common" class="math-menu">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- binary relational ops -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="birelation"
+                                                title="Relations, Ops">
+                                            $\leq$</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu"
+                                            aria-labelledby="birelation">
+                                            <li>
+                                                <div id="mnu-relation" class="math-menu">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- derivative -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="sum-union"
+                                                title="Derivative">$\partial$
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu"
+                                            aria-labelledby="sum-union">
+                                            <li>
+                                                <div id="mnu-derivative" class="math-menu">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- integral -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="sum-union"
+                                                title="Integral">$\int$
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                            aria-labelledby="sum-union">
+                                            <li>
+                                                <div id="mnu-integral" class="math-menu">
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <!-- sum, mul, union, inter -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="sum-union"
+                                                title="Sum,mul...">$\sum$
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                            aria-labelledby="sum-union">
+                                            <li>
+                                                <div id="mnu-sumprod" class="math-menu">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- greek -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="greek" title="Greek">
+                                            $\beta$
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                            aria-labelledby="greek">
+                                            <li>
+                                                <div id="mnu-greek" class="math-menu">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- others -->
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" id="greek" title="More">...
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                            aria-labelledby="greek">
+                                            <li>
+                                                <div class="math-menu">
+                                                    <div class="tabbable" id="tabs-142114">
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="active">
+                                                                <a href="#panel-mt"
+                                                                   data-toggle="tab" title="Matrix">Mt</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#panel-fn"
+                                                                   data-toggle="tab"
+                                                                   title="Function">Fn</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#panel-op"
+                                                                   data-toggle="tab"
+                                                                   title="Operator">Op</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#panel-de"
+                                                                   data-toggle="tab"
+                                                                   title="Delimiter">De</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#panel-ar"
+                                                                   data-toggle="tab"
+                                                                   title="Arrow &amp; Font">Ar&amp;Ft</a>
+                                                            </li>
+                                                        </ul>
+
+                                                        <div class="tab-content pull-right">
+                                                            <div class="tab-pane active"
+                                                                 id="panel-mt">
+                                                                <table>
+                                                                    <tbody align="center"
+                                                                           valign="middle">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\ldots ">
+                                                                                $\ldots$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\cdots ">
+                                                                                $\cdots$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\vdots ">
+                                                                                $\vdots$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\ddots ">
+                                                                                $\ddots$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\begin{cases} a & b \\ c & d \end{cases}"
+                                                                                    title="cases">
+                                                                                cases
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\begin{pmatrix} a & b \\ c & d \end{pmatrix}"
+                                                                                    title="pmatrix">
+                                                                                $\begin{pmatrix} a &
+                                                                                b \\ c & d
+                                                                                \end{pmatrix}$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td colspan="3">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\begin{pmatrix} a_{11} & \cdots & a_{1n} \\ \vdots & \ddots & \vdots \\ a_{m1} & \cdots & a_{mn} \end{pmatrix}"
+                                                                                    title="pmatrix">
+                                                                                $\begin{pmatrix}
+                                                                                a_{11} & \cdots &
+                                                                                a_{1n} \\ \vdots &
+                                                                                \ddots & \vdots \\
+                                                                                a_{m1} & \cdots &
+                                                                                a_{mn}
+                                                                                \end{pmatrix}$
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\begin{bmatrix} a & b \\ c & d \end{bmatrix}"
+                                                                                    title="pmatrix">
+                                                                                $\begin{bmatrix} a &
+                                                                                b \\ c & d
+                                                                                \end{bmatrix}$
+                                                                            </button>
+                                                                        </td>
+                                                                        <td colspan="3">
+                                                                            <button type="button"
+                                                                                    class="btn btn-default"
+                                                                                    value="\begin{bmatrix} a_{11} & \cdots & a_{1n} \\ \vdots & \ddots & \vdots \\ a_{m1} & \cdots & a_{mn} \end{bmatrix}"
+                                                                                    title="pmatrix">
+                                                                                $\begin{bmatrix}
+                                                                                a_{11} & \cdots &
+                                                                                a_{1n} \\ \vdots &
+                                                                                \ddots & \vdots \\
+                                                                                a_{m1} & \cdots &
+                                                                                a_{mn}
+                                                                                \end{bmatrix}$
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="tab-pane" id="panel-fn">
+                                                            </div>
+                                                            <div class="tab-pane" id="panel-op">
+                                                            </div>
+                                                            <div class="tab-pane" id="panel-de">
+                                                            </div>
+                                                            <div class="tab-pane" id="panel-ar">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="padding-top:0px">
+                                <!-- MATH INPUT -->
+                                <div class="row clearfix">
+                                    <div id="MathInput"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END OF SECTION EDIT -->
+
+
+        <!-- SECTION WELCOME -->
+        <div id="page-welcome" class="section fp-noscroll" style="display: none"
+             data-anchor="welcome">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-5 col-md-4 column">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <a id="create" href="#" class="btn btn-info">
+                                    <h5 class="list-group-item-heading">
+                                        <i class="fa fa-lg fa-file-o"></i>
+                                        <b>New</b></h5>
+                                </a>
+                                <span>&nbsp;</span>
+                                <a id="confirm-delete" href="#modal-del-confirm" role="button"
+                                   class="btn btn-warning" data-toggle="modal" title="Remove it">
+                                    <h5 class="list-group-item-heading">
+                                        <i class="fa fa-lg fa-trash"></i>
+                                    </h5>
+                                </a>
+
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-default dropdown-toggle" type="button"
+                                            data-toggle="dropdown" data-submenu=""
+                                            aria-expanded="false" title="Settings">
+                                        <i class="fa fa-lg fa-cog text-info"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-submenu dropdown-menu-right">
+                                            <a tabindex="0"><i
+                                                    class="fa fa-lg fa-th-large text-info"></i>
+                                                Themes</a>
+                                            <ul class="dropdown-menu dropdown-menu-right"
+                                                role="menu" aria-labelledby="themes">
+                                                <li><a href="#" data-theme="default"
+                                                       class="theme-link">Default</a></li>
+                                                <li><a href="#" data-theme="cerulean"
+                                                       class="theme-link">Cerulean</a></li>
+                                                <li><a href="#" data-theme="cosmo"
+                                                       class="theme-link">Cosmo</a></li>
+                                                <li><a href="#" data-theme="cyborg"
+                                                       class="theme-link">Cyborg</a></li>
+                                                <li><a href="#" data-theme="darkly"
+                                                       class="theme-link">Darkly</a></li>
+                                                <li><a href="#" data-theme="flatly"
+                                                       class="theme-link">Flatly</a></li>
+                                                <li><a href="#" data-theme="journal"
+                                                       class="theme-link">Journal</a></li>
+                                                <li><a href="#" data-theme="lumen"
+                                                       class="theme-link">Lumen</a></li>
+                                                <li><a href="#" data-theme="paper"
+                                                       class="theme-link">Paper</a></li>
+                                                <li><a href="#" data-theme="readable"
+                                                       class="theme-link">Readable</a></li>
+                                                <li><a href="#" data-theme="sandstone"
+                                                       class="theme-link">Sandstone</a></li>
+                                                <li><a href="#" data-theme="simplex"
+                                                       class="theme-link">Simplex</a></li>
+                                                <li><a href="#" data-theme="slate"
+                                                       class="theme-link">Slate</a></li>
+                                                <li><a href="#" data-theme="spacelab"
+                                                       class="theme-link">Spacelab</a></li>
+                                                <li><a href="#" data-theme="superhero"
+                                                       class="theme-link">Superhero</a></li>
+                                                <li><a href="#" data-theme="united"
+                                                       class="theme-link">United</a></li>
+                                                <li><a href="#" data-theme="yeti"
+                                                       class="theme-link">Yeti</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a id="show-hints-table" href="#modal-hints-table"
+                                               role="button" data-toggle="modal"><i
+                                                    class="fa fa-lg fa-magic text-info"></i>
+                                                Hints...</a>
+                                        </li>
+                                        <li role="separator" class="divider"></li>
+                                        <li>
+                                            <a href="#modal-container-about" data-toggle="modal">
+                                                <i class="fa fa-lg text-info fa-question-circle"></i>
+                                                About...
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <a href="#modal-sliding-mode" class="btn pull-right"
+                                   data-toggle="modal" title="Sliding mode">
+                                    <i id="sliding-mode-indicator" class=""></i>
+                                </a>
+                            </div>
+                            <div class="panel-body">
+                                <div class="list-group">
+                                    <div id="snippets-list" style="overflow-y:auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-7 col-md-8 column hidden-xs">
+                        <div class="jumbotron">
+                            <h1 class="visible-md-block visible-lg-block">
+                                <a href="javascript:$.fn.fullpage.moveSectionDown();"><i
+                                        class="fa fa-dollar fa-lg text-success"></i><i
+                                        class="fa fa-dollar text-success"></i></a>
+                                Math Pad
+                            </h1>
+                            <h2 class="visible-sm-block">
+                                <a href="javascript:$.fn.fullpage.moveSectionDown();"><i
+                                        class="fa fa-dollar fa-lg text-success"></i><i
+                                        class="fa fa-dollar text-success"></i></a>
+                                Math Pad
+                            </h2>
+                            <p>
+                                Write <b>formatted text</b> with <b>LaTeX formula</b>!
+                            </p>
+                            <p id="math-example">
+                                $$f(a) = {1 \over 2\pi i}\oint_\gamma {f(z) \over z-a} dz$$
+                            </p>
+                            <p>
+                                Enjoy it!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SECTION PREVIEW -->
+        <div id="page-preview" class="section" style="display: none" data-anchor="preview">
+            <div class="container-fluid">
+                <button id="printit" type="button" class="btn btn-default pull-right hidden-xs"
+                        title="Print">
+                    <i class="fa fa-print"></i>
+                </button>
+                <div class="row">
+                    <div id="PrintView">
+                        <div id="MathPreview"
+                             style="border:0px solid; padding: 20px; width:90%; margin-top:5px"></div>
+                        <div id="MathBuffer" style="border:0px solid; padding: 20px; width:90%; margin-top:5px;
+          visibility:hidden; position:absolute; top:0; left: 0"></div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END OF SECTION PREVIEW -->
+    </div> <!-- END OF FULLPAGE -->
+</div> <!-- END OF mobile-wapper -->
+
+<div class="modal fade" id="modal-hints-table" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <div class="tabbable" id="tabs-header">
+                    <ul class="nav nav-tabs">
+                        <li id="tab-hints-all" class="active">
+                            <a href="#panel-hints-all" data-toggle="tab"><b>All hints <span
+                                    class="badge" id="hints-count"></span></b></a>
+                        </li>
+                        <li>
+                            <a href="#panel-my-hints" data-toggle="tab"><b>My hints</b></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="modal-body">
+
+                <div class="tabbable" id="tabs-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="panel-hints-all">
+                            <!-- hints table -->
+                            <div id="hintstmpls" style="overflow-y:auto; height:180px;">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Hint</th>
+                                        <th>Code</th>
+                                        <th>Disp.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="hints-table">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="panel-my-hints">
+
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="textarea">
+                                        <textarea id="myhints-conf" type="" class="col-xs-12"
+                                                  style="height:100px; resize: none;"></textarea>
+                                        <p class="help-block">FORMAT: <b class="text-success"
+                                                                         title="Replace (hint) with (code), menu display in desktop and/or phone; (.) required, [.] optional">(hint)
+                                            ## (code) [## [display] ## [display phone]]</b><br/>
+                                            <i class="fa fa-hand-o-right"></i> <span
+                                                    class="text-info"
+                                                    title="Replace xa with \alpha">xa ## \alpha</span><br/>
+                                            <i class="fa fa-hand-o-right"></i> <span
+                                                    class="text-info"
+                                                    title="Replace sqrt with \sqrt, show 'sqrt' in menu">sqrt ## \sqrt{ } ## sqrt</span><br/>
+                                            <i class="fa fa-hand-o-right"></i> <span
+                                                    class="text-info"
+                                                    title="Replace rq with the root of a quadratic equation, show 'root of quadr. eq' in menu at phone">rq ## {-b\pm\sqrt{b^2-4ac} \over 2a} ## ## root of quadr. eq</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="form-group" style="display:inline; float:left;">
+                    <input type="text" class="form-control" id="hints-filter" placeholder="filter"
+                           title="Filter hints">
+                </div>
+                <button id="hints-btn-close" type="button" class="btn btn-default"
+                        data-dismiss="modal" style="display:inline;">Close
+                </button>
+                <button id="hints-btn-save" type="button" class="btn btn-primary"
+                        data-dismiss="modal">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/summernote/0.8.10/summernote.min.js"></script>
+<script src="https://cdn.bootcss.com/store.js/1.3.20/store.min.js"></script>
+<script src="https://cdn.bootcss.com/prettydate/0.1.0/prettydate.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/prettydate/0.1.0/i18n/prettydate.zh-CN.min.js"></script> -->
+
+<script src="https://cdn.bootcss.com/jQuery.print/1.5.1/jQuery.print.min.js"></script>
+<script type="text/javascript">
+    // On print
+    $('#printit').click(function() {
+      $('#PrintView').print();
+    });
+
+</script>
+
+<script
+        src="https://cdn.bootcss.com/bootstrap-submenu/2.0.4/js/bootstrap-submenu.min.js"></script>
+<script type="text/javascript">
+    $('[data-submenu]').submenupicker();
+
+</script>
+
+<script src="mathmenus.js" charset="utf-8"></script>
+<script src="hintsconf.js" charset="utf-8"></script>
+<script src="mathpad.js" charset="utf-8"></script>
+
+</body>
+</html>
