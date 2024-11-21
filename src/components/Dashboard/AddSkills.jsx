@@ -16,19 +16,24 @@ import * as Yup from "yup";
 import { FaAngleDown } from "react-icons/fa6";
 import message from "../../assets/LoginScreen/message.png";
 import getHighQualList from "../../actions/LoginScreens/getHighQualList";
+import getSectorList from "../../actions/LoginScreens/getSectorList";
+import getDiffLevel from "../../actions/LoginScreens/getDiffLevel";
 import getPlatforms from "../../actions/MasterDataApi/getPlatforms";
 import addPublicLink from "../../actions/Dashboard/addPublicLink";
 import addAccomplishment from "../../actions/Dashboard/addAccomplishment";
 import addKeySkill from "../../actions/Dashboard/addKeySkill";
 import addITSkill from "../../actions/Dashboard/addITSkill";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import getKeySkills from "../../actions/MasterDataApi/getKeySkills";
 import addProject from "../../actions/Dashboard/addProject";
 import updateProfileSummary from "../../actions/Dashboard/updateProfileSummary";
 import addCertificate from "../../actions/Dashboard/addCertificate";
+import { toast } from "react-toastify";
+import { recallData } from "../../store/studentProfileSlice";
 
 const AddSkills = ({ onClose }) => {
 	const user = useSelector((state) => state?.auth?.userData);
+	const dispatch = useDispatch();
 	console.log(user);
 	const studentProfile = useSelector(
 		(state) => state?.studentProfile?.studentProfileData
@@ -62,6 +67,8 @@ const AddSkills = ({ onClose }) => {
 	} = useForm();
 
 	const [highestQualication, setHighestQualication] = useState([]);
+	const [sectors, setSectors] = useState([]);
+	const [diffLevel, setDiffLevel] = useState([]);
 	const [errors, setErrors] = useState({});
 	const [platforms, setPlatforms] = useState([]);
 	const [keySkills, setKeySkills] = useState([]);
@@ -70,6 +77,10 @@ const AddSkills = ({ onClose }) => {
 		try {
 			const highQual = await getHighQualList();
 			setHighestQualication(highQual?.data?.high_qual);
+			const sector = await getSectorList();
+			setSectors(sector?.data?.job_roles);
+			const diffLevel = await getDiffLevel();
+			setDiffLevel(diffLevel?.data?.dl);
 			const platformData = await getPlatforms();
 			setPlatforms(platformData?.data?.platforms);
 			console.log(platformData);
@@ -109,6 +120,12 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addPublicLink(data);
+			if (response?.data?.code ===1000) {
+				dispatch(recallData())
+				toast.success("Public link added successfully!");
+				onClose();
+				
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding public link :: ", error);
@@ -125,6 +142,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addAccomplishment(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Accomplishment added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding accomplishment :: ", error);
@@ -140,6 +162,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addKeySkill(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Key skill added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding key skills :: ", error);
@@ -160,6 +187,12 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addITSkill(data);
+			if (response?.data?.code === 1000) {
+				
+				dispatch(recallData())
+				toast.success("IT Skill added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding IT Skill :: ", error);
@@ -180,6 +213,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addProject(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Project added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding project :: ", error);
@@ -196,6 +234,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await updateProfileSummary(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Profile summary updated successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while updating profile summary :: ", error);
@@ -241,6 +284,11 @@ const AddSkills = ({ onClose }) => {
 			};
 			console.log(data);
 			const response = await addCertificate(data);
+			if (response?.data?.code === 1000) {
+				dispatch(recallData())
+				toast.success("Certificate added successfully!");
+				onClose();
+			}
 			console.log(response);
 		} catch (error) {
 			console.log("Error while adding certificate :: ", error);
@@ -276,12 +324,12 @@ const AddSkills = ({ onClose }) => {
 									<option value="" disabled hidden>
 										Information and Tech
 									</option>
-									{highestQualication?.map((qualName) => (
+									{sectors?.map((sectorName) => (
 										<option
-											key={qualName?.id}
-											value={qualName.id}
+											key={sectorName?.id}
+											value={sectorName.id}
 										>
-											{qualName.highest_qualification}
+											{sectorName.job_role}
 										</option>
 									))}
 								</select>
@@ -378,12 +426,12 @@ const AddSkills = ({ onClose }) => {
 									<option value="" disabled hidden>
 										1
 									</option>
-									{highestQualication?.map((qualName) => (
+									{diffLevel?.map((dflevel) => (
 										<option
-											key={qualName?.id}
-											value={qualName.id}
+											key={dflevel?.id}
+											value={dflevel.id}
 										>
-											{qualName.highest_qualification}
+											{dflevel.level_difficulty_name}
 										</option>
 									))}
 								</select>
@@ -541,7 +589,7 @@ const AddSkills = ({ onClose }) => {
 											className="h-5 w-5"
 										/>
 										<label htmlFor="" className="pl-2">
-											Sector
+											Public Links
 										</label>
 									</div>
 								</div>

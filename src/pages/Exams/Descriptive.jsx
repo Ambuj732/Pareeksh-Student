@@ -160,16 +160,18 @@ function Descriptive() {
     SpeechRecognition.startListening({
       continuous: true,
       interimResults: true,
-      language: selectedLanguage,
+      language: selectedLanguage || language,
     });
     console.log(selectedLanguage);
   };
+
   const stopHandle = () => {
     setIsListening(false);
     microphoneRef.current.classList.remove("listening");
     SpeechRecognition.stopListening();
     console.log("stop listening");
   };
+
   const handleReset = () => {
     stopHandle();
     console.log(transcript);
@@ -1509,6 +1511,7 @@ function Descriptive() {
         usercode: user?.usercode,
         exam_id: exam?.exam_id,
       };
+      console.log(data);
       const response = await getSecondaryLanguage(data);
       console.log(response);
       setPrimaryLanugage(response?.data?.primary_lang_name);
@@ -2114,7 +2117,8 @@ function Descriptive() {
         <div className="flex flex-col">
           <div className="flex justify-between p-4 px-8 items-center">
             <span className="text-2xl font-medium text-[#1C4481]">
-              {examInitial?.type}
+              {/* {examInitial?.type} */}
+              Descriptive
             </span>
             <div className="flex gap-4 items-center">
               <div
@@ -2150,6 +2154,7 @@ function Descriptive() {
             </div>
           </div>
 
+          {/* {question Number part} */}
           <div className="bg-white h-20 border ml-8 mt-4 rounded-l-2xl flex items-center px-12 justify-between">
             <div className="flex items-center justify-between w-3/5 ">
               <div className="flex items-center  justify-center gap-4">
@@ -2192,7 +2197,7 @@ function Descriptive() {
                             getTheoryQuestionByNoHandler(0, index + 1);
                           }
                         }}
-                        className={`bg-[#A6E097] min-h-12 min-w-12 flex items-center justify-center rounded-lg font-semibold text-lg text-[#14540E] cursor-pointer ${className}`}
+                        className={`bg-[#A6E097] min-h-12 min-w-12 flex items-center justify-center rounded-lg font-semibold text-lg text-black cursor-pointer ${className}`}
                       >
                         <span>{index + 1}</span>
                       </div>
@@ -2231,7 +2236,7 @@ function Descriptive() {
                 <span className="font-medium text-slate-600">Visited</span>
               </div>
               <div className="flex items-center gap-1">
-                <div className="h-2 w-2 bg-[#A6E097] rounded-full"></div>
+                <div className="h-2 w-2 bg-[#808080] rounded-full"></div>
                 <span className="font-medium text-slate-600">Not Visited</span>
               </div>
             </div>

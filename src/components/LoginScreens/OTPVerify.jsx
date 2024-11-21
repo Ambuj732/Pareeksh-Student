@@ -11,7 +11,6 @@ import queryString from "query-string";
 
 function OTPVerify() {
   const { register, handleSubmit } = useForm();
-
   const navigate = useNavigate();
   const [error, setError] = useState("");
   //let [searchParams, setSearchParams] = useSearchParams();
@@ -44,11 +43,9 @@ function OTPVerify() {
   const otpVerifyHandler = async (formData, e) => {
     try {
       var userData = JSON.parse(localStorage.getItem("ps_loguser"));
-      console.log(userData);
       var settings = JSON.parse(sessionStorage.pkshn_exam_set);
       const parsed = queryString.parse(window.location.search);
       const querystr = parsed.q; // Retrieve the value of a specific query parameter
-      console.log(parsed);
       var otp_type = 0;
       var req_data;
       if (userData["usercode"] != undefined) {
@@ -70,8 +67,7 @@ function OTPVerify() {
             "" +
             formData.otpfourFormControl;
         }
-        // var params = window.atob(querystr);
-        var params = qstring;
+        var params = window.atob(querystr);
         var splitStr = params.split("//@spwd++sup@//");
         //console.log(splitStr);
         userData["usercode"] = splitStr[0];

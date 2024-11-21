@@ -93,10 +93,23 @@ function StudentDashboard() {
               </div>
             </div>
 
-            <div className="animate-marquee whitespace-nowrap text-base text-black font-medium">
-              Please Complete your profile&nbsp;.It will help you to get
-              relevent exams and job recommendation. &nbsp;
-            </div>
+            {profilePercent?.length === 0 && (
+              <div className="animate-marquee whitespace-nowrap text-base text-black font-medium">
+                Please Complete your profile&nbsp;.It will help you to get
+                relevent exams and job recommendation. &nbsp;
+              </div>
+            )}
+            {profilePercent?.length > 0 && (
+              <div className="animate-marquee whitespace-nowrap text-base text-black font-medium">
+                You have completed your profile{" "}
+                <span className="font-bold ">
+                  {" "}
+                  {profilePercent[0].score_percentage}%
+                </span>
+                &nbsp;.It will help you to get relevent exams and job
+                recommendation. &nbsp;
+              </div>
+            )}
           </div>
         </div>
         <div className="bg-[#EDF2FF] min-h-screen rounded-3xl">

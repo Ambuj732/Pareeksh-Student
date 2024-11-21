@@ -18,6 +18,18 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import logo from "../../assets/logo/pareekshn_logo.png";
 import { useDispatch } from "react-redux";
 import { login as authLogin } from "../../store/authSlice";
+import books from "../../assets/LoginScreen/books.png";
+import graduationCap from "../../assets/LoginScreen/cap.png";
+import scaleAndPencle from "../../assets/LoginScreen/scalepencle.jpg";
+import exam from "../../assets/LoginScreen/exam.png";
+import parkeeshnLogo from "../../assets/LoginScreen/parkeeshnLogo.png";
+import hand from "../../assets/LoginScreen/hand.png";
+import laptop from "../../assets/LoginScreen/laptop.png";
+import scaleAndPencil from "../../assets/LoginScreen/scaleAndPencil.png";
+import student from "../../assets/LoginScreen/student.png";
+import bulb from "../../assets/LoginScreen/bulb.png";
+import building from "../../assets/LoginScreen/building.png";
+import personWithLaptop from "../../assets/LoginScreen/personWithLaptop.png";
 
 function Login() {
   const { register, handleSubmit } = useForm();
@@ -46,20 +58,21 @@ function Login() {
       };
       await validationSchema.validate(data, { abortEarly: false });
       setErrors({});
-
       const response = await login(data);
-
       const code = response?.data?.code;
       const message = response?.data?.status;
       if (code !== 1000) {
         toast.error("Username or Password Wrong!");
         console.log("Message :: ", message);
         return;
+      } else if (code === 1000) {
+        toast.success("You have successfully logged in!");
+        setTimeout(() => {
+          navigate("/dashboard/exams");
+        }, 1000);
       }
       localStorage.setItem("ps_loguser", JSON.stringify(response.data.info));
       dispatch(authLogin(response?.data?.info));
-      toast.success("You have successfully logged in!");
-      navigate("/dashboard/exams");
     } catch (error) {
       const newErrors = {};
       console.log(error);
@@ -73,14 +86,22 @@ function Login() {
 
   return (
     <div className="min-h-screen relative w-full lg:w-2/3 flex justify-center items-center">
-      <img src={logo} alt="" className="absolute top-3 left-3 h-24" />
+      <img src={logo} alt="" className="absolute top-3 left-3 h-20" />
       <div className="absolute inset-0 z-[-1] overflow-hidden bg-[#2F5185]">
         {/* <img
 					src={leftBg}
 					alt=""
 					className="w-full h-full object-fill  cursor-pointer absolute inset-0"
 				/> */}
+        <img
+          src={graduationCap}
+          alt=""
+          className="absolute h-16 top-10 right-10"
+        />
+        <img src={hand} alt="" className="absolute bottom-24 h-16 left-12" />
+        <img src={laptop} alt="" className="absolute bottom-56 h-16 left-10" />
       </div>
+
       <form
         onSubmit={handleSubmit(loginHandler)}
         className="bg-[#ffffff] h-[470px] w-3/5 lg:w-4/5 xl:w-[400px] rounded-3xl p-4 flex flex-col gap-4 relative z-10"

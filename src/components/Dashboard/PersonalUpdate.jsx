@@ -10,10 +10,12 @@ import profilePercentage from "../../actions/Dashboard/profilePercentage";
 import EditProfile from "./EditProfile";
 import formatDate from "../../utils/formatDate";
 import UserProfile from "./UserProfile";
+import { useSelector } from "react-redux";	
 
 function PersonalUpdate() {
 	const [studentProfile, setStudentProfile] = useState({});
 	const [modelOpen, setModelOpen] = useState(false);
+	const recallCount = useSelector((state)=>state.call.recallCount)
 
 	const getStudentProfileHandler = async () => {
 		try {
@@ -47,7 +49,7 @@ function PersonalUpdate() {
 
 	useEffect(() => {
 		getStudentProfileHandler();
-	}, []);
+	}, [recallCount]);
 
 	const formatGender = (gender) => {
 		if (gender === 1) {

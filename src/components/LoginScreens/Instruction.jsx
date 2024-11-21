@@ -5,6 +5,7 @@ import nextVideo from "../../assets/LoginScreen/nextVideo.png";
 import getInstructions from "../../actions/LoginScreens/instructions";
 import { Link } from "react-router-dom";
 import GeneralInstruction from "./GeneralInstruction";
+import { useNavigate } from "react-router-dom";
 
 function Instruction() {
   const [pdfUrl, setPdfUrl] = useState("");
@@ -13,6 +14,7 @@ function Instruction() {
   const [loading, setLoading] = useState(true);
   const [response, setResponse] = useState("");
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const onClose = () => {
     setOpen(false);
@@ -22,10 +24,10 @@ function Instruction() {
     const fetchData = async () => {
       try {
         const data = {
-          exam_id: 8636,
-          student_id: 212904,
+          exam_id: 8551,
+          student_id: 211037,
           streamvideo: 1,
-          usercode: "yXhaHzoOciO1",
+          usercode: "i9lBY5euU0vw",
         };
         const response = await getInstructions(data);
         setPdfUrl(response?.data?.pdf_url);
@@ -40,6 +42,11 @@ function Instruction() {
 
     fetchData();
   }, []);
+
+  const goToExamPage = () => {
+    console.log("His");
+    navigate("/exams");
+  };
 
   return (
     <div className="bg-[#EDF2FF] h-screen m-4 rounded-3xl flex justify-center relative items-center">
@@ -87,7 +94,10 @@ function Instruction() {
           </button>
         )}
       </div>
-      <button className="bg-[#1C4481] absolute bottom-1 h-10 w-1/6 rounded-3xl text-white font-medium m-1">
+      <button
+        className="bg-[#1C4481] absolute bottom-1 h-10 w-1/6 rounded-3xl text-white font-medium m-1"
+        onClick={goToExamPage}
+      >
         Start Theory
       </button>
     </div>

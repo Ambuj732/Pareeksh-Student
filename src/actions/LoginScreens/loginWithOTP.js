@@ -18,6 +18,7 @@ const loginWithOTP = async (data) => {
       }
     );
     console.log("Login with OTP response :: ", response);
+    return response;
   } catch (error) {
     console.log("Error while logging with otp :: ", error);
   }

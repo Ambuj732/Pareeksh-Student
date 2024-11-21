@@ -73,81 +73,81 @@ function UserProfile() {
 					<span>Profile Update</span>
 					{location.pathname ===
 						"/dashboard/student-profile/personal-details/personal-update" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleEditProfileClick}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleEditProfileClick}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">Edit</span>
+							</div>
+						)}
 					{location.pathname ===
 						"/dashboard/student-profile/education-profile" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-30 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleAddEducationClick}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">
-								Add Education
-							</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-30 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleAddEducationClick}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">
+									Add Education
+								</span>
+							</div>
+						)}
 					{location.pathname ===
 						"/dashboard/student-profile/profile-update" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleEditProfileUpdateClick}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleEditProfileUpdateClick}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">Edit</span>
+							</div>
+						)}
 					{location.pathname ===
 						"/dashboard/student-profile/employment" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-30 justify-center p-1 py-1 flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleAddEmployment}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">
-								Add More Employment
-							</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-30 justify-center p-1 py-1 flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleAddEmployment}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">
+									Add More Employment
+								</span>
+							</div>
+						)}
 
 					{location.pathname ===
 						"/dashboard/student-profile/skills" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleSkills}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleSkills}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">Edit</span>
+							</div>
+						)}
 
 					{location.pathname ===
 						"/dashboard/student-profile/resume" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleAddResume}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleAddResume}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">Edit</span>
+							</div>
+						)}
 
 					{location.pathname ===
 						"/dashboard/student-profile/career-profile" && (
-						<div
-							className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
-							onClick={handleAddCareerProfile}
-						>
-							<img src={pen} alt="Edit" className="h-5" />
-							<span className="text-sm font-normal">Edit</span>
-						</div>
-					)}
+							<div
+								className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1  flex gap-1 text-white h-8 cursor-pointer"
+								onClick={handleAddCareerProfile}
+							>
+								<img src={pen} alt="Edit" className="h-5" />
+								<span className="text-sm font-normal">Edit</span>
+							</div>
+						)}
 				</div>
 				{isEditProfileModalOpen && (
 					<EditProfile onClose={handleCloseModals} />

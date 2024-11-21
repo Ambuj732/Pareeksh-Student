@@ -1,5 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import logo from "/logo.png";
+import pareekshn_logo from "../../assets/LoginScreen/pareekshn_logo.png";
 import questionMark from "/questionMark.png";
 import logout from "/logout.png";
 import reset from "/reset1.png";
@@ -33,7 +34,6 @@ import getTheoryQuestionByNo from "../../actions/Passcode/getTheoryQuestionByNo"
 import getTheorySecondQuestionByIndex from "../../actions/Passcode/getTheorySecondQuestionByIndex";
 import getPsycQuestionByIndex from "../../actions/Passcode/psycQuestionByIndex.js";
 import getAutoQuestionByIndex from "../../actions/Passcode/getAutoQuestionByIndex.js";
-
 import getStudentLog from "../../actions/Passcode/getStudentLog";
 import psycStudentLog from "../../actions/Passcode/psycStudentLog.js";
 import theorySecondStudentLog from "../../actions/Passcode/theorySecondStudentLog";
@@ -56,7 +56,6 @@ import Swal from "sweetalert2";
 import textToSpeech from "../../utils/textToSpeech";
 import timeTaken from "../../utils/timeTaken.js";
 import { date } from "yup";
-
 import multiObjectDetection from "../../actions/Passcode/multiObjectDetection";
 import facesDetection from "../../actions/Passcode/facesDetection";
 import moveDetection from "../../actions/Passcode/moveDetection";
@@ -99,6 +98,8 @@ function Question() {
   const [microphoneChecked, setMicrophoneChecked] = useState(false);
   const [bgCount, setBgCount] = useState(0);
   const [isTimerPaused, setIsTimerPaused] = useState(false);
+  const [primaryLanguage, setPrimaryLanugage] = useState("");
+  const [primaryLanguageCode, setPrimaryLanguageCode] = useState("");
   let count = 0;
 
   const intervalRef = useRef(null);
@@ -279,7 +280,8 @@ function Question() {
       console.log(selectedAnswer);
       const endTime = Date();
       console.log(endTime);
-
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const timeTakenInSeconds = timeTaken(startTime, endTime);
 
       const data = {
@@ -351,6 +353,8 @@ function Question() {
   const theorySecondSubmitByIndexHandler = async () => {
     try {
       console.log(selectedAnswer);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         answer_id: String(selectedAnswer) || "",
         index: String(currentQuestion?.index),
@@ -409,6 +413,8 @@ function Question() {
   const psycSubmitByIndexHandler = async () => {
     try {
       console.log(selectedAnswer);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         answer_id: String(selectedAnswer) || "",
         index: String(currentQuestion?.index),
@@ -466,6 +472,8 @@ function Question() {
 
   const getStudentLogHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+
       console.log(user);
       const data = {
         sub_user_id: user?.subuserid,
@@ -510,6 +518,8 @@ function Question() {
 
   const theorySecondStudentLogHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+
       console.log(user);
       const data = {
         sub_user_id: user?.subuserid,
@@ -535,6 +545,7 @@ function Question() {
 
   const psycStudentLogHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
       console.log(user);
       const data = {
         sub_user_id: user?.subuserid,
@@ -581,11 +592,14 @@ function Question() {
     setAnswers(ans);
   };
 
+  // Random Image Handler
   const sendRandomImageHandler = async () => {
     try {
       const imageSrc = capture();
       console.log(imageSrc);
       console.log(examInitial);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         file: imageSrc,
         exam_id: exam?.exam_id,
@@ -642,6 +656,8 @@ function Question() {
       const imageSrc = capture();
       console.log(imageSrc);
       console.log(examInitial);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         file: imageSrc,
         exam_id: examInitial?.exam_id,
@@ -698,6 +714,8 @@ function Question() {
       const imageSrc = capture();
       console.log(imageSrc);
       console.log(examInitial);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         file: imageSrc,
         exam_id: examInitial?.exam_id,
@@ -770,6 +788,7 @@ function Question() {
     }
   };
 
+  // QuestionByNumber
   const getTheoryQuestionByNoHandler = async (value, idx) => {
     try {
       if (value && !idx) {
@@ -789,6 +808,8 @@ function Question() {
 
       const ind = idx ? idx : Number(currentQuestion?.index) + value;
       console.log(ind);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         index: ind,
         shuffle_ans: 0,
@@ -846,10 +867,13 @@ function Question() {
     }
   };
 
+  // secondQuestionByIndexHandler
   const getTheorySecondQuestionByIndexHandler = async (value, idx) => {
     try {
       const ind = idx ? idx : Number(currentQuestion?.index) + value;
       console.log(ind);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         index: ind,
         shuffle_ans: 0,
@@ -908,6 +932,8 @@ function Question() {
     try {
       const ind = idx ? idx : Number(currentQuestion?.index) + value;
       console.log(ind);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         index: ind,
         shuffle_ans: 0,
@@ -966,6 +992,8 @@ function Question() {
     try {
       const ind = idx ? idx : Number(currentQuestion?.index) + value;
       console.log(ind);
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         index: ind,
         shuffle_ans: 0,
@@ -1020,6 +1048,7 @@ function Question() {
     }
   };
 
+  // language translate ki api
   const googleTranslateApiHandler = async (selectedLanguage) => {
     try {
       console.log(selectedLanguage);
@@ -1040,10 +1069,14 @@ function Question() {
       };
       console.log(data);
       const response = await googleTranslateApi(data);
+      console.log("API Response: ", response);
+
       console.log(response?.data?.translations[0]?.translatedText);
-      const question = JSON.parse(
-        response?.data?.translations[0]?.translatedText
-      );
+      let translatedText = response?.data?.translations?.[0]?.translatedText;
+      translatedText = translatedText.replace(/[\[\]\"]+/g, "");
+      console.log("Cleaned Translated Text: ", translatedText);
+
+      const question = translatedText.split(",");
       console.log(question);
 
       setCurrentQuestion((prev) => ({
@@ -1084,6 +1117,8 @@ function Question() {
 
   const getInitialExamHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         exam_id: exam?.exam_id,
         shuffle_ans: 0,
@@ -1091,6 +1126,7 @@ function Question() {
         student_id: user?.id,
         usercode: user?.usercode,
       };
+      console.log(data);
       const response = await examsInitial(data);
       console.log(response);
       if (response?.data?.code === 1000) {
@@ -1178,6 +1214,8 @@ function Question() {
 
   const getTheorySecondExamInitialHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         exam_id: exam?.exam_id,
         shuffle_ans: 0,
@@ -1185,6 +1223,7 @@ function Question() {
         student_id: user?.id,
         usercode: user?.usercode,
       };
+      console.log(data);
       const response = await getTheorySecondExamInitial(data);
       console.log(response);
       if (response?.data?.code === 1000) {
@@ -1260,6 +1299,8 @@ function Question() {
 
   const getPsychometricExamInitialHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+
       const data = {
         exam_id: exam?.exam_id,
         shuffle_ans: 0,
@@ -1343,6 +1384,7 @@ function Question() {
 
   const autoExamInitialHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
       const data = {
         exam_id: exam?.exam_id,
         shuffle_ans: 0,
@@ -1423,8 +1465,10 @@ function Question() {
     }
   };
 
+  // freeze Status Handler
   const freezeStatusHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
       const data = {
         student_id: user?.id,
         usercode: user?.usercode,
@@ -1440,15 +1484,21 @@ function Question() {
     }
   };
 
+  // secondary language handler
   const getSecondaryLanguageHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         exam_type: examType,
         usercode: user?.usercode,
         exam_id: exam?.exam_id,
       };
+      console.log(data);
       const response = await getSecondaryLanguage(data);
       console.log(response);
+      setPrimaryLanugage(response?.data?.primary_lang_name);
+      setPrimaryLanguageCode(response?.data?.primary_lang_code);
       setSecondaryLanguage(response?.data?.languages);
       console.log(response?.data?.languages);
     } catch (error) {
@@ -1463,6 +1513,7 @@ function Question() {
     console.log(event.target.value);
   };
 
+  // Lock Status Change
   const handleLockStatusChange = () => {
     if (!selectedAnswer && !lockStatus) {
       Swal.fire("No Option is Selected!");
@@ -1506,8 +1557,11 @@ function Question() {
     }
   };
 
+  // Reset Option Handler
   const resetOptionsHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         student_id: user?.id,
         exam_id: exam?.exam_id,
@@ -1528,8 +1582,11 @@ function Question() {
     }
   };
 
+  // Answer Clear api
   const theorySecondClearAnsweredOptionHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         student_id: user?.id,
         exam_id: exam?.exam_id,
@@ -1552,6 +1609,8 @@ function Question() {
 
   const psycClearAnsweredOptionHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         student_id: user?.id,
         exam_id: exam?.exam_id,
@@ -1574,6 +1633,8 @@ function Question() {
 
   const finalSubmitHandler = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const student = [
         {
           student_id: user?.id,
@@ -1582,6 +1643,7 @@ function Question() {
         },
       ];
       console.log(examInitial);
+
       const data = {
         usercode: user?.usercode,
         exam_id: exam?.exam_id,
@@ -1695,8 +1757,11 @@ function Question() {
     };
   };
 
+  // multiObject detection
   const multiObjectDetectionHandler = async (imageUrl) => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       console.log(imageUrl);
       const data = {
         exam_id: Number(exam?.exam_id),
@@ -1713,14 +1778,18 @@ function Question() {
     }
   };
 
+  // multiface detection
   const facesDetectionHandler = async (imageUrl) => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         exam_id: exam?.exam_id,
         student_id: user?.id,
         usercode: user?.usercode,
         randomphoto: imageUrl,
       };
+      console.log(data);
       const response = await facesDetection(data);
       console.log(response);
       return response;
@@ -1729,14 +1798,18 @@ function Question() {
     }
   };
 
+  // moveMovement detection
   const moveDetectionHandler = async (imageUrl) => {
     try {
+      const user = JSON.parse(localStorage.getItem("ps_loguser"));
+      console.log(user);
       const data = {
         exam_id: exam?.exam_id,
         student_id: user?.id,
         usercode: user?.usercode,
         randomphoto: imageUrl,
       };
+      console.log(data);
       const response = await moveDetection(data);
       console.log(response);
       return response;
@@ -1770,6 +1843,7 @@ function Question() {
 
   // setInterval(freezeStatusHandler, 120000);
 
+  // textTo Speech
   const enableTextToSpeech = () => {
     console.log(currentQuestion);
     const originalQuestionTemp = { ...currentQuestion };
@@ -1902,7 +1976,7 @@ function Question() {
       <div className="min-h-screen font-custom">
         {/* Header */}
         <div className="h-20 bg-[#305187] px-8 flex items-center justify-between">
-          <img src={logo} alt="" className="h-4/5 my-auto" />
+          <img src={pareekshn_logo} alt="" className="h-4/5 my-auto" />
           {/* <span className="font-medium text-white text-xl">
 						Online Exam
 					</span> */}
@@ -1933,32 +2007,30 @@ function Question() {
         <div className="flex flex-col">
           <div className="flex justify-between p-4 px-8 items-center">
             <span className="text-2xl font-medium text-[#1C4481]">
-              {examInitial?.type}
+              {/* {examInitial?.type} */}
+              Theory
             </span>
             <div className="flex gap-4 items-center">
               <div
                 className="flex flex-col bg-[#DDEAFF] px-4 rounded-md py-1 cursor-pointer"
-                onClick={() => googleTranslateApiHandler(currentQuestion?.lang)}
+                onClick={() => googleTranslateApiHandler(primaryLanguageCode)}
               >
                 <span className="font-medium text-sm">Default Language</span>
-                <span className="font-bold">{currentQuestion?.lang}</span>
+                <span className="font-bold">{primaryLanguage}</span>
               </div>
               <div className="flex items-center gap-5">
                 <div className="flex flex-col text-sm font-medium">
                   <span>You can translate question</span>
                   <span>into other languages</span>
                 </div>
-                <img src={translate} alt="" />
+                <img src={translate} alt="" className="h-5 w-3" />
               </div>
               {secondaryLanguage && (
-                <div
-                  className="border-2 border-[#1C4481] text-[#1C4481] h-10 w-fit flex items-center justify-between px-2 rounded-md element-outline-none outline-none
-								"
-                >
+                <div className=" text-blue-700 h-10 w-fit flex items-center justify-between  rounded-md element-outline-none outline-none">
                   <select
                     value={selectedLanguage}
                     onChange={handleChange}
-                    className="appearance-none bg-transparent element-outline-none outline-0 border-none w-full"
+                    className="rounded-md border-[2px] border-gray-500 w-full appearance-none focus:border-gray-500 focus:ring-0"
                   >
                     <option>Select</option>
                     {secondaryLanguage?.map((lang) => (
@@ -1970,75 +2042,79 @@ function Question() {
               )}
             </div>
           </div>
-          <div className="bg-white h-14 border ml-8 mt-4 rounded-l-2xl flex items-center px-4 justify-between">
-            <div className="flex items-center w-1/3 justify-between">
-              <img
-                src={questionIndicator}
-                alt=""
-                className="h-5 cursor-pointer"
-                onClick={scrollLeft}
-              />
-              <div
-                className="flex gap-4 px-4 w-96 overflow-x-scroll no-scrollbar"
-                ref={scrollContainerRef}
-              >
-                {Array.from({ length: totalQuestion }, (_, index) => {
-                  let className = "";
-                  if (Number(currentQuestion?.index) == index + 1) {
-                    className = "border-[3px] border-[#14540E] bg-white";
-                  } else if (answered[index + 1] == true) {
-                    className = "text-white bg-[#2B8B14]";
-                  } else if (submitted[index + 1] == true) {
-                    className = "text-white bg-[#FF7272]";
-                  } else if (visited[index + 1] == true) {
-                    className = "bg-[#ce03dc] text-white";
-                  }
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        if (locked[index]) {
-                          return;
-                        }
-                        if (exam?.theory2_login) {
-                          getTheorySecondQuestionByIndexHandler(0, index + 1);
-                          theorySecondSubmitByIndexHandler();
-                        } else if (exam?.entered_psyc) {
-                          getPsycQuestionByIndexHandler(0, index + 1);
-                          psycSubmitByIndexHandler();
-                        } else {
-                          submitByIndexHandler();
-                          getTheoryQuestionByNoHandler(0, index + 1);
-                        }
-                      }}
-                      className={`bg-[#A6E097] min-h-8 min-w-8 flex items-center justify-center rounded-lg font-semibold text-lg text-[#14540E] ${className} ${
-                        locked[index] == true
-                          ? "cursor-not-allowed"
-                          : "cursor-pointer"
-                      }`}
-                    >
-                      <span>{index + 1}</span>
-                    </div>
-                  );
-                })}
+
+          {/* {question Number part} */}
+          <div className="bg-white h-20 border mt-4 rounded-l-2xl flex  px-12 justify-between gap-10">
+            <div className="flex  items-center gap-10">
+              <div className="flex items-center gap-4 w-[700px]">
+                <img
+                  src={questionIndicator}
+                  alt=""
+                  className="h-5 cursor-pointer"
+                  onClick={scrollLeft}
+                />
+                <div
+                  className="flex gap-5 w-full overflow-x-scroll no-scrollbar items-center"
+                  ref={scrollContainerRef}
+                >
+                  {Array.from({ length: totalQuestion }, (_, index) => {
+                    let className = "bg-[#808080]";
+                    if (Number(currentQuestion?.index) == index + 1) {
+                      className = "border-[3px] border-[#14540E] bg-white";
+                    } else if (answered[index + 1] == true) {
+                      className = "text-white bg-[#125302]";
+                    } else if (submitted[index + 1] == true) {
+                      className = "text-white bg-[#FF7272]";
+                    } else if (visited[index + 1] == true) {
+                      className = "bg-[#ce03dc] text-white";
+                    }
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          if (locked[index]) {
+                            return;
+                          }
+                          if (exam?.theory2_login) {
+                            getTheorySecondQuestionByIndexHandler(0, index + 1);
+                            theorySecondSubmitByIndexHandler();
+                          } else if (exam?.entered_psyc) {
+                            getPsycQuestionByIndexHandler(0, index + 1);
+                            psycSubmitByIndexHandler();
+                          } else {
+                            submitByIndexHandler();
+                            getTheoryQuestionByNoHandler(0, index + 1);
+                          }
+                        }}
+                        className={`bg-[#A6E097] min-h-12 min-w-12 flex items-center justify-center rounded-lg font-semibold text-lg text-black cursor-pointer ${className} ${
+                          locked[index] == true
+                            ? "cursor-not-allowed"
+                            : "cursor-pointer"
+                        }`}
+                      >
+                        <span>{index + 1}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <img
+                  src={questionIndicator}
+                  alt=""
+                  className="scale-x-[-1] h-5 cursor-pointer mr-10"
+                  onClick={scrollRight}
+                />
               </div>
-              <img
-                src={questionIndicator}
-                alt=""
-                className="scale-x-[-1] h-5 cursor-pointer"
-                onClick={scrollRight}
-              />
-            </div>
-            <span className="font-medium text-xl">
-              Time Remaining -{" "}
-              <span
-                className={`font-semibold text-2xl ${
-                  fiveMinuteLeft ? "text-red-600 blink" : ""
-                }`}
-              >
-                {time.minutes}:{time.seconds}
+              <span className="font-medium text-xl text-nowrap">
+                Time Remaining -{" "}
+                <span
+                  className={`font-semibold text-2xl ${
+                    fiveMinuteLeft ? "text-red-600 blink" : ""
+                  }`}
+                >
+                  {time.minutes}:{time.seconds}
+                </span>
               </span>
-            </span>
+            </div>
             <div className="flex gap-3 items-center text-sm">
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 bg-[#2B8B14] rounded-full"></div>
@@ -2053,11 +2129,13 @@ function Question() {
                 <span className="font-medium text-slate-600">Visited</span>
               </div>
               <div className="flex items-center gap-1">
-                <div className="h-2 w-2 bg-[#A6E097] rounded-full"></div>
+                <div className="h-2 w-2 bg-[#808080] rounded-full"></div>
                 <span className="font-medium text-slate-600">Not Visited</span>
               </div>
             </div>
           </div>
+
+          {/* {question part start} */}
           <div className="flex">
             <div className="w-1/2 ml-8 px-2 mt-1 border-r flex flex-col gap-4">
               <div className="flex mt-6 justify-between items-center">
@@ -2097,18 +2175,20 @@ function Question() {
                 <QuestionSection question={currentQuestion} />
               )}
               <div className="border-t border-[#c2c2c2]"></div>
-              <div className="w-full h-32 flex items-center justify-between px-8">
-                <div className="flex flex-col items-center gap-2">
+              <div className=" relative w-full h-32 flex  items-center px-8 mt-24 gap-28">
+                <div className="flex flex-col">
                   <Webcam
                     audio={false}
-                    minScreenshotWidth={"640"}
+                    minScreenshotWidth={"800"}
                     screenshotQuality={1}
                     disablePictureInPicture={false}
                     ref={webcamRef}
                     screenshotFormat="image/jpeg"
-                    className="h-20 rounded-md"
+                    className="h-28 rounded-md"
                   />
-                  <span className="font-medium text-[#444444]">Live Video</span>
+                  <span className="font-medium text-[#444444] text-nowrap">
+                    Live Video
+                  </span>
                 </div>
                 <div className="flex gap-4 items-center justify-between ">
                   <div
@@ -2195,7 +2275,10 @@ function Question() {
                     </div>
                     <span>Lock</span>
                   </div>
-                  <span onClick={finalSubmitHandler} className="cursor-pointer">
+                  <span
+                    onClick={finalSubmitHandler}
+                    className="cursor-pointer border rounded-full px-6 py-2 bg-blue-900 text-white"
+                  >
                     Submit
                   </span>
                 </div>

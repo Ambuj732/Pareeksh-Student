@@ -8,6 +8,11 @@ import getProjects from "../../actions/Dashboard/getProjects";
 import getCertificates from "../../actions/Dashboard/getCertificates";
 import getProfileSummary from "../../actions/Dashboard/getProfileSummary";
 import getPublicLinks from "../../actions/Dashboard/getPublicLinks";
+import pen from "../../assets/Dashboard/pen.png";
+import EditSkill from "./EditSkill";
+import EditProject from "./EditProject";
+import EditCertificate from "./EditCertificate";
+import { useSelector } from "react-redux";
 
 function Skills() {
   const [skills, setSkills] = useState([]);
@@ -16,6 +21,14 @@ function Skills() {
   const [profileSummary, setProfileSummary] = useState("");
   const [accomplishments, setAccomplishments] = useState("");
   const [publicLinks, setPublicLinks] = useState([]);
+  const [openModalSkill, setopenModalSkill] = useState(false);
+  const [openModalProject, setopenModalProject] = useState(false);
+  const [openModalCertificate, setopenModalCertificate] = useState(false);
+  const [skillData, setSkillData] = useState({});
+  const [projectData, setProjectData] = useState({});
+  const [certificateData, setCertificateData] = useState({});
+  const [mainData, setMainData] = useState({});
+  const recallCount = useSelector((state) => state.call.recallCount)
 
   const getITSkillsHandler = async () => {
     try {
@@ -24,8 +37,10 @@ function Skills() {
         usercode: user?.usercode,
         id_self_student: user?.id_self_student,
       };
+      setMainData(data)
       const response = await getITSkills(data);
       if (response?.data?.code === 1000) setSkills(response?.data?.it_skills);
+      console.log("IT Skills :: ", response?.data?.it_skills);
     } catch (error) {
       console.log("Error while getting IT Skills :: ", error);
     }
@@ -40,7 +55,7 @@ function Skills() {
       };
       const response = await getProjects(data);
       if (response?.data?.code === 1000) setProjects(response?.data?.projects);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getCertificatesHandler = async () => {
@@ -52,7 +67,8 @@ function Skills() {
       };
       const response = await getCertificates(data);
       if (response?.data?.code === 1000)
-        setCertificates(response?.data?.certificates);
+        console.log("Certificates :: ", response?.data?.certificates);
+      setCertificates(response?.data?.certificates);
     } catch (error) {
       console.log("Error while getting certificates :: ", error);
     }
@@ -83,6 +99,8 @@ function Skills() {
       const response = await getProfileSummary(data);
       if (response?.data?.code === 1000) {
         setProfileSummary(response?.data?.profile_summary);
+        console.log("Profile Summary :: ", response?.data?.profile_summary);
+        console.log("Accomplishments :: ", response?.data?.accomplishment);
         setAccomplishments(response?.data?.accomplishment);
       }
     } catch (error) {
@@ -96,7 +114,7 @@ function Skills() {
     getCertificatesHandler();
     getProfileSummaryHandler();
     getPublicLinksHandler();
-  }, []);
+  }, [recallCount]);
 
   function calculateDuration(startDate, endDate) {
     const start = new Date(startDate);
@@ -198,11 +216,24 @@ function Skills() {
           ))}
         </div>
       </div>
-      <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
-        <span>IT Skills</span>
-      </div>
+
       {skills?.map((skill) => (
         <>
+          <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full flex justify-between items-center">
+            <span>IT Skills</span>
+            <div
+              className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+              onClick={() => {
+                console.log(skill.id, skill.experience)
+                setopenModalSkill(true);
+                setSkillData(skill);
+              }}
+            >
+              <img src={pen} alt="Edit" className="h-5" />
+              <span className="text-sm font-normal">Edit</span>
+            </div>
+          </div>
+
           <div>
             <div className="flex items-center">
               <div className="flex flex-col gap-2 w-1/3">
@@ -217,7 +248,7 @@ function Skills() {
                   className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
                 />
               </div>
-              <div className="flex flex-col gap-2 w-1/3">
+              {/* <div className="flex flex-col gap-2 w-1/3">
                 <div className="flex items-center gap-2">
                   <img src={language} alt="" className="h-4" />
                   <span className="text-sm text-[#1C4481]">
@@ -229,11 +260,7 @@ function Skills() {
                   type="text"
                   className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
                 />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center">
+              </div> */}
               <div className="flex flex-col gap-2 w-1/3">
                 <div className="flex items-center gap-2">
                   <img src={language} alt="" className="h-4" />
@@ -246,6 +273,11 @@ function Skills() {
                   className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
                 />
               </div>
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center">
+
               <div className="flex flex-col gap-2 w-1/3">
                 <div className="flex items-center gap-2">
                   <img src={language} alt="" className="h-4" />
@@ -262,16 +294,27 @@ function Skills() {
           </div>
         </>
       ))}
-      <div className="flex flex-col gap-1">
-        <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
-          <span>Projects</span>
-        </div>
-        <span className="text-sm text-[#8b8b8b]">
-          Add projects to show your experience
-        </span>
-      </div>
+
       {projects?.map((project) => (
         <>
+          <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full flex justify-between items-center">
+            <span>Projects</span>
+            <div
+              className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+              onClick={() => {
+                console.log(project.id,)
+                setopenModalProject(true);
+                setProjectData(project);
+              }}
+            >
+              <img src={pen} alt="Edit" className="h-5" />
+              <span className="text-sm font-normal">Edit</span>
+            </div>
+          </div>
+          <span className="text-sm text-[#8b8b8b]">
+            Add projects to show your experience
+          </span>
+
           <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
@@ -331,16 +374,26 @@ function Skills() {
           </div>
         </>
       ))}
-      <div className="flex flex-col gap-1">
-        <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full">
-          <span>Certifications</span>
-        </div>
-        <span className="text-sm text-[#8b8b8b]">
-          Show your skills via certification benchmark
-        </span>
-      </div>
+
       {certificates?.map((certificate) => (
         <>
+          <div className="bg-[#E7F0FF] text-[#1C4481] font-medium p-2 rounded-md w-full flex justify-between items-center">
+            <span>Certification</span>
+            <div
+              className="bg-[#1C4481] items-center rounded-full px-2 w-20 justify-center p-1 flex gap-1 text-white h-8 cursor-pointer"
+              onClick={() => {
+                console.log(certificate.id, "certificate")
+                setopenModalCertificate(true);
+                setCertificateData(certificate);
+              }}
+            >
+              <img src={pen} alt="Edit" className="h-5" />
+              <span className="text-sm font-normal">Edit</span>
+            </div>
+          </div>
+          <span className="text-sm text-[#8b8b8b]">
+            Show your skills via certification benchmark
+          </span>
           <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
@@ -356,7 +409,7 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-            <div className="flex flex-col gap-2 w-1/3">
+            {/* <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
                 <span className="text-sm text-[#1C4481]">Role in Project</span>
@@ -366,9 +419,7 @@ function Skills() {
                 type="text"
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
-            </div>
-          </div>
-          <div className="flex items-center">
+            </div> */}
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -383,6 +434,9 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
+          </div>
+          <div className="flex items-center">
+
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -397,8 +451,6 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-          </div>
-          <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -413,6 +465,9 @@ function Skills() {
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
+          </div>
+          <div className="flex items-center">
+
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -423,12 +478,12 @@ function Skills() {
               <input
                 disabled
                 type="text"
-                value={certificate?.end_month + certificate?.end_year}
+                value={certificate?.end_year}
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
           </div>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <div className="flex flex-col gap-2 w-1/3">
               <div className="flex items-center gap-2">
                 <img src={category} alt="" className="h-4" />
@@ -439,10 +494,11 @@ function Skills() {
               <input
                 disabled
                 type="text"
+                value={certificate?.end_year}
                 className="outline-none shadow-customShadow rounded-md h-9 px-4 w-5/6 text-md	 font-medium"
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex gap-2 items-center">
             <span>This is certificate does not expire</span>
             <input
@@ -454,6 +510,32 @@ function Skills() {
           </div>
         </>
       ))}
+
+
+      {openModalSkill && (
+        <EditSkill
+          skillData={skillData}
+          mainData={mainData}
+          onClose={() => setopenModalSkill(false)}
+        />
+      )}
+
+
+      {openModalProject && (
+        <EditProject
+          projectData={projectData}
+          mainData={mainData}
+          onClose={() => setopenModalProject(false)}
+        />
+      )}
+
+      {openModalCertificate && (
+        <EditCertificate
+          certificateData={certificateData}
+          mainData={mainData}
+          onClose={() => setopenModalCertificate(false)}
+        />
+      )}
     </div>
   );
 }
