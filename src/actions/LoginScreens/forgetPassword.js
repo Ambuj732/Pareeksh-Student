@@ -18,6 +18,7 @@ const forgetPassword = async (data) => {
       }
     );
     console.log("Forget password response :: ", response);
+    return response;
   } catch (error) {
     console.log("Error whiling forgetting password :: ", forgetPassword);
   }

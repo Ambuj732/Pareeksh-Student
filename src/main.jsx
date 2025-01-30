@@ -70,6 +70,18 @@ import Viva from "./pages/Exams/Viva.jsx";
 import FinalSubmit from "./pages/Exams/FinalSubmit.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
+import DescriptiveFinalSubmit from "./pages/Exams/DescritpiveFinalSumbit.jsx";
+import TheorySecondFinalSubmit from "./pages/Exams/TheorySecondFinalSubmit.jsx";
+import TheoryFincalSumbit from "./pages/Exams/TheoryFincalSumbit.jsx";
+import PsychometricFinalSubmit from "./pages/Exams/PsychometricFinalSubmit.jsx";
+import HackathonFeeDetails from "./components/Dashboard/HackathonFeeDetails.jsx";
+import AppliedJobs from "./components/Dashboard/AppliedJobs.jsx";
+import JobDetailsPage from "./components/Dashboard/JobDetailsPage.jsx";
+import NewJob from "./components/Dashboard/NewJob.jsx";
+import ApplyJob from "./components/Dashboard/ApplyJob.jsx";
+import SignupVerifyOtp from "./components/LoginScreens/SignupVerifyOtp.jsx";
+import PracticalWelocme from "./components/Exams/PracticalWelocme.jsx";
+import ChatPracticalPage from "./components/Exams/ChatPracticalPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -128,6 +140,19 @@ const router = createBrowserRouter(
       <Route path="/descriptive" element={<Descriptive />} />
       <Route path="/viva" element={<Viva />} />
       <Route path="/final-submit" element={<FinalSubmit />} />
+      <Route
+        path="/descriptive-final-submit"
+        element={<DescriptiveFinalSubmit />}
+      />
+      <Route
+        path="/theory-second-final-submit"
+        element={<TheorySecondFinalSubmit />}
+      />
+      <Route path="/theory-final-submit" element={<TheoryFincalSumbit />} />
+      <Route
+        path="/psychometric-final-submit"
+        element={<PsychometricFinalSubmit />}
+      />
       <Route path="/exams" element={<Question />}>
         <Route path="/exams/audioPlayer" element={<AudioPlayer />}></Route>
         <Route path="/exams/descriptive" element={<Descriptive />}></Route>
@@ -180,8 +205,20 @@ const router = createBrowserRouter(
         ></Route>
         <Route
           path="/dashboard/examfeedetails/:examId"
+          c
           element={<ExamFeeDetails />}
         ></Route>
+        <Route
+          path="/dashboard/hackathon-fee-details/:examId"
+          element={<HackathonFeeDetails />}
+        ></Route>
+        <Route path="/dashboard/applied-job" element={<AppliedJobs />}></Route>
+        <Route path="/dashboard/new-job" element={<NewJob />}></Route>
+        <Route
+          path="/dashboard/job-details-page"
+          element={<JobDetailsPage />}
+        ></Route>
+        <Route path="/dashboard/apply-job" element={<ApplyJob />}></Route>
         <Route
           path="/dashboard/hackathon/rejectedhackathon"
           element={<RejectedHackathon />}
@@ -245,12 +282,17 @@ const router = createBrowserRouter(
         <Route path="/signup/account" element={<SignUp />}></Route>
         <Route
           path="/signup/account/verify-otp"
-          element={<ForgetPasswordOTPVerify />}
+          element={<SignupVerifyOtp />}
         ></Route>
       </Route>
       <Route path="/testing" element={<ApiTesting />}></Route>
 
       <Route path="/welcome" element={<Instruction />}></Route>
+      <Route path="/practical-welcome" element={<PracticalWelocme />}></Route>
+      <Route
+        path="/chat-practical-page"
+        element={<ChatPracticalPage />}
+      ></Route>
     </Route>
   )
 );

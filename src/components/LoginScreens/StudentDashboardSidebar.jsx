@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function StudentDashboardSidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen2, setIsMenuOpen2] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -49,20 +50,28 @@ function StudentDashboardSidebar() {
   };
 
   return (
-    <div className="bg-[#2F5185] min-h-screen w-1/5 flex flex-col justify-between overflow-y-scroll no-scrollbar">
+    <div className="bg-[#2F5185] -h-screen w-1/5 flex flex-col justify-between overflow-y-scroll no-scrollbar">
       <div>
         <img src={logo} alt="" className="h-20" />
         <div className="py-4 flex flex-col">
           <Link to={"/dashboard/exams"}>
-            <div className="flex items-center cursor-pointer w-4/5 h-12 rounded-e-full bg-white text-[#1C4481] gap-2 py-2 px-4">
+            <div
+              className="flex items-center cursor-pointer w-4/5 h-12 rounded-e-full bg-white text-[#1C4481] gap-2 py-2 px-4"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsMenuOpen2(false);
+              }}
+            >
               <img src={dashboard} alt="" />
               <span className="font-semibold">Dashboard</span>
             </div>
           </Link>
+          {/* Profile*/}
           <div
             onClick={() => {
               const open = isMenuOpen;
               setIsMenuOpen(!open);
+              setIsMenuOpen2(false);
             }}
             className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 justify-between py-2 px-4 cursor-pointer"
           >
@@ -167,20 +176,64 @@ function StudentDashboardSidebar() {
               </Link>
             </div>
           )}
-
+          {/* Jobs*/}
+          <div
+            className="flex items-center cursor-pointer w-4/5 h-12 rounded-e-full  text-white gap-2 py-2 px-4"
+            onClick={() => {
+              const open = isMenuOpen2;
+              setIsMenuOpen2(!open);
+              setIsMenuOpen(false);
+            }}
+          >
+            <img src={user} alt="" />
+            <span className="font-semibold">Jobs</span>
+          </div>
+          {isMenuOpen2 && (
+            <div className="flex flex-col items-center">
+              <Link to={"/dashboard/applied-job"} className="w-4/5 h-12">
+                <div className="flex items-center w-full h-12 rounded-e-full text-white gap-2 py-2 px-4">
+                  <div className="flex items-center gap-2">
+                    <img src={user} alt="" />
+                    <span className="text-nowrap">Applied Jobs</span>
+                  </div>
+                </div>
+              </Link>
+              <Link to={"/dashboard/new-job"} className="w-4/5 h-12">
+                <div className="flex items-center w-full h-12 rounded-e-full text-white gap-2 py-2 px-4">
+                  <div className="flex items-center gap-2">
+                    <img src={user} alt="" />
+                    <span className="">New Jobs</span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          )}
+          {/* Transation*/}
           <Link>
-            <div className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 py-2 px-4">
+            <div
+              className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 py-2 px-4"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsMenuOpen2(false);
+              }}
+            >
               <img src={transition} alt="" />
               <span className="">Transaction</span>
             </div>
           </Link>
+          {/* Secotr*/}
           <Link to={"/dashboard/student-profile/sectors"}>
-            <div className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 py-2 px-4">
+            <div
+              className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 py-2 px-4"
+              onClick={() => {
+                setIsMenuOpen(false);
+                setIsMenuOpen2(false);
+              }}
+            >
               <img src={stat} alt="" />
               <span className="">Sectors</span>
             </div>
           </Link>
-
           <div
             onClick={logoutHandler}
             className="flex items-center w-4/5 h-12 rounded-e-full text-white gap-2 py-2 px-4 cursor-pointer"

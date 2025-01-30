@@ -13,37 +13,30 @@ import bulb from "../../assets/LoginScreen/bulb.png";
 import building from "../../assets/LoginScreen/building.png";
 import personWithLaptop from "../../assets/LoginScreen/personWithLaptop.png";
 import logo from "../../assets/logo/pareekshn_logo.png";
-
 import { Outlet } from "react-router";
 
 function LoginWithPasscodePage() {
   return (
-    <div className="p-6 max-h-screen flex justify-center items-center relative">
-      <div className="h-[530px] m-8 w-[65%] bg-[#2F5185] rounded-t-3xl rounded-bl-3xl rounded-br-3xl"></div>
-      {/* <img src={passcodeBg} alt="" className="h-[550px] m-8 bg-[#e6e6e8]" /> */}
-      <img src={exam} alt="" className="absolute h-56 left-80" />
-      <img src={logo} alt="" className="absolute top-20 left-80 h-16" />
+    <div className="max-h-screen flex justify-center items-center relative">
+      <div className="h-screen w-full bg-[#2F5185]"></div>
+      <img src={exam} alt="" className="absolute h-56 left-96" />
+      <img src={logo} alt="" className="absolute top-10 left-10 h-20" />
       <img
         src={graduationCap}
         alt=""
-        className="absolute h-16 top-48 left-48"
+        className="absolute h-16 top-14 right-20"
       />
-      <img src={hand} alt="" className="absolute top-16 h-16 left-[500px]" />
-      <img src={laptop} alt="" className="absolute top-44 left-[660px] h-16" />
-      <img
+      {/* <img src={laptop} alt="" className="absolute bottom-32 left-10 h-16" /> */}
+      {/* <img
         src={scaleAndPencil}
         alt=""
-        className="absolute h-28 top-[440px] left-[600px]"
-      />
-      <img
-        src={student}
-        alt=""
-        className="absolute h-20 right-[190px] top-20"
-      />
+        className="absolute h-28 bottom-32 left-[600px]"
+      /> */}
+      {/* <img src={student} alt="" className="absolute h-20 right-16 top-60" /> */}
       <img
         src={books}
         alt=""
-        className="absolute top-[500px] right-[190px] h-24"
+        className="absolute top-[500px] right-[150px] h-24"
       />
       <img
         src={bulb}

@@ -9,6 +9,7 @@ import { Doughnut } from "react-chartjs-2";
 import vivaExamSubmit from "../../actions/Passcode/vivaExamSubmit";
 import Swal from "sweetalert2";
 import ThankYou from "../../components/Exams/ThankYou";
+import InstructionPage from "../../components/Exams/InstructionPage.jsx";
 
 function FinalSubmit() {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ function FinalSubmit() {
   const [attempted, setAttempted] = useState(0);
   const [totalQuestion, setTotalQuestion] = useState(0);
   const [thankYouModal, setThankYouModal] = useState(false);
+  const [instructionPages, setInstructionPages] = useState(false);
+
   const [data, setData] = useState({
     labels: ["Attempted", "Not Attempted"],
     datasets: [
@@ -100,10 +103,29 @@ function FinalSubmit() {
       };
       console.log(data);
       const response = await vivaExamSubmit(data);
+      if (response?.data?.code === 1000) {
+        localStorage.removeItem("id_self_student");
+        localStorage.removeItem("instruction");
+        localStorage.removeItem("pkshn_profileData");
+        localStorage.removeItem("ps_attempted");
+        localStorage.removeItem("ps_loguser");
+        localStorage.removeItem("ps_totalq");
+        localStorage.removeItem("supspw_geoIPStu");
+        sessionStorage.removeItem("pkshn_exam_set");
+      }
       console.log(response);
     } catch (error) {
       console.log("Error while submitting viva exam :: ", error);
     }
+  };
+
+  const profile_Data = JSON.parse(localStorage.getItem("pkshn_profileData"));
+  const instructionPage = () => {
+    setInstructionPages(true);
+  };
+
+  const closeModal = () => {
+    setInstructionPages(false);
   };
 
   return (
@@ -114,13 +136,13 @@ function FinalSubmit() {
         <div className="flex  gap-6">
           <div className="flex items-center justify-around py-1 gap-2 bg-[#FEFEFF1A] rounded-full h-14 w-[200px] px-2 pr-8">
             <img
-              src={studentProfile?.profile_pic}
+              src={profile_Data?.pic}
               alt=""
-              className="h-10 rounded-full"
+              className="h-11 w-16 object-contain rounded-full"
             />
             <div className="flex flex-col font-medium text-white">
-              <span className="w-[150px]">{studentProfile?.student_name}</span>
-              <span>{studentProfile?.id}</span>
+              <span className="w-[150px]">{profile_Data?.name}</span>
+              {/* <span>{studentProfile?.id}</span> */}
             </div>
           </div>
           <div className="flex gap-3 h-14">
@@ -130,7 +152,12 @@ function FinalSubmit() {
               // onClick={logoutHandler}
               className="cursor-pointer"
             />
-            <img src={questionMark} alt="" />
+            <img
+              src={questionMark}
+              alt=""
+              className="cursor-pointer"
+              onClick={instructionPage}
+            />
           </div>
         </div>
       </div>
@@ -180,6 +207,7 @@ function FinalSubmit() {
             </button>
           </div>
         </div>
+        {instructionPages && <InstructionPage closeModal={closeModal} />}
       </div>
     </div>
   );

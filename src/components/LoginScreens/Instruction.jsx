@@ -6,6 +6,7 @@ import getInstructions from "../../actions/LoginScreens/instructions";
 import { Link } from "react-router-dom";
 import GeneralInstruction from "./GeneralInstruction";
 import { useNavigate } from "react-router-dom";
+import { resolveInput } from "face-api.js";
 
 function Instruction() {
   const [pdfUrl, setPdfUrl] = useState("");
@@ -20,19 +21,125 @@ function Instruction() {
     setOpen(false);
   };
 
+  const userData = JSON.parse(localStorage.getItem("ps_loguser"));
+  console.log(userData);
+  const settings = JSON.parse(sessionStorage.getItem("pkshn_exam_set"));
+  console.log(settings);
+  const theory2_login = settings.theory2_login;
+  const entered_psyc = settings.entered_psyc;
+  console.log(entered_psyc);
+  console.log(theory2_login);
+  let isAllowPsycho = false;
+  let isTheory = false;
+  let isAllowViva = false;
+  let isTheory3 = false;
+
+  if (userData["examstatus"] === undefined) {
+    window.location.reload();
+    return;
+  }
+  if (settings["entered_psyc"] == 1) {
+    isAllowPsycho = true;
+    isTheory = false;
+    isAllowViva = false;
+  } else if (settings["entered_theory3"] == 1) {
+    isAllowPsycho = false;
+    isTheory = false;
+    isAllowViva = false;
+    isTheory3 = true;
+  } else {
+    if (
+      userData["examstatus"] == 0 &&
+      settings["viva_assessor"] == 0 &&
+      settings["module"] >= 2 &&
+      settings["viva_first"] == 1
+    ) {
+      isAllowViva = true;
+      isTheory = false;
+    }
+    if (
+      userData["examstatus"] == 0 &&
+      settings["module"] >= 2 &&
+      settings["viva_first"] == 0
+    ) {
+      isAllowViva = false;
+      isTheory = true;
+    }
+    if (
+      userData["examstatus"] == 1 &&
+      settings["module"] >= 2 &&
+      settings["viva_first"] == 0
+    ) {
+      isAllowViva = true;
+      isTheory = false;
+    }
+    if (
+      userData["examstatus"] == 2 &&
+      settings["viva_assessor"] == 0 &&
+      settings["module"] >= 2 &&
+      settings["viva_first"] == 1
+    ) {
+      isAllowViva = false;
+      isTheory = true;
+    }
+    if (
+      userData["examstatus"] == 2 &&
+      settings["viva_assessor"] == 1 &&
+      settings["module"] >= 2 &&
+      settings["viva_first"] == 1
+    ) {
+      isAllowViva = false;
+      isTheory = true;
+    }
+    if (userData["examstatus"] == 0 && settings["module"] == 1) {
+      isAllowViva = false;
+      isTheory = true;
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = {
-          exam_id: 8551,
-          student_id: 211037,
-          streamvideo: 1,
-          usercode: "i9lBY5euU0vw",
+          exam_id: settings?.exam_id,
+          student_id: userData.id,
+          streamvideo: settings?.video,
+          usercode: userData?.usercode,
         };
+        console.log(data);
         const response = await getInstructions(data);
-        setPdfUrl(response?.data?.pdf_url);
-        setVideoInstruction(response?.data?.video_link);
-        setInstruction(response?.data?.instruction);
+        console.log(response);
+        if (response?.data?.code === 1000) {
+          let profile_data = {
+            name: response?.data?.student_name,
+            pic: response?.data?.pic,
+          };
+          localStorage.setItem(
+            "pkshn_profileData",
+            JSON.stringify(profile_data)
+          );
+          if (response?.data?.feed?.session != "") {
+            const videostream = 1;
+            let feedsetting = {
+              sessid: response?.data.feed.session,
+              toid: response?.data.feed.token,
+            };
+            sessionStorage.setItem(
+              "pkshn_feedsetting",
+              JSON.stringify(feedsetting)
+            );
+          } else {
+            const videostream = 0;
+          }
+
+          setPdfUrl(response?.data?.pdf_url);
+          setVideoInstruction(response?.data?.video_link);
+          setInstruction(response?.data?.instruction);
+          localStorage.setItem(
+            "instruction",
+            JSON.stringify(response?.data?.instruction)
+          );
+        }
       } catch (error) {
         console.log("Error while getting instruction:", error);
       } finally {
@@ -45,7 +152,20 @@ function Instruction() {
 
   const goToExamPage = () => {
     console.log("His");
-    navigate("/exams");
+    console.log(isTheory);
+    if (isTheory === true) {
+      console.log("Hi theory");
+      navigate("/exams");
+    } else if (theory2_login === 1) {
+      console.log("Hi theory2");
+      navigate("/exams");
+    } else if (isAllowPsycho === true) {
+      console.log("Hi psy");
+      navigate("/exams");
+    } else {
+      console.log("Hi");
+      navigate("/viva");
+    }
   };
 
   return (
@@ -94,12 +214,20 @@ function Instruction() {
           </button>
         )}
       </div>
-      <button
-        className="bg-[#1C4481] absolute bottom-1 h-10 w-1/6 rounded-3xl text-white font-medium m-1"
-        onClick={goToExamPage}
-      >
-        Start Theory
-      </button>
+      {open && instruction && (
+        <button
+          className="bg-[#1C4481] flex items-center justify-center absolute bottom-4 h-10 w-1/6 rounded-3xl text-white font-medium px-2"
+          onClick={goToExamPage}
+        >
+          {isTheory === true
+            ? "Start Theory"
+            : theory2_login === 1
+            ? "Start Theory2"
+            : isAllowPsycho === true
+            ? "Start Psychometric"
+            : "Start Viva"}
+        </button>
+      )}
     </div>
   );
 }

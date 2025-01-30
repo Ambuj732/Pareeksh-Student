@@ -1,6 +1,6 @@
 function createTimer(minutes, setTimeCallback) {
-  console.log(minutes);
   console.log("Hi");
+  console.log(minutes);
   let seconds = minutes * 60;
   let intervalRef = null;
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import avatar from "/avatar.png";
 import { format } from "date-fns";
-
 import profileComletion from "/profileCompletion.png";
 // import CorporateHackathonSidebar from "../CorporateHackathonSidebar";
 import mock from "/mock.png";
@@ -23,17 +22,21 @@ import sector from "../../assets/Hackathon/sector.png";
 import location from "../../assets/Hackathon/location.png";
 import level from "../../assets/Hackathon/level.png";
 import bottom from "../../assets/Hackathon/bottom.png";
+import paidcorner from "../../assets/Hackathon/paidcorner.png";
 import LeaderBoard from "../Dashboard/LeaderBoard";
 import { Outlet } from "react-router";
 import hackthonStudentDashboardStatistics from "../../actions/Hackthon/hackthonStudentDashboardStatistics";
 import newHackathonList from "../../actions/Hackthon/newHackathonList";
 import enrolledHackathonList from "../../actions/Hackthon/enrolledHackathonList";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 function CorporateHackathonDashboard1() {
   const [studentDashboard, setStudentDashboard] = useState({});
   const [hackathonList, setHackathonList] = useState([]);
   const [enrolledHackthon, setEnrolledHackthon] = useState([]);
   const [view, setView] = useState("new");
+  const navigate = useNavigate();
   const [errors, setErrors] = useState([]);
 
   const getEnrolledHackathonList = async () => {
@@ -83,11 +86,19 @@ function CorporateHackathonDashboard1() {
       const response = await newHackathonList(data);
       if (response?.data?.code === 1000)
         setHackathonList(response?.data?.new_exams);
+      console.log(response?.data?.new_exams.length);
       console.log("newHacathon list :", response);
     } catch (error) {
       console.log("Error while getting data :: ", error);
       setErrors([error.message]);
     }
+  };
+
+  const handleBuyClick = () => {
+    // console.log(hackathonList.id_exam);
+    console.log("hi hakcathon");
+    localStorage.setItem("hackathonfee", JSON.stringify(hackathonList));
+    navigate("/dashboard/examfeedetails/");
   };
 
   useEffect(() => {
@@ -102,11 +113,11 @@ function CorporateHackathonDashboard1() {
   };
 
   return (
-    <div className="h-screen flex items-start mx-4 justify-around overflow-hidden">
+    <div className=" flex items-start mx-4 justify-around overflow-hidden">
       <div className="w-2/3 overflow-y-scroll no-scrollbar">
         <div className="bg-[#EDF2FF] min-h-screen rounded-3xl">
           <div className="flex">
-            <div className="w-full h-fit flex flex-col gap-4">
+            <div className="w-full  flex flex-col gap-4">
               <div className="flex justify-between items-center gap-10">
                 <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 w-[300px] h-28 rounded-xl flex justify-between px-4 py-2">
                   <div className="w-1/4 h-1/6 flex flex-col gap-2">
@@ -152,7 +163,7 @@ function CorporateHackathonDashboard1() {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col gap-2">
+              <div className="  mt-6 flex flex-col gap-2 ">
                 <div className="flex items-center gap-8 mx-auto w-full mb-6 justify-center">
                   <div
                     className={`w-fit border ${
@@ -185,7 +196,7 @@ function CorporateHackathonDashboard1() {
                     Completed Hackathon
                   </div>
                 </div>
-                <div className="flex flex-col gap-8">
+                <div className=" h-screen flex flex-col gap-8 overflow-y-scroll no-scrollbar">
                   {view === "new" && (
                     <>
                       {hackathonList.length === 0 ? (
@@ -193,76 +204,189 @@ function CorporateHackathonDashboard1() {
                           No new hackathons available.
                         </p>
                       ) : (
-                        hackathonList.map((list) => (
-                          <div className="w-full h-fit bg-white rounded-3xl">
-                            <div className="flex h-1/2 items-center justify-between p-6">
-                              <div className="flex w-2/3 gap-2">
-                                <img
-                                  src={hackathon}
-                                  alt=""
-                                  className="h-1/3 w-1/3"
-                                />
-                                <div className="flex flex-col">
-                                  <span className="font-semibold text-[#1C4481] text-lg">
-                                    {list.title}
-                                  </span>
-                                  <span className="text-sm text-[#1C4481] font-medium">
-                                    {list.category}
-                                  </span>
-                                  <span className="text-sm text-[#7B7B7B]">
-                                    Level-{list.level}
-                                  </span>
+                        hackathonList.map((list) => {
+                          if (list.paid_type === 0) {
+                            return (
+                              <div className="w-full h-auto bg-white rounded-3xl">
+                                <div className="flex h-1/2 items-center justify-between p-6">
+                                  <div className="flex w-2/3 gap-2">
+                                    <img
+                                      src={list?.banner?.banner_pic}
+                                      alt=""
+                                      className="h-1/3 w-1/3 rounded cursor-pointer"
+                                    />
+                                    <div className="flex flex-col">
+                                      <span className="font-semibold text-[#1C4481] text-lg">
+                                        {list.hackthon_title}
+                                      </span>
+                                      <span className="text-sm text-[#1C4481] font-medium">
+                                        {list.category}
+                                      </span>
+                                      <span className="text-sm text-[#7B7B7B]">
+                                        Level-{list.level_difficulty_name}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center bg-[#1C4481] h-10 w-28 rounded-full justify-center">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-white">
+                                        {list.paid_type === 0 ? "Free" : "Paid"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr className="border-t-[1px] border-[#1C4481]" />
+                                <div className="flex justify-between p-6 text-[#1C4481]">
+                                  <div className="flex items-center gap-2">
+                                    <img src={date} alt="" className="h-8" />
+                                    <div className="flex flex-col text-[12px]">
+                                      <span>Date & Time</span>
+                                      <span className="font-semibold">
+                                        {formatDate(list.date_of_exam)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <img src={sector} alt="" className="h-8" />
+                                    <div className="flex flex-col text-[12px]">
+                                      <span>Sector</span>
+                                      <span className="font-semibold">
+                                        {list.sector}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <img
+                                      src={location}
+                                      alt=""
+                                      className="h-8"
+                                    />
+                                    <div className="flex flex-col text-[12px]">
+                                      <span>Location</span>
+                                      <span className="font-semibold">
+                                        {list.city},{list.state}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <img src={level} alt="" className="h-8" />
+                                    <div className="flex flex-col text-[12px]">
+                                      <span>Level</span>
+                                      <span className="font-semibold text-nowrap">
+                                        {list.level_difficulty_name}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                              <div className="flex items-center bg-[#1C4481] h-10 w-28 rounded-full justify-center">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-white">
-                                    {list.isFree ? "Free" : "Paid"}
-                                  </span>
+                            );
+                          }
+                          if (list.paid_type == 1) {
+                            return (
+                              <div
+                                className={`h-fit mx-auto rounded-3xl bg-gradient-to-br from-yellow-300 to-yellow-400 w-full`}
+                              >
+                                <div className="flex h-1/2 items-center justify-between relative p-6">
+                                  <img
+                                    src={paidcorner}
+                                    alt=""
+                                    className="absolute top-10 left-10 transform -translate-x-1/2 -translate-y-1/2"
+                                  />
+                                  <div className="flex w-2/3 gap-2 px-12">
+                                    <img
+                                      src={list.banner.banner_pic}
+                                      alt="blank"
+                                      className="h-1/3 w-1/3 rounded"
+                                    />
+                                    <div className="flex flex-col">
+                                      <span className="font-semibold text-[#1C4481] text-lg">
+                                        {list.hackthon_title}
+                                      </span>
+                                      <span className="text-sm text-[#1C4481] font-medium">
+                                        {list.sector_name}
+                                      </span>
+                                      <span className="text-sm text-[#7B7B7B]">
+                                        Level-{list.level_difficulty_name}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center flex-col gap-2">
+                                    <Link
+                                      to={`/dashboard/hackathon-fee-details/${list?.banner?.id}`}
+                                    >
+                                      <div className="flex items-center border  h-10 w-fit px-10 rounded-full bg-white cursor-pointer ">
+                                        <div className="flex items-center gap-2">
+                                          <span
+                                            className="text-black text-md font-semibold"
+                                            onClick={handleBuyClick}
+                                          >
+                                            Buy
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </Link>
+                                    <div className="flex items-center h-10 w-28 rounded-full justify-center">
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-semibold text-2xl">
+                                          Rs.{list?.amount}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr class="border-t-[1px] border-[#1C4481]" />
+                                <div className="bg-gradient-to-br from-yellow-300 p-4 to-yellow-400 rounded-b-3xl ">
+                                  <div className="flex bg-white justify-between text-[#1C4481] rounded-xl p-2">
+                                    <div className="flex items-center gap-2">
+                                      <img src={date} alt="" className="h-8" />
+                                      <div className="flex flex-col text-[12px]">
+                                        <span>Date & Time</span>
+                                        <span className="font-semibold">
+                                          {formatDate(list.date_of_exam)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <img
+                                        src={sector}
+                                        alt=""
+                                        className="h-8"
+                                      />
+                                      <div className="flex flex-col text-[12px]">
+                                        <span>Sector</span>
+                                        <span className="font-semibold">
+                                          {list.sector}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <img
+                                        src={location}
+                                        alt=""
+                                        className="h-8"
+                                      />
+                                      <div className="flex flex-col text-[12px]">
+                                        <span>Location</span>
+                                        <span className="font-semibold">
+                                          {list.city},{list.state}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <img src={level} alt="" className="h-8" />
+                                      <div className="flex flex-col text-[12px]">
+                                        <span>Level</span>
+                                        <span className="font-semibold">
+                                          {list.level_difficulty_name}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <hr className="border-t-[1px] border-[#1C4481]" />
-                            <div className="flex justify-between p-6 text-[#1C4481]">
-                              <div className="flex items-center gap-2">
-                                <img src={date} alt="" className="h-8" />
-                                <div className="flex flex-col text-[12px]">
-                                  <span>Date & Time</span>
-                                  <span className="font-semibold">
-                                    {formatDate(list.date_of_exam)}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <img src={sector} alt="" className="h-8" />
-                                <div className="flex flex-col text-[12px]">
-                                  <span>Sector</span>
-                                  <span className="font-semibold">
-                                    {list.sector}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <img src={location} alt="" className="h-8" />
-                                <div className="flex flex-col text-[12px]">
-                                  <span>Location</span>
-                                  <span className="font-semibold">
-                                    {list.location}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <img src={level} alt="" className="h-8" />
-                                <div className="flex flex-col text-[12px]">
-                                  <span>Level</span>
-                                  <span className="font-semibold">
-                                    {list.level}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))
+                            );
+                          }
+                        })
                       )}
                     </>
                   )}
@@ -346,8 +470,88 @@ function CorporateHackathonDashboard1() {
                       )}
                     </>
                   )}
+                  {view === "completed" && (
+                    <>
+                      {enrolledHackthon.length === 0 ? (
+                        <p className="text-center text-[#1C4481]">
+                          No enrolled hackathons.
+                        </p>
+                      ) : (
+                        enrolledHackthon.map((list) => (
+                          <div className="w-full h-fit bg-white rounded-3xl">
+                            <div className="flex h-1/2 items-center justify-between p-6">
+                              <div className="flex w-2/3 gap-2">
+                                <img
+                                  src={hackathon}
+                                  alt=""
+                                  className="h-1/3 w-1/3"
+                                />
+                                <div className="flex flex-col">
+                                  <span className="font-semibold text-[#1C4481] text-lg">
+                                    {list.title}
+                                  </span>
+                                  <span className="text-sm text-[#1C4481] font-medium">
+                                    {list.category}
+                                  </span>
+                                  <span className="text-sm text-[#7B7B7B]">
+                                    Level-{list.level}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center bg-[#1C4481] h-10 w-28 rounded-full justify-center">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-white">
+                                    {list.isFree ? "Free" : "Paid"}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <hr className="border-t-[1px] border-[#1C4481]" />
+                            <div className="flex justify-between p-6 text-[#1C4481]">
+                              <div className="flex items-center gap-2">
+                                <img src={date} alt="" className="h-8" />
+                                <div className="flex flex-col text-[12px]">
+                                  <span>Date & Time</span>
+                                  <span className="font-semibold">
+                                    {formatDate(list.date_of_exam)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src={sector} alt="" className="h-8" />
+                                <div className="flex flex-col text-[12px]">
+                                  <span>Sector</span>
+                                  <span className="font-semibold">
+                                    {list.sector}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src={location} alt="" className="h-8" />
+                                <div className="flex flex-col text-[12px]">
+                                  <span>Location</span>
+                                  <span className="font-semibold">
+                                    {list.location}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <img src={level} alt="" className="h-8" />
+                                <div className="flex flex-col text-[12px]">
+                                  <span>Level</span>
+                                  <span className="font-semibold">
+                                    {list.level}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </>
+                  )}
                 </div>
-                <img src={bottom} alt="" className="mt-2" />
+                {/* <img src={bottom} alt="" className="mt-2" /> */}
               </div>
             </div>
             {/* <LeaderBoard /> */}

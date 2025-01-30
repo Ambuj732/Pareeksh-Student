@@ -16,6 +16,7 @@ function LeaderBoard() {
         id_self_student: user.id_self_student,
       };
       const response = await leaderboard(data);
+      console.log(response);
       if (response?.data?.code === 1000)
         setLeaderData(response?.data?.hackathon.students);
       setLeaderHackathonData(response?.data?.hackathon);
@@ -37,7 +38,7 @@ function LeaderBoard() {
         <div className="text-sm flex flex-col gap-2">
           <span className="text-[#1C4481]">Hackathon Name</span>
           <div className="text-center flex items-center justify-center rounded-md shadow-allBorder ">
-            <span>{leaderHackathonData.hackthon_title}</span>
+            <span>{leaderHackathonData?.hackthon_title}</span>
             <img src={arrowdown} alt="" />
           </div>
         </div>
@@ -46,7 +47,7 @@ function LeaderBoard() {
         <span className="font-medium">Top Five</span>
         <div className="flex flex-col items-center text-[#0A2E89] font-medium bg-[#C9DCF8] p-1 px-2 rounded-md">
           <span>Total Candidate</span>
-          <span className="text-xl">{leaderData.length}</span>
+          <span className="text-xl">{leaderData?.length}</span>
         </div>
       </div>
       <div className="bg-[#1C4481] h-12 w-full rounded-t-xl">
@@ -63,11 +64,11 @@ function LeaderBoard() {
             leaderData.map((data) => (
               <div className="flex items-center justify-center">
                 <span className="w-1/12 text-center ml-2">Rank</span>
-                <span className="w-2/3 text-center ">{data.student_name}</span>
+                <span className="w-2/3 text-center ">{data?.student_name}</span>
 
                 <span className="w-1/5 text-center mr-10">Location</span>
                 <span className="w-1/12 text-center mr-10">
-                  {data.obtain_marks}
+                  {data?.obtain_marks}
                 </span>
               </div>
             ))}

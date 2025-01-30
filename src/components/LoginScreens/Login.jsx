@@ -87,7 +87,7 @@ function Login() {
   return (
     <div className="min-h-screen relative w-full lg:w-2/3 flex justify-center items-center">
       <img src={logo} alt="" className="absolute top-3 left-3 h-20" />
-      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[#2F5185]">
+      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[rgb(47,81,133)]">
         {/* <img
 					src={leftBg}
 					alt=""
@@ -98,8 +98,8 @@ function Login() {
           alt=""
           className="absolute h-16 top-10 right-10"
         />
-        <img src={hand} alt="" className="absolute bottom-24 h-16 left-12" />
-        <img src={laptop} alt="" className="absolute bottom-56 h-16 left-10" />
+        <img src={laptop} alt="" className="absolute bottom-72 h-16 left-10" />
+        <img src={hand} alt="" className="absolute bottom-16 h-16 left-10" />
       </div>
 
       <form

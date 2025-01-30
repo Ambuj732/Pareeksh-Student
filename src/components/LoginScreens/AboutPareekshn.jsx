@@ -56,19 +56,21 @@ function AboutPareekshn() {
       >
         {Array.isArray(photo) &&
           photo.map((data, index) => (
-            <div
-              key={index}
-              className="overflow-hidden flex flex-col justify-center items-center w-full"
-            >
-              <div className="flex justify-center items-center relative mr-10">
-                <img src={data.photo_url} alt="" className="h-80" />
-                <div className="h-[290px] bg-[#CBD9FF] rounded-3xl w-[420px] absolute z-[-1]"></div>
-                <div className="h-[240px] bg-[#9CB8FF87] rounded-3xl w-[450px] absolute z-[-2]"></div>
+            <>
+              <div
+                key={index}
+                className="overflow-hidden flex flex-col justify-center items-center w-full "
+              >
+                <div className="flex justify-center items-center relative mr-10 ">
+                  <img src={data.photo_url} alt="" className="h-80" />
+                  <div className="h-[290px] bg-[#CBD9FF] rounded-3xl w-[420px] absolute z-[-1]"></div>
+                  <div className="h-[240px] bg-[#9CB8FF87] rounded-3xl w-[450px] absolute z-[-2]"></div>
+                </div>
               </div>
-              <p className="text-center text-sm mt-4">
-                <span className="font-semibold">{data.photo_text}</span>
+              <p className="text-center text-sm py-9">
+                <span className="font-semibold ">{data.photo_text}</span>
               </p>
-            </div>
+            </>
           ))}
       </Carousel>
     </div>

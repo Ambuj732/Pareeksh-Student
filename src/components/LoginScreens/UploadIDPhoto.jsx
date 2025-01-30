@@ -6,6 +6,8 @@ import Webcam from "react-webcam";
 import { useNavigate } from "react-router";
 import uploadIdPhoto from "../../actions/LoginScreens/uploadIdPhoto";
 import SlidingMessage from "../ApiResponse";
+import uploadIdImage from "../../actions/LoginScreens/uploadIdImage";
+import psyUploadIDImage from "../../actions/LoginScreens/psyUploadIDImage";
 
 function UploadIDPhoto() {
   const navigate = useNavigate();
@@ -29,34 +31,107 @@ function UploadIDPhoto() {
     }
   };
 
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const uploadIdPhotoHandler = async () => {
     if (capturedImage) {
+      console.log(capturedImage);
       var userData = JSON.parse(localStorage.getItem("ps_loguser"));
       var settings = JSON.parse(sessionStorage.pkshn_exam_set);
-      // Call your upload function here
-      uploadIdPhoto(capturedImage, userData, settings["exam_id"])
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.code);
-          if (response.status == 200) {
-            const code = response?.data?.code;
-            if (code == 1000) {
-              setError(
-                "Your ID photo captured successfully. You will be redirected to capture your photo."
-              );
-              navigate("/login-with-passcode/upload-photo");
+      console.log(userData);
+      console.log(settings);
+      const theory2_login = settings.theory2_login;
+      const entered_psyc = settings.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
+      if (theory2_login === 1) {
+        uploadIdImage(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            console.log(response);
+            console.log(response.status);
+            console.log(response.data.code);
+            console.log(response?.message);
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              if (code == 1000) {
+                setError(
+                  "Your ID photo captured successfully. You will be redirected to capture your photo."
+                );
+                navigate("/login-with-passcode/upload-photo");
+              } else {
+                // setError(message);
+                return;
+              }
             } else {
-              setError(message);
+              setError("Please try again.");
               return;
             }
-          } else {
-            setError("Please try again.");
-            return;
-          }
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-        });
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      } else if (entered_psyc === 1) {
+        console.log("hi");
+        psyUploadIDImage(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            console.log(response);
+            console.log(response.status);
+            console.log(response.data.code);
+            console.log(response?.message);
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              if (code == 1000) {
+                setError(
+                  "Your ID photo captured successfully. You will be redirected to capture your photo."
+                );
+                navigate("/login-with-passcode/upload-photo");
+              } else {
+                // setError(message);
+                return;
+              }
+            } else {
+              setError("Please try again.");
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      } else {
+        uploadIdPhoto(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            console.log(response);
+            console.log(response.status);
+            console.log(response.data.code);
+            console.log(response?.message);
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              if (code == 1000) {
+                setError(
+                  "Your ID photo captured successfully. You will be redirected to capture your photo."
+                );
+                navigate("/login-with-passcode/upload-photo");
+              } else {
+                // setError(message);
+                return;
+              }
+            } else {
+              setError("Please try again.");
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      }
+      // Call your upload function here
     }
   };
 

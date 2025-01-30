@@ -59,6 +59,16 @@ import { date } from "yup";
 import multiObjectDetection from "../../actions/Passcode/multiObjectDetection";
 import facesDetection from "../../actions/Passcode/facesDetection";
 import moveDetection from "../../actions/Passcode/moveDetection";
+import createTimer from "../../utils/timer.js";
+import randomImagesTheory2 from "../../actions/Passcode/randomImagesTheory2.js";
+import multiObjectDetectionWebTheory2 from "../../actions/Passcode/multiObjectDetectionWebTheory2.js";
+import multifaceDetectionWebTheory2 from "../../actions/Passcode/multifaceDetectionWebTheory2.js";
+import faceDetectionWebTheory2 from "../../actions/Passcode/faceDetectionWebTheory2.js";
+import psyRandomImages from "../../actions/Passcode/psyRandomImages.js";
+import psyMultiObjectDetection from "../../actions/Passcode/psyMultiObjectDetection.js";
+import psyMultifaceDetection from "../../actions/Passcode/psyMultifaceDetection.js";
+import psyFaceDetection from "../../actions/Passcode/psyFaceDetection.js";
+import InstructionPage from "../../components/Exams/InstructionPage.jsx";
 
 function Question() {
   const navigate = useNavigate();
@@ -78,6 +88,7 @@ function Question() {
   const [imageSrc, setImageSrc] = useState("");
   const [screenshot, setScreenshot] = useState(null);
   const [time, setTime] = useState({ minutes: 10, seconds: 0 });
+  const [timerInstance, setTimerInstance] = useState(null);
   const [lockStatus, setLockStatus] = useState(0);
   const [primaryLang, setPrimaryLang] = useState("");
   const [fiveMinuteLeft, setFiveMinuteLeft] = useState(false);
@@ -100,6 +111,8 @@ function Question() {
   const [isTimerPaused, setIsTimerPaused] = useState(false);
   const [primaryLanguage, setPrimaryLanugage] = useState("");
   const [primaryLanguageCode, setPrimaryLanguageCode] = useState("");
+  const [instructionPages, setInstructionPages] = useState(false);
+
   let count = 0;
 
   const intervalRef = useRef(null);
@@ -126,6 +139,7 @@ function Question() {
     setIsTimerPaused(false);
   };
 
+  // exam type declare krana
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("ps_loguser"));
     console.log("User :: ", user);
@@ -148,6 +162,7 @@ function Question() {
     setExamType(examType);
   }, []);
 
+  // doubt hai isme in condition - ki exam type ke kaise different api chalegi
   useEffect(() => {
     if (exam?.theory2_login) {
       getTheorySecondExamInitialHandler();
@@ -164,12 +179,26 @@ function Question() {
     getSecondaryLanguageHandler();
   }, [examInitial]);
 
+  // timer start yanha se hoga
   useEffect(() => {
-    console.log(time?.minutes);
-    if (time?.minutes < 5) {
+    console.log("Initializing timer...");
+    // setTimerInstance(time);
+    const timer = createTimer(timerInstance, setTime);
+    console.log(timer);
+    timer.start();
+
+    return () => {
+      console.log("Cleaning up timer...");
+      timer.pause();
+    };
+  }, [timerInstance]);
+
+  useEffect(() => {
+    if (parseInt(time.minutes) < 5) {
+      console.log("Hi");
       setFiveMinuteLeft(true);
     }
-  }, []);
+  }, [timerInstance]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -238,6 +267,7 @@ function Question() {
   const webcamRef = useRef(null);
 
   const capture = () => {
+    // ss liya hai is method se
     const imageSrc = webcamRef.current.getScreenshot();
     setImageSrc(imageSrc);
     console.log("Captured image:", imageSrc);
@@ -350,6 +380,7 @@ function Question() {
     }
   };
 
+  // theory 2 submission by index handler
   const theorySecondSubmitByIndexHandler = async () => {
     try {
       console.log(selectedAnswer);
@@ -592,12 +623,18 @@ function Question() {
     setAnswers(ans);
   };
 
+  const [imageUrl, setImageUrl] = useState("");
   // Random Image Handler
   const sendRandomImageHandler = async () => {
     try {
+      const examInitial = JSON.parse(sessionStorage.getItem("pkshn_exam_set"));
+      console.log(examInitial);
+      const theory2_login = examInitial.theory2_login;
+      const entered_psyc = examInitial.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
       const imageSrc = capture();
       console.log(imageSrc);
-      console.log(examInitial);
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
       console.log(user);
       const data = {
@@ -611,7 +648,7 @@ function Question() {
       };
       console.log(data);
       const formData = new FormData();
-      formData.append("file", data?.file);
+      formData.append("file", data?.file); // ye tarika hai append krne ka in formdata
       formData.append("exam_id", data?.exam_id);
       formData.append("student_id", data?.student_id);
       formData.append("sub_user_id", data?.sub_user_id);
@@ -620,15 +657,29 @@ function Question() {
       formData.append("req_by", data?.req_by);
 
       console.log(data);
-      const response = await sendRandomImage(formData);
-      console.log(response);
-
-      const imageUrl = response?.data?.pic;
-      console.log(imageUrl);
+      if (theory2_login === 1) {
+        const response = await randomImagesTheory2(formData);
+        if (response?.data?.code === 1000) {
+          setImageUrl(response?.data?.pic);
+        }
+        console.log(response);
+      } else if (entered_psyc === 1) {
+        const response = await psyRandomImages(formData);
+        if (response?.data?.code === 1000) {
+          setImageUrl(response?.data?.pic);
+        }
+        console.log(response);
+      } else {
+        const response = await sendRandomImage(formData);
+        if (response?.data?.code === 1000) {
+          setImageUrl(response?.data?.pic);
+        }
+        console.log(response);
+      }
 
       if (exam?.object_found) {
         const response = await multiObjectDetectionHandler(imageUrl);
-        console.log();
+        console.log("hi");
         if (response?.data?.code === 1000) {
           Swal.fire(response?.data?.status);
         }
@@ -774,9 +825,11 @@ function Question() {
       console.log("User :: ", user);
       setUser(user);
       getExamHandler(user);
+      const id_self_student = localStorage.getItem("id_self_student");
+      console.log(id_self_student);
       const data = {
         usercode: user.usercode,
-        id_self_student: user.id_self_student,
+        id_self_student: id_self_student,
       };
       const response = await getStudentProfile(data);
       console.log("Profile Percentage response:", response);
@@ -867,7 +920,7 @@ function Question() {
     }
   };
 
-  // secondQuestionByIndexHandler
+  // theory2
   const getTheorySecondQuestionByIndexHandler = async (value, idx) => {
     try {
       const ind = idx ? idx : Number(currentQuestion?.index) + value;
@@ -1098,6 +1151,7 @@ function Question() {
     }
   };
 
+  // final submission path
   const submitAndlogoutHandler = async () => {
     try {
       const attempted = Object.keys(answered).length;
@@ -1159,7 +1213,7 @@ function Question() {
         console.log(answerResponse);
         console.log(response?.data?.exams);
         startTimerHandler(exam?.duration, setTime);
-
+        setTimerInstance(exam?.duration);
         setExamInitial(response?.data?.exams);
         setTotalQuestion(response?.data?.exams?.totalq);
         console.log(response?.data?.exams?.question);
@@ -1212,6 +1266,7 @@ function Question() {
     }
   }, [examInitial]);
 
+  // theory2 initial question handler
   const getTheorySecondExamInitialHandler = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
@@ -1655,12 +1710,16 @@ function Question() {
       };
       console.log(data);
       const response = await finalSubmit(data);
+      if (response?.data?.code === 1000) {
+        localStorage.removeItem("instruction");
+      }
       console.log(response);
     } catch (error) {
       console.log("Error while final submit :: ", error);
     }
   };
 
+  // theory2
   const theorySecondFinalSubmitHandler = async () => {
     try {
       const student = [
@@ -1760,6 +1819,12 @@ function Question() {
   // multiObject detection
   const multiObjectDetectionHandler = async (imageUrl) => {
     try {
+      const examInitial = JSON.parse(sessionStorage.getItem("pkshn_exam_set"));
+      console.log(examInitial);
+      const theory2_login = examInitial.theory2_login;
+      const entered_psyc = examInitial.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
       console.log(user);
       console.log(imageUrl);
@@ -1770,9 +1835,19 @@ function Question() {
         randomphoto: imageUrl,
       };
       console.log(data);
-      const response = await multiObjectDetection(data);
-      console.log(response);
-      return response;
+      if (theory2_login === 1) {
+        const response = await multiObjectDetectionWebTheory2(data);
+        console.log(response);
+        return response;
+      } else if (entered_psyc === 1) {
+        const response = await psyMultiObjectDetection(data);
+        console.log(response);
+        return response;
+      } else {
+        const response = await multiObjectDetection(data);
+        console.log(response);
+        return response;
+      }
     } catch (error) {
       console.log("Error while multi object detection :: ", error);
     }
@@ -1781,6 +1856,13 @@ function Question() {
   // multiface detection
   const facesDetectionHandler = async (imageUrl) => {
     try {
+      console.log(imageUrl);
+      const examInitial = JSON.parse(sessionStorage.getItem("pkshn_exam_set"));
+      console.log(examInitial);
+      const theory2_login = examInitial.theory2_login;
+      const entered_psyc = examInitial.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
       console.log(user);
       const data = {
@@ -1790,9 +1872,19 @@ function Question() {
         randomphoto: imageUrl,
       };
       console.log(data);
-      const response = await facesDetection(data);
-      console.log(response);
-      return response;
+      if (theory2_login === 1) {
+        const response = await multifaceDetectionWebTheory2(data);
+        console.log(response);
+        return response;
+      } else if (entered_psyc === 1) {
+        const response = await psyMultifaceDetection(data);
+        console.log(response);
+        return response;
+      } else {
+        const response = await facesDetection(data);
+        console.log(response);
+        return response;
+      }
     } catch (error) {
       console.log("Error while faces detection :: ", error);
     }
@@ -1801,6 +1893,12 @@ function Question() {
   // moveMovement detection
   const moveDetectionHandler = async (imageUrl) => {
     try {
+      const examInitial = JSON.parse(sessionStorage.getItem("pkshn_exam_set"));
+      console.log(examInitial);
+      const theory2_login = examInitial.theory2_login;
+      const entered_psyc = examInitial.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
       const user = JSON.parse(localStorage.getItem("ps_loguser"));
       console.log(user);
       const data = {
@@ -1810,9 +1908,20 @@ function Question() {
         randomphoto: imageUrl,
       };
       console.log(data);
-      const response = await moveDetection(data);
-      console.log(response);
-      return response;
+
+      if (theory2_login === 1) {
+        const response = await faceDetectionWebTheory2(data);
+        console.log(response);
+        return response;
+      } else if (entered_psyc === 1) {
+        const response = await psyFaceDetection(data);
+        console.log(response);
+        return response;
+      } else {
+        const response = await moveDetection(data);
+        console.log(response);
+        return response;
+      }
     } catch (error) {
       console.log("Error while move detection :: ", error);
     }
@@ -1971,25 +2080,36 @@ function Question() {
     }, 1000);
   }, []);
 
+  const profile_Data = JSON.parse(localStorage.getItem("pkshn_profileData"));
+
+  const instructionPage = () => {
+    console.log("Hi");
+    setInstructionPages(true);
+  };
+
+  const closeModal = () => {
+    setInstructionPages(false);
+  };
+
   return (
     <>
-      <div className="min-h-screen font-custom">
+      <div className="min-h-screen font-custom ">
         {/* Header */}
+        {instructionPages && <InstructionPage closeModal={closeModal} />}
         <div className="h-20 bg-[#305187] px-8 flex items-center justify-between">
           <img src={pareekshn_logo} alt="" className="h-4/5 my-auto" />
           {/* <span className="font-medium text-white text-xl">
 						Online Exam
 					</span> */}
           <div className="flex  gap-6">
-            <div className="flex items-center justify-around py-1 gap-2 bg-[#FEFEFF1A] rounded-full h-14 w-[200px] px-2 pr-8">
+            <div className="flex items-center justify-around py-1 gap-2 bg-[#FEFEFF1A] rounded-full h-14 w-[200px] px-2 ">
               <img
-                src={studentProfile.profile_pic}
+                src={profile_Data.pic ? profile_Data?.pic : livevideo}
                 alt=""
-                className="h-10 rounded-full"
+                className=" w-16 h-11 object-contain rounded-full"
               />
               <div className="flex flex-col font-medium text-white">
-                <span className="w-[150px]">{studentProfile.student_name}</span>
-                <span>{studentProfile.id}</span>
+                <span className="w-[150px]">{profile_Data.name}</span>
               </div>
             </div>
             <div className="flex gap-3 h-14">
@@ -1999,7 +2119,12 @@ function Question() {
                 onClick={submitAndlogoutHandler}
                 className="cursor-pointer"
               />
-              <img src={questionMark} alt="" />
+              <img
+                src={questionMark}
+                alt=""
+                className="cursor-pointer"
+                onClick={instructionPage}
+              />
             </div>
           </div>
         </div>
@@ -2007,8 +2132,7 @@ function Question() {
         <div className="flex flex-col">
           <div className="flex justify-between p-4 px-8 items-center">
             <span className="text-2xl font-medium text-[#1C4481]">
-              {/* {examInitial?.type} */}
-              Theory
+              {examInitial?.type}
             </span>
             <div className="flex gap-4 items-center">
               <div
@@ -2058,11 +2182,11 @@ function Question() {
                   ref={scrollContainerRef}
                 >
                   {Array.from({ length: totalQuestion }, (_, index) => {
-                    let className = "bg-[#808080]";
+                    let className = "bg-[#aea8a8]";
                     if (Number(currentQuestion?.index) == index + 1) {
                       className = "border-[3px] border-[#14540E] bg-white";
                     } else if (answered[index + 1] == true) {
-                      className = "text-white bg-[#125302]";
+                      className = "text-white bg-[#197205]";
                     } else if (submitted[index + 1] == true) {
                       className = "text-white bg-[#FF7272]";
                     } else if (visited[index + 1] == true) {
@@ -2076,12 +2200,17 @@ function Question() {
                             return;
                           }
                           if (exam?.theory2_login) {
+                            console.log("HI");
                             getTheorySecondQuestionByIndexHandler(0, index + 1);
                             theorySecondSubmitByIndexHandler();
                           } else if (exam?.entered_psyc) {
+                            console.log("HI");
+
                             getPsycQuestionByIndexHandler(0, index + 1);
                             psycSubmitByIndexHandler();
                           } else {
+                            console.log("HI");
+
                             submitByIndexHandler();
                             getTheoryQuestionByNoHandler(0, index + 1);
                           }
@@ -2117,7 +2246,7 @@ function Question() {
             </div>
             <div className="flex gap-3 items-center text-sm">
               <div className="flex items-center gap-1">
-                <div className="h-2 w-2 bg-[#2B8B14] rounded-full"></div>
+                <div className="h-2 w-2 bg-[#197205] rounded-full"></div>
                 <span className="font-medium text-slate-600">Answered</span>
               </div>
               <div className="flex items-center gap-1">
@@ -2149,9 +2278,9 @@ function Question() {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="h-8 border-[#14540E] border w-28 flex items-center justify-center rounded-full text-sm">
-                    <span className="font-semibold text-[#5F5F5F]">
-                      Max Marks {examInitial?.max_marks}
+                  <div className="h-8 border-[#14540E] border w-32 flex items-center justify-center rounded-full text-sm px-2">
+                    <span className="font-semibold text-[#5F5F5F] text-nowrap">
+                      Max Marks {currentQuestion?.max_marks}
                     </span>
                   </div>
                   <div className="bg-[#FAFF0D] px-3 rounded-full h-9 flex items-center justify-center font-medium gap-1 text-sm">
@@ -2275,12 +2404,12 @@ function Question() {
                     </div>
                     <span>Lock</span>
                   </div>
-                  <span
+                  {/* <span
                     onClick={finalSubmitHandler}
                     className="cursor-pointer border rounded-full px-6 py-2 bg-blue-900 text-white"
                   >
                     Submit
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </div>

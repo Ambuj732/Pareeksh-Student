@@ -7,6 +7,12 @@ import tablet from "../../assets/LoginScreen/Tablet.png";
 import message from "../../assets/LoginScreen/message.png";
 import date from "../../assets/LoginScreen/date.png";
 import userProfile from "../../assets/LoginScreen/userProfile.png";
+import graduationCap from "../../assets/LoginScreen/cap.png";
+import scaleAndPencle from "../../assets/LoginScreen/scalepencle.jpg";
+import exam from "../../assets/LoginScreen/exam.png";
+import parkeeshnLogo from "../../assets/LoginScreen/parkeeshnLogo.png";
+import hand from "../../assets/LoginScreen/hand.png";
+import laptop from "../../assets/LoginScreen/laptop.png";
 import viewHideIcon from "../../assets/LoginScreen/View_hide_light.png";
 import { MdEmail } from "react-icons/md";
 import { useForm } from "react-hook-form";
@@ -19,16 +25,22 @@ import * as Yup from "yup";
 import logo from "../../assets/logo/pareekshn_logo.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function SignUp() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { error },
+  } = useForm();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const [highestQualication, setHighestQualication] = useState([]);
   const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
   const [selectedState, setSelectedState] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [checkbox, setCheckbox] = useState(false);
@@ -95,6 +107,10 @@ function SignUp() {
     console.log("State :: ", e.target.value);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   const registerStudentHandler = async (formData) => {
     try {
       console.log("Form Data :: ", formData);
@@ -114,8 +130,16 @@ function SignUp() {
       console.log("Data :: ", data);
       await createAccountSchema.validate(data, { abortEarly: false });
       const response = await registerStudent(data);
+      console.log(response);
       if (response?.data?.code === 1000) {
         toast.success("Successfully registered");
+        localStorage.setItem(
+          "id_self_student",
+          JSON.stringify(response.data.id_self_student)
+        );
+        setTimeout(() => {
+          navigate("/signup/account/verify-otp");
+        }, 1500);
       } else if (
         response?.data?.status ===
         "Mobile Number already used. Please use different one."
@@ -153,13 +177,15 @@ function SignUp() {
       onSubmit={handleSubmit(registerStudentHandler)}
       className="min-h-screen relative w-full lg:w-1/2 flex justify-center items-center"
     >
-      <img src={logo} alt="" className="absolute top-3 left-3 h-24" />
-      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[#2F5185]">
-        {/* <img
-					src={leftBg}
-					alt=""
-					className="w-full h-full object-fill  cursor-pointer absolute inset-0"
-				/> */}
+      <img src={logo} alt="" className="absolute top-3 left-3 h-20" />
+      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[rgb(47,81,133)]">
+        <img
+          src={graduationCap}
+          alt=""
+          className="absolute h-16 top-10 right-10"
+        />
+        <img src={laptop} alt="" className="absolute bottom-72 h-16 left-10" />
+        <img src={hand} alt="" className="absolute bottom-16 h-16 left-10" />
       </div>
       <div className="bg-[#ffffff] h-[500px] w-3/4 lg:w-4/5 xl:w-2/3 overflow-y-scroll no-scrollbar rounded-3xl p-6 flex flex-col gap-4 relative z-10 pb-10 mt-16">
         <div className="flex justify-between items-center">
@@ -181,7 +207,7 @@ function SignUp() {
               id="floating_filled"
               className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
               placeholder=""
-              {...register("fullName", { required: true })}
+              {...register("fullName", { required: true, maxLength: 20 })}
             />
             <div
               htmlFor="floating_filled"
@@ -293,7 +319,7 @@ function SignUp() {
         <div className="relative h-14 mb-3">
           <div>
             <input
-              type="text"
+              type="Number"
               id="floating_filled"
               className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
               placeholder=""
@@ -322,7 +348,7 @@ function SignUp() {
               id="floating_filled"
               className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
               placeholder=""
-              {...register("username", { required: true })}
+              {...register("username", { required: true, maxLength: 10 })}
             />
             <div
               htmlFor="floating_filled"
@@ -342,13 +368,22 @@ function SignUp() {
         </div>
         <div className="relative h-14 mb-3">
           <div>
-            <input
-              type="text"
-              id="floating_filled"
-              className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
-              placeholder=""
-              {...register("password", { required: true })}
-            />
+            <div className="flex items-center justify-between text-sm gap-2 w-full text-[#1C4481]">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="floating_filled"
+                className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
+                placeholder=""
+                {...register("password", { required: true, maxLength: 10 })}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-between"
+              >
+                {showPassword ? <VscEyeClosed /> : <VscEye />}
+              </button>
+            </div>
             <div
               htmlFor="floating_filled"
               className="absolute text-base text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"

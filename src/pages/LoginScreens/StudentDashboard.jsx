@@ -63,11 +63,11 @@ function StudentDashboard() {
           </span>
           <div className="flex  flex-col items-center  w-1/3 justify-between overflow-hidden">
             <div className="flex gap-7 px-1 mt-4">
-              <div className="flex items-center gap-2 h-14 border-2 border-[#1C4481] px-1 rounded-[100px] w-1/2">
+              <div className="flex items-center gap-2 h-16 border-2 border-[#1C4481]  rounded-[100px] w-auto px-3 ">
                 <img
                   src={studentProfile.profile_pic}
                   alt=""
-                  className="h-10 m-1 rounded-full"
+                  className="h-12 w-12 object-fill m-1 rounded-full"
                 />
                 <div className="flex flex-col text-sm">
                   <span className="font-semibold text-[#305187]">Welcome</span>

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import arrowLeft from "../../assets/LoginScreen/arrowLeft.png";
-import leftBg from "../../assets/LoginScreen/leftBg.jpg";
+import logo from "../../assets/logo/pareekshn_logo.png";
+import hand from "../../assets/LoginScreen/hand.png";
+import laptop from "../../assets/LoginScreen/laptop.png";
+import scaleAndPencil from "../../assets/LoginScreen/scaleAndPencil.png";
+import student from "../../assets/LoginScreen/student.png";
+import graduationCap from "../../assets/LoginScreen/cap.png";
 import userProfile from "../../assets/LoginScreen/userProfile.png";
 import { useForm } from "react-hook-form";
 import { IoPerson } from "react-icons/io5";
@@ -9,11 +14,24 @@ import OTPVerify from "../../actions/LoginScreens/verifyOTP";
 import { useNavigate } from "react-router";
 import resetPassword from "../../actions/LoginScreens/resetPassword";
 import * as Yup from "yup";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ResetPassword() {
   const { register, handleSubmit } = useForm();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPassword((prevShowPassword) => !prevShowPassword);
+  };
 
   const resetPasswordSchema = Yup.object({
     newPassword: Yup.string()
@@ -26,18 +44,24 @@ function ResetPassword() {
 
   const resetPasswordHandler = async (formData) => {
     try {
-      // if (formData.newpassword !== formData.confirmPassword) {
-      // 	return;
-      // }
+      const id_self_student = JSON.parse(
+        localStorage.getItem("id_self_student")
+      );
       const data = {
-        id_self_student: 1,
-        password: "654321",
+        id_self_student: id_self_student,
+        password: formData?.newPassword,
+        new_password: formData?.confirmPassword,
       };
       await resetPasswordSchema.validate(formData, { abortEarly: false });
       setErrors({});
-      await resetPassword(data);
-
-      navigate("/");
+      const response = await resetPassword(data);
+      if (response?.data?.code === 1000) {
+        toast.success("Your password has been changed successfully");
+        localStorage.removeItem("id_self_student");
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      }
     } catch (error) {
       console.log("Error while logging with passcode :: ", error);
       const newErrors = {};
@@ -55,12 +79,20 @@ function ResetPassword() {
 
   return (
     <div className="min-h-screen relative w-full lg:w-1/2 flex justify-center items-center">
-      <div className="absolute inset-0 z-[-1] overflow-hidden min-h-screen">
+      <img src={logo} alt="" className="absolute top-3 left-3 h-20" />
+      <div className="absolute inset-0 z-[-1] overflow-hidden bg-[rgb(47,81,133)]">
         <img
-          src={leftBg}
+          src={graduationCap}
           alt=""
-          className="w-full h-full absolute  cursor-pointer inset-0 object-fill"
+          className="absolute h-16 top-10 right-10"
         />
+        <img src={laptop} alt="" className="absolute bottom-72 h-16 left-10" />
+        <img
+          src={scaleAndPencil}
+          alt=""
+          className="absolute bottom-12 h-24 left-10"
+        />
+        <img src={hand} alt="" className="absolute bottom-12 h-16 right-24" />
       </div>
       <form
         onSubmit={handleSubmit(resetPasswordHandler)}
@@ -84,12 +116,19 @@ function ResetPassword() {
         <div className="relative h-14 my-6">
           <div>
             <input
-              type="text"
+              type={showPassword ? "text" : "password"}
               id="floating_filled"
               className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
               placeholder=""
               {...register("newPassword", { required: true })}
             />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 text-[#1C4481] focus:outline-none"
+            >
+              {showPassword ? <VscEyeClosed /> : <VscEye />}
+            </button>
             <div
               htmlFor="floating_filled"
               className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
@@ -109,12 +148,19 @@ function ResetPassword() {
         <div className="relative h-14 my-6">
           <div>
             <input
-              type="text"
+              type={confirmPassword ? "text" : "password"}
               id="floating_filled"
               className="block pl-8 text-black pb-2.5 pt-5 w-full text-base border border-[#6E6E6E] rounded-md appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
               placeholder=""
               {...register("confirmPassword", { required: true })}
             />
+            <button
+              type="button"
+              onClick={toggleConfirmPasswordVisibility}
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 text-[#1C4481] focus:outline-none"
+            >
+              {confirmPassword ? <VscEyeClosed /> : <VscEye />}
+            </button>
             <div
               htmlFor="floating_filled"
               className="absolute text-base pl-5 text-[#1C4481] dark:text-[#1C4481] duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-[#1C4481] peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto flex items-center"
@@ -138,6 +184,7 @@ function ResetPassword() {
           Continue
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

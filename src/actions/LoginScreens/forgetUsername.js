@@ -18,6 +18,7 @@ const forgetUsername = async (data) => {
       }
     );
     console.log("Forget username response :: ", response);
+    return response;
   } catch (error) {
     console.log("Error while forgetting username :: ", error);
     throw error;

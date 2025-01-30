@@ -7,6 +7,8 @@ import uploadPhoto from "../../actions/LoginScreens/uploadPhoto";
 import Webcam from "react-webcam";
 import * as faceapi from "face-api.js";
 import SlidingMessage from "../ApiResponse";
+import uploadImageTheory2 from "../../actions/LoginScreens/uploadImageTheory2";
+import psyUploadImage from "../../actions/LoginScreens/psyUploadImage";
 
 function UploadPhoto() {
   const navigate = useNavigate();
@@ -24,27 +26,76 @@ function UploadPhoto() {
     if (capturedImage) {
       var userData = JSON.parse(localStorage.getItem("ps_loguser"));
       var settings = JSON.parse(sessionStorage.pkshn_exam_set);
-      // Call your upload function here
-      uploadPhoto(capturedImage, userData, settings["exam_id"])
-        .then((response) => {
-          if (response.status == 200) {
-            const code = response?.data?.code;
-            const message = response?.data?.status;
-            if (code == 1000) {
-              setError("Your photo captured successfully.");
-              navigate("/welcome");
+      const theory2_login = settings.theory2_login;
+      const entered_psyc = settings.entered_psyc;
+      console.log(entered_psyc);
+      console.log(theory2_login);
+      if (theory2_login === 1) {
+        uploadImageTheory2(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              const message = response?.data?.status;
+              if (code == 1000) {
+                setError("Your photo captured successfully.");
+                navigate("/welcome");
+              } else {
+                setError(typeof message === "string" ? message : "");
+                return;
+              }
             } else {
-              setError(typeof message === "string" ? message : "");
+              setError("Please try again.");
               return;
             }
-          } else {
-            setError("Please try again.");
-            return;
-          }
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-        });
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      } else if (entered_psyc === 1) {
+        console.log("Hi psycho");
+        psyUploadImage(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              const message = response?.data?.status;
+              if (code == 1000) {
+                setError("Your photo captured successfully.");
+                navigate("/welcome");
+              } else {
+                setError(typeof message === "string" ? message : "");
+                return;
+              }
+            } else {
+              setError("Please try again.");
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      } else {
+        // Call your upload function here
+        uploadPhoto(capturedImage, userData, settings["exam_id"])
+          .then((response) => {
+            if (response.status == 200) {
+              const code = response?.data?.code;
+              const message = response?.data?.status;
+              if (code == 1000) {
+                setError("Your photo captured successfully.");
+                navigate("/welcome");
+              } else {
+                setError(typeof message === "string" ? message : "");
+                return;
+              }
+            } else {
+              setError("Please try again.");
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+          });
+      }
     }
   };
 

@@ -72,6 +72,7 @@ import descriptiveDeleteAttachment from "../../actions/Passcode/descriptiveDelet
 import descriptiveFinalExamSubmit from "../../actions/Passcode/descriptiveFinalExamSubmit.js";
 import { IoCloseSharp } from "react-icons/io5";
 import EasySpeech from "easy-speech";
+import InstructionPage from "../../components/Exams/InstructionPage.jsx";
 import createTimer from "../../utils/timer.js";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -98,6 +99,7 @@ function Descriptive() {
     minutes: "10",
     seconds: "00",
   });
+  const [timerInstance, setTimerInstance] = useState(null);
   const [lockStatus, setLockStatus] = useState(0);
   const [primaryLang, setPrimaryLang] = useState("");
   const [fiveMinuteLeft, setFiveMinuteLeft] = useState(false);
@@ -117,6 +119,7 @@ function Descriptive() {
   const [attempted, setAttempted] = useState(new Array(1000).fill(false));
   const [primaryLanguage, setPrimaryLanugage] = useState("");
   const [primaryLanguageCode, setPrimaryLanguageCode] = useState("");
+  const [instructionPages, setInstructionPages] = useState(false);
   const microphoneRef = useRef(null);
   // const commands = [
   //   {
@@ -969,8 +972,13 @@ function Descriptive() {
 
   // Descriptive questionbyNoIndex
   const descriptiveQuestionByIndexHandler = async (value, idx) => {
+    console.log(value);
+    console.log(idx);
+    // value =0
+    // index = index+1;
     try {
-      const ind = idx ? idx : Number(currentQuestion?.index) + value;
+      const ind =
+        idx !== undefined ? idx : Number(currentQuestion?.index) + value;
       console.log(ind);
       const data = {
         index: ind,
@@ -982,6 +990,7 @@ function Descriptive() {
         student_id: user?.id,
         usercode: user?.usercode,
       };
+      console.log(data);
       const response = await descriptiveQuestionByIndex(data);
       setSelectedAnswer("");
       setSelectedLanguage("");
@@ -992,6 +1001,9 @@ function Descriptive() {
         const answer = response?.data?.question?.answer;
         const answer_type = answer?.answer_type;
         console.log(answer);
+        console.log("Hi");
+        // navigateToFinalSubmitPage();
+        console.log("Hi");
         if (answer_type == 1) {
           if (exam?.editor_type == 0) {
             setMathPadPreview(answer?.answer);
@@ -1006,39 +1018,26 @@ function Descriptive() {
         } else {
           setAnswerAttachment("");
         }
-        // let selected;
-        // if (exam?.mso) {
-        // 	selected = "";
-        // 	let selectedArray = [];
-        // 	options?.map((option) => {
-        // 		console.log(option?.select_option);
-        // 		if (option?.select_option) {
-        // 			selectedArray?.push(option?.select_option);
-        // 		}
-        // 	});
-        // 	selected = selectedArray?.join(",");
-        // 	console.log(selected);
-        // } else {
-        // 	selected = 0;
-        // 	options?.map((option) => {
-        // 		console.log(option?.select_option);
-        // 		if (option?.select_option) {
-        // 			selected = option?.select_option;
-        // 		}
-        // 	});
-        // }
-        // console.log(selected);
-        // setSelectedAnswer(selected);
-        // const lock =
-        // 	options[0]?.lock_status ||
-        // 	options[1]?.lock_status ||
-        // 	options[2]?.lock_status ||
-        // 	options[3]?.lock_status;
-        // console.log(lock);
         setLockStatus(lock);
       }
     } catch (error) {
       console.log("Error while getting theory question by index :: ", error);
+    }
+  };
+
+  // navigate yanha se karega in final submit page pe.
+  const navigateToFinalSubmitPage = () => {
+    console.log(currentQuestion);
+    console.log(Number(Number(currentQuestion?.index) + 1));
+    console.log(examInitial?.totalq + 1);
+    if (
+      Number(Number(currentQuestion?.index) + 1) ===
+      examInitial?.totalq + 1
+    ) {
+      console.log("Navigating to final submit page");
+      console.log(Number(currentQuestion?.index));
+      console.log(examInitial?.totalq);
+      navigate("/descriptive-final-submit");
     }
   };
 
@@ -1101,7 +1100,7 @@ function Descriptive() {
     }
   };
 
-  // timer esi api se fit hoga
+  // timer esi api se fit hoga and total question isi se mileg
   const getInitialExamHandler = async () => {
     try {
       const data = {
@@ -1411,6 +1410,7 @@ function Descriptive() {
         student_id: user?.id,
         usercode: user?.usercode,
       };
+      console.log(data);
       const response = await descriptiveExamInitial(data);
       console.log(response);
       if (response?.data?.code === 1000) {
@@ -1430,6 +1430,7 @@ function Descriptive() {
         console.log(answerResponse);
         console.log(response?.data?.exams);
         startTimer(exam?.duration, setTime);
+        setTimerInstance(exam?.duration);
         setExamInitial(response?.data?.exams);
         setTotalQuestion(response?.data?.exams?.totalq);
         console.log(response?.data?.exams?.question);
@@ -1449,47 +1450,15 @@ function Descriptive() {
         } else {
           setAnswerAttachment("");
         }
-        // console.log(response?.data?.exams?.question?.options);
-        // const options = response?.data?.exams?.question?.options;
-        // console.log(options);
-        // let selected;
-        // if (exam?.mso) {
-        // 	selected = "";
-        // 	let selectedArray = [];
-        // 	options?.map((option) => {
-        // 		console.log(option?.select_option);
-        // 		if (option?.select_option) {
-        // 			selectedArray?.push(option?.select_option);
-        // 		}
-        // 	});
-        // 	selected = selectedArray?.join(",");
-        // 	console.log(selected);
-        // } else {
-        // 	selected = 0;
-        // 	options?.map((option) => {
-        // 		console.log(option?.select_option);
-        // 		if (option?.select_option) {
-        // 			selected = option?.select_option;
-        // 		}
-        // 	});
-        // }
-        // console.log(selected);
-        setSelectedAnswer(selected);
 
-        // const lock =
-        // 	options[0]?.lock_status ||
-        // 	options[1]?.lock_status ||
-        // 	options[2]?.lock_status ||
-        // 	options[3]?.lock_status;
-        // console.log(lock);
-        // setLockStatus(lock);
+        setSelectedAnswer(selected);
       }
     } catch (error) {
       console.log("Error while getting initial exam :: ", error);
     }
   };
 
-  // const freezeStatusHandler = async () => {
+  // const freezeStatusHandler = async () =>
   // 	try {
   // 		const data = {
   // 			student_id: user?.id,
@@ -2059,27 +2028,51 @@ function Descriptive() {
     }
   };
 
-  const navigateToFinalSubmitPage = () => {
-    console.log(currentQuestion?.index + 1);
-    console.log(examInitial?.totalq + 1);
-    if (currentQuestion?.index + 1 == examInitial?.totalq + 1) {
-      console.log(currentQuestion?.index);
-      console.log(examInitial?.totalq);
-      navigate("/final-submit");
-    }
-  };
-
   useEffect(() => {
-    const timer = createTimer(10, setTime);
-    // timer.start();
-    console.log(time?.minutes);
-    if (time?.minutes < 5) {
-      setFiveMinuteLeft(true);
-    }
+    console.log("Initializing timer...");
+    // setTimerInstance(time);
+    const timer = createTimer(timerInstance, setTime);
+    console.log(timer);
+    timer.start();
+
     return () => {
+      console.log("Cleaning up timer...");
       timer.pause();
     };
-  }, []);
+  }, [timerInstance]);
+
+  useEffect(() => {
+    if (parseInt(time.minutes) < 5) {
+      setFiveMinuteLeft(true);
+    }
+  }, [timerInstance]);
+
+  const profile_Data = JSON.parse(localStorage.getItem("pkshn_profileData"));
+
+  const instructionPage = () => {
+    setInstructionPages(true);
+  };
+
+  const closeModal = () => {
+    setInstructionPages(false);
+  };
+
+  const submitAndlogoutHandler = async () => {
+    try {
+      const attempted = Object.keys(answered).length;
+      console.log(attempted);
+      if (examInitial?.totalq - attempted) {
+        Swal.fire({
+          text: "This is a mandatory exam. You have to attempt all questions. Please press back button to go back and submit all questions.",
+          icon: "warning",
+        });
+        return;
+      }
+      navigate("/descriptive-final-submit");
+    } catch (error) {
+      console.log("Error while logging out user :: ", error);
+    }
+  };
 
   return (
     <>
@@ -2093,23 +2086,28 @@ function Descriptive() {
           <div className="flex  gap-6">
             <div className="flex items-center justify-around py-1 gap-2 bg-[#FEFEFF1A] rounded-full h-14 w-[200px] px-2 pr-8">
               <img
-                src={studentProfile.profile_pic}
+                src={profile_Data.pic ? profile_Data?.pic : speak}
                 alt=""
-                className="h-10 rounded-full"
+                className=" w-16 h-11 object-contain rounded-full"
               />
               <div className="flex flex-col font-medium text-white">
-                <span className="w-[150px]">{studentProfile.student_name}</span>
-                <span>{studentProfile.id}</span>
+                <span className="w-[150px]">{profile_Data?.name}</span>
+                {/* <span>{studentProfile.id}</span> */}
               </div>
             </div>
             <div className="flex gap-3 h-14">
               <img
                 src={logout}
                 alt=""
-                onClick={logoutHandler}
+                onClick={submitAndlogoutHandler}
                 className="cursor-pointer"
               />
-              <img src={questionMark} alt="" />
+              <img
+                src={questionMark}
+                alt=""
+                className="cursor-pointer"
+                onClick={instructionPage}
+              />
             </div>
           </div>
         </div>
@@ -2155,9 +2153,9 @@ function Descriptive() {
           </div>
 
           {/* {question Number part} */}
-          <div className="bg-white h-20 border ml-8 mt-4 rounded-l-2xl flex items-center px-12 justify-between">
+          <div className="bg-white h-20 border ml-8 mt-4 rounded-l-2xl flex items-center px-8 justify-between">
             <div className="flex items-center justify-between w-3/5 ">
-              <div className="flex items-center  justify-center gap-4">
+              <div className="flex items-center justify-center">
                 <img
                   src={questionIndicator}
                   alt=""
@@ -2211,7 +2209,7 @@ function Descriptive() {
                   onClick={scrollRight}
                 />
               </div>
-              <span className="font-medium text-xl text-nowrap">
+              <span className="font-medium text-xl">
                 Time Remaining -{" "}
                 <span
                   className={`font-semibold text-2xl ${
@@ -2432,42 +2430,7 @@ function Descriptive() {
             </div>
             {/* {next filed} */}
             <div className="w-full  flex items-center justify-between px-8">
-              {/* <div className="flex flex-col items-center gap-2">
-                  <Webcam
-                    audio={false}
-                    // minScreenshotHeight={}
-                    minScreenshotWidth={"640"}
-                    screenshotQuality={1}
-                    disablePictureInPicture={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    className="h-20 rounded-md"
-                  />
-
-                  <span className="font-medium text-[#444444]">Live Video</span>
-                </div> */}
               <div className="flex items-center justify-center gap-20 w-full px-8">
-                {/* <div
-										className="flex flex-col items-center gap-2 cursor-pointer"
-										onClick={() => {
-											if (exam?.theory2_login) {
-												theorySecondClearAnsweredOptionHandler();
-											} else if (exam?.entered_psyc) {
-												psycClearAnsweredOptionHandler();
-											} else {
-												resetOptionsHandler();
-											}
-										}}
-									>
-										<div className="border-2 flex-col border-[#1C4481] rounded-full h-11 w-11 flex items-center justify-center">
-											<img
-												src={reset}
-												alt=""
-												className="h-8"
-											/>
-										</div>
-										<span>Reset</span>
-									</div> */}
                 <div
                   className="flex flex-col items-center gap-2 cursor-pointer"
                   onClick={() => {
@@ -2491,16 +2454,6 @@ function Descriptive() {
                   </div>
                   <span>Previous</span>
                 </div>
-                {/* <div className="flex flex-col items-center gap-2 cursor-pointer">
-										<div className="border-2 flex-col border-[#1C4481] rounded-full h-11 w-11 flex items-center justify-center">
-											<img
-												src={play}
-												alt=""
-												className="h-6"
-											/>
-										</div>
-										<span>Play</span>
-									</div> */}
                 <div
                   className="flex flex-col items-center gap-2 cursor-pointer"
                   onClick={() => {
@@ -2517,7 +2470,7 @@ function Descriptive() {
                       submitByIndexHandler();
                       getTheoryQuestionByNoHandler(1);
                     }
-                    navigateToFinalSubmitPage();
+                    navigateToFinalSubmitPage(currentQuestion);
                   }}
                 >
                   <div className="border-2 flex-col border-[#1C4481] rounded-full h-11 w-11 flex items-center justify-center">
@@ -2525,33 +2478,11 @@ function Descriptive() {
                   </div>
                   <span>Next</span>
                 </div>
-                {/* <div
-										className="flex flex-col items-center gap-2 cursor-pointer"
-										onClick={handleLockStatusChange}
-									>
-										<div
-											className={`border-2 flex-col border-[#1C4481] rounded-full h-11 w-11 flex items-center justify-center`}
-										>
-											<img
-												src={lock}
-												alt=""
-												className="h-6"
-											/>
-										</div>
-										<span>Lock</span>
-									</div> */}
-                {/* <span
-										onClick={
-											descriptiveFinalExamSubmitHandler
-										}
-										className="cursor-pointer"
-									>
-										Submit
-									</span> */}
               </div>
             </div>
           </div>
         </div>
+        {instructionPages && <InstructionPage closeModal={closeModal} />}
       </div>
       <Outlet />
     </>

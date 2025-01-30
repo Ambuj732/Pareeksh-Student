@@ -18,6 +18,7 @@ const register = async (data) => {
       }
     );
     console.log("Register response :: ", response);
+    return response;
   } catch (error) {
     console.log("Error while registering student :: ", error);
   }
